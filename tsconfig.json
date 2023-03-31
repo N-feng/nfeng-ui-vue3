@@ -17,15 +17,18 @@
     }
   },
   "include": [
-    "src/typings/auto-imports.d.ts",
-    "src/typings/components.d.ts",
+    "auto-imports.d.ts",
+    "components.d.ts",
     "src/**/*.ts",
     "src/**/*.d.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
     "packages/**/*.ts",
     "packages/**/*.tsx",
-    "packages/**/*.vue"
-, "src/index.tsx.tsdex.ts"  ],
+    "packages/**/*.vue",
+    "lib/**/*.ts",
+    "lib/**/*.tsx",
+    "lib/**/*.vue"
+  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

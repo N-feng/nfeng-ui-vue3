@@ -1,5 +1,11 @@
-import { createApp } from 'vue'
-import './style.css'
-import App from './App.vue'
+import { createApp } from "vue";
+import "@/styles/index.scss";
+import App from "./App";
+import antdIcons from "@/plugins/antd-icons";
+import Nfeng from "./components";
 
-createApp(App).mount('#app')
+const app = createApp(App);
+
+app.use(Nfeng);
+app.use(antdIcons);
+app.mount("#app");
