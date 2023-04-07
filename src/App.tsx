@@ -49,6 +49,7 @@ export default defineComponent({
               },
             },
           },
+          value: [{ name: "jokcy", age: 12 }],
         },
         multiSelectArray: {
           title: "multiSelectArray",
@@ -66,7 +67,6 @@ export default defineComponent({
         <ThemeProvider theme={themeDefault}>
           <SchemaForm schema={schema} />
         </ThemeProvider>
-      
       );
     };
   },

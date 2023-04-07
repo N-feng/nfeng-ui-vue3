@@ -5,13 +5,26 @@ import NumberField from "./fields/NumberField";
 
 import ObjectField from "./fields/ObjectField";
 import ArrayField from "./fields/ArrayField";
+import { retrieveSchema } from "./utils";
+import { useVJSFContext } from "./context";
 
 export default defineComponent({
   name: "SchemaItem",
   props: FieldPropsDefine,
   setup(props) {
+    const formContext = useVJSFContext()
+
+    const retrieveSchemaRef = computed(() => {
+      const { schema, rootSchema, value } = props
+      return formContext.transformSchemaRef.value(
+        retrieveSchema(schema, rootSchema, value)
+      )
+    })
+
     return () => {
-      const { schema } = props;
+      const { schema, rootSchema, value } = props;
+
+      const retrieveSchema = retrieveSchemaRef.value
 
       // TODO: 如果type没有指定，我们需要猜测这个type
 
@@ -41,7 +54,7 @@ export default defineComponent({
         }
       }
 
-      return <Component schema={schema} />;
+      return <Component {...props} schema={retrieveSchema} />;
     };
   },
 });

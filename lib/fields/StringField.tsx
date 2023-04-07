@@ -12,14 +12,17 @@ export default defineComponent({
       return widgetRef.value;
     })
 
+    const widgetPlaceholderRef = computed(() => {
+      const title = `请输入 ${ props.schema?.placeholder || props.schema?.title || ''}`
+      return title;
+    })
 
     return () => {
+      const { rootSchema, ...rest } = props;
+
       const TextWidget = TextWidgetRef.value;
-      const { schema } = props;
 
-      const placeholder = `请输入 ${schema?.title || ''}`;
-
-      return (<TextWidget placeholder={placeholder} />)
+      return (<TextWidget {...rest} placeholder={widgetPlaceholderRef.value} />)
     }
   }
 })

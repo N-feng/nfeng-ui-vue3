@@ -11,6 +11,10 @@ import { fileURLToPath, URL } from "node:url";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  server: {
+    host: true,
+    port: Number(process.env.SERVER_PORT || 3000),
+  },
   plugins: [
     vue(),
     Components({
@@ -20,11 +24,9 @@ export default defineConfig({
           importStyle: "less",
         }),
       ],
-      dts: "src/typings/components.d.ts",
     }),
     AutoImport({
       imports: ["vue", "vue-router", "pinia"],
-      dts: "src/typings/auto-import.d.ts",
     }),
     createStyleImportPlugin({
       resolves: [AndDesignVueResolve()],

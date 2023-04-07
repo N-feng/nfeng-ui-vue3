@@ -41,8 +41,18 @@ export const FieldPropsDefine = {
     type: Object as PropType<Schema>,
     require: true,
   },
-  value: {}
+  rootSchema: {
+    type: Object as PropType<Schema>,
+    required: true,
+  },
+  value: {},
 } as const
+
+export const TypeHelperComponent = defineComponent({
+  props: FieldPropsDefine,
+})
+
+export type CommonFieldType = typeof TypeHelperComponent
 
 export const CommonWidgetPropsDefine = {
   value: {},
@@ -57,9 +67,9 @@ export const CommonWidgetPropsDefine = {
     type: Object as PropType<Schema>,
     // required: true,
   },
-  options: {
-    type: Object as PropType<{ [keys: string]: any }>,
-  },
+  // options: {
+  //   type: Object as PropType<{ [keys: string]: any }>,
+  // },
   placeholder: {
     type: String
   }
@@ -118,3 +128,9 @@ interface ErrorSchemaObject {
 export type ErrorSchema = ErrorSchemaObject & {
   __errors?: string[];
 };
+
+export interface CustomKeyword {
+  name: string;
+  // deinition: VjsfKeywordDefinition;
+  transformSchema: (originSchema: Schema) => Schema;
+}

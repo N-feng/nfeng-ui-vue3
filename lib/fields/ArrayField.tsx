@@ -36,7 +36,7 @@ export default defineComponent({
 
     return () => {
       const SelectionWidget = SelectWidgetRef.value;
-      const { schema, value } = props;
+      const { schema, rootSchema, value } = props;
 
       const isMultiType = Array.isArray(schema?.items);
       const isSelect = schema?.items && (schema.items as any).enum;
@@ -46,7 +46,14 @@ export default defineComponent({
         const arr = Array.isArray(value) ? value : [];
 
         return items.map((s: Schema, index: number) => {
-          return <SchemaItem schema={s} key={index} value={arr[index]} />;
+          return (
+            <SchemaItem
+              schema={s}
+              key={index}
+              rootSchema={rootSchema}
+              value={arr[index]}
+            />
+          );
         });
       } else if (!isSelect) {
         const arr = Array.isArray(value) ? value : [];
@@ -57,6 +64,7 @@ export default defineComponent({
                 schema={schema?.items as Schema}
                 value={v}
                 key={index}
+                rootSchema={rootSchema}
               />
             </ArrayItemWrapper>
           );

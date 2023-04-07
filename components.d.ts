@@ -9,6 +9,7 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    AFormItem: typeof import('ant-design-vue/es')['FormItem']
     AInput: typeof import('ant-design-vue/es')['Input']
     AInputNumber: typeof import('ant-design-vue/es')['InputNumber']
     ASelect: typeof import('ant-design-vue/es')['Select']
