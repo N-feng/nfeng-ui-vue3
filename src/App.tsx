@@ -1,6 +1,6 @@
 import { defineComponent, reactive } from "vue";
-import { SchemaForm, ThemeProvider } from "../lib";
-import themeDefault from "../lib/theme-antd";
+// import { SchemaForm, ThemeProvider } from "../lib";
+import themeDefault from "./components/theme-antd";
 
 export default defineComponent({
   setup() {
@@ -64,9 +64,9 @@ export default defineComponent({
 
     return () => {
       return (
-        <ThemeProvider theme={themeDefault}>
-          <SchemaForm schema={schema} />
-        </ThemeProvider>
+        <theme-provider theme={themeDefault}>
+          <schema-form schema={schema} />
+        </theme-provider>
       );
     };
   },

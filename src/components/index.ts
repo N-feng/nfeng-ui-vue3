@@ -1,22 +1,18 @@
-import type { App } from "vue";
-import { SchemaForm, ObjectField, ArrayField, ThemeProvider } from "../../lib";
+import ObjectField from "./fields/ObjectField";
+import ArrayField from "./fields/ArrayField";
 
-const components = [SchemaForm, ObjectField, ArrayField, ThemeProvider];
+import HeaderLayout from "./layouts/HeaderLayout";
+import Row from "./row/Row";
+import SchemaForm from "./schema-form/SchemaForm";
+import ThemeProvider from "./schema-form/theme";
 
-/**
- * 组件注册
- * @param {App} app Vue 对象
- * @returns {Void}
- */
-const install = (app: App) => {
-  // 注册组件
-  components.forEach((component) => {
-    app.component(component.name, component);
-  });
-};
+const components = [
+  ObjectField,
+  ArrayField,
+  HeaderLayout,
+  Row,
+  SchemaForm,
+  ThemeProvider,
+];
 
-// 全部导出
-export default {
-  install,
-  ...components,
-};
+export default components;

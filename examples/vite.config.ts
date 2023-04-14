@@ -1,5 +1,6 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
+import vueJsx from "@vitejs/plugin-vue-jsx";
 import Components from "unplugin-vue-components/vite";
 import AutoImport from "unplugin-auto-import/vite";
 import { AntDesignVueResolver } from "unplugin-vue-components/resolvers";
@@ -17,8 +18,12 @@ export default defineConfig({
   },
   plugins: [
     vue(),
+    vueJsx({
+      // options are passed on to @vue/babel-plugin-jsx
+    }),
     Components({
       dirs: ["src/components", "src/packages"],
+      include: [/\.vue$/, /\.vue\?vue/, /\.tsx$/],
       resolvers: [
         AntDesignVueResolver({
           importStyle: "less",

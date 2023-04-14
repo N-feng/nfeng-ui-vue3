@@ -1,0 +1,64 @@
+@use "sass:map";
+
+$flex: (
+  // 默认值：nowrap
+  flex-wrap: (wrap wrap-reverse),
+  // 默认值：center
+  justify-content: (
+      flex-start flex-end space-between space-evenly space-around
+    ),
+  // 默认值：center
+  align-items: (stretch flex-start flex-end baseline),
+  // 默认值：stretch
+  align-content: (center flex-start flex-end space-between space-around)
+);
+
+// flex布局
+@mixin flex-layout($blocks) {
+  @each $block in $blocks {
+    %#{$block} {
+      flex-direction: $block;
+      align-content: stretch;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @include b($block) {
+      display: flex;
+      flex-wrap: nowrap;
+
+      @extend %#{$block};
+
+      @include m(inline) {
+        display: inline-flex;
+        flex-wrap: nowrap;
+
+        @extend %#{$block};
+      }
+
+      @each $value in map.get($flex, flex-wrap) {
+        @include m($value) {
+          display: flex;
+          flex-wrap: $value;
+
+          @extend %#{$block};
+        }
+
+        @include m(inline__#{$value}) {
+          display: inline-flex;
+          flex-wrap: $value;
+
+          @extend %#{$block};
+        }
+      }
+    }
+  }
+
+  @each $name, $values in map.remove($flex, flex-wrap) {
+    @each $value in $values {
+      .#{$name}__#{$value} {
+        #{$name}: $value;
+      }
+    }
+  }
+}
