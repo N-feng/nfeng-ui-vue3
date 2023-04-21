@@ -1,0 +1,17 @@
+$with: (
+  100p: 100%,
+  180: 180px,
+  400: 400px,
+);
+
+@each $k, $v in $with {
+  .w-#{$k} {
+    width: #{$v} !important;
+  }
+  .max-w-#{$k} {
+    max-width: #{$v} !important;
+  }
+  .min-w-#{$k} {
+    min-width: #{$v} !important;
+  }
+}

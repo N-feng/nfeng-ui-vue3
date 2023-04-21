@@ -1,0 +1,27 @@
+// HeaderLayout
+.ant-layout-header {
+  height: 48px;
+  padding: 0 16px;
+  line-height: 48px;
+  background-color: #ff6720;
+}
+
+// HeaderSystemMenu
+.ant-menu-horizontal {
+    width: calc(100% - 200px);
+    background-color: #ff6720;
+    border-bottom: none;
+
+    & > .ant-menu-item {
+      color: #fff !important;
+
+      &:hover,
+      &.ant-menu-item-selected {
+        font-weight: 500;
+
+        &::after {
+          border-color: #fff !important;
+        }
+      }
+    }
+  }

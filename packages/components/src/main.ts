@@ -6,6 +6,6 @@ import Nfeng from "./index";
 
 const app = createApp(App);
 
-app.use(Nfeng);
 app.use(antdIcons);
+app.use(Nfeng);
 app.mount("#app");

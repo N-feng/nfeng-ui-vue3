@@ -1,33 +1,33 @@
-@mixin margin-init($max: 30, $interval: 5, $direction: true true true true true) {
+@mixin padding-init($max: 30, $interval: 5, $direction: true true true true true) {
   @for $i from $interval through $max {
     @if $i % $interval ==0 {
       @if(nth($direction, 1)) {
-        .mt#{$i} {
-          margin-top: $i+px;
+        .pt-#{$i} {
+          padding-top: $i+px;
         }
       }
 
       @if(nth($direction, 2)) {
-        .mr#{$i} {
-          margin-right: $i+px;
+        .pr-#{$i} {
+          padding-right: $i+px;
         }
       }
 
       @if(nth($direction, 3)) {
-        .mb#{$i} {
-          margin-bottom: $i+px;
+        .pb-#{$i} {
+          padding-bottom: $i+px;
         }
       }
 
       @if(nth($direction, 4)) {
-        .ml#{$i} {
-          margin-left: $i+px;
+        .pl-#{$i} {
+          padding-left: $i+px;
         }
       }
 
       @if(nth($direction, 5)) {
-        .m#{$i} {
-          margin: $i+px;
+        .p-#{$i} {
+          padding: $i+px;
         }
       }
 

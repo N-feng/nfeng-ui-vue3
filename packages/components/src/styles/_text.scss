@@ -1,0 +1,23 @@
+@mixin text-line($line: 1) {
+  display: -webkit-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: $line;
+  -webkit-box-orient: vertical;
+  word-break: break-all;
+}
+
+@for $num from 1 through 2 {
+  .text-#{$num}-line {
+    @include text-line($num);
+  }
+}
+
+.text-nowrap {
+  white-space: nowrap;
+}
+
+.text-wrap {
+  word-break: break-word;
+  white-space: pre-line;
+}

@@ -1,0 +1,18 @@
+$color: (
+  fff: #fff,
+  1c1d21: #1c1d21,
+  262626: #262626,
+  76777b: #76777b,
+);
+
+@each $k, $v in $color {
+  .c-#{$k} {
+    color: #{$v} !important;
+  }
+}
+
+@each $k, $v in $color {
+  .bg-#{$k} {
+    background-color: #{$v} !important;
+  }
+}

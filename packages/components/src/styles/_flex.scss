@@ -1,12 +1,10 @@
-@use "sass:map";
+@use 'sass:map';
 
 $flex: (
   // 默认值：nowrap
   flex-wrap: (wrap wrap-reverse),
   // 默认值：center
-  justify-content: (
-      flex-start flex-end space-between space-evenly space-around
-    ),
+  justify-content: (flex-start flex-end space-between space-evenly space-around),
   // 默认值：center
   align-items: (stretch flex-start flex-end baseline),
   // 默认值：stretch

@@ -1,5 +1,3 @@
-
-
 export default defineComponent({
   name: "Row",
   props: {
@@ -10,7 +8,7 @@ export default defineComponent({
       default: "center",
     },
     align: {
-      type: Object as PropType<string | string[]>,
+      type: [String, Array<string>],
       default: "center",
     },
     wrap: Boolean,
@@ -20,7 +18,7 @@ export default defineComponent({
     const classObjRef = computed(() => {
       const list = [];
       list.push(
-        `ygp-row${props.reverse ? "-reverse" : ""}${
+        `n-row${props.reverse ? "-reverse" : ""}${
           props.inline
             ? `--inline${
                 props.wrap
@@ -60,6 +58,6 @@ export default defineComponent({
       const classObj = classObjRef.value;
 
       return <div class={classObj}>{slots.default && slots.default()}</div>;
-    }
+    };
   },
 });
