@@ -1,6 +1,6 @@
 import { defineConfig } from "vite";
-import vue from "@vitejs/plugin-vue";
-import vueJsx from "@vitejs/plugin-vue-jsx";
+import Vue from "@vitejs/plugin-vue";
+import VueJsx from "@vitejs/plugin-vue-jsx";
 import Components from "unplugin-vue-components/vite";
 import AutoImport from "unplugin-auto-import/vite";
 import { AntDesignVueResolver } from "unplugin-vue-components/resolvers";
@@ -17,8 +17,10 @@ export default defineConfig({
     port: Number(process.env.SERVER_PORT || 3000),
   },
   plugins: [
-    vue(),
-    vueJsx({
+    Vue({
+      include: [/\.vue$/, /\.md$/],
+    }),
+    VueJsx({
       // options are passed on to @vue/babel-plugin-jsx
     }),
     Components({
@@ -54,3 +56,4 @@ export default defineConfig({
     },
   },
 });
+
