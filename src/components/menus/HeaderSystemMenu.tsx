@@ -1,3 +1,4 @@
+import { defineComponent } from "vue";
 import Row from "../row/Row";
 
 export default defineComponent({

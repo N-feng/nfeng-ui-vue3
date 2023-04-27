@@ -23,7 +23,8 @@ dist-ssr
 *.sln
 *.sw?
 
-yarn.lock
 package-lock.json
+pnpm-lock.yaml
+yarn.lock
 
 .vitepress/cache

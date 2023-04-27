@@ -1,4 +1,4 @@
-import { DefineComponent, PropType } from "vue";
+import { PropType, defineComponent, DefineComponent } from "vue";
 
 export enum SchemaTypes {
   "NUMBER" = "number",
@@ -46,13 +46,13 @@ export const FieldPropsDefine = {
     required: true,
   },
   value: {},
-} as const
+} as const;
 
 export const TypeHelperComponent = defineComponent({
   props: FieldPropsDefine,
-})
+});
 
-export type CommonFieldType = typeof TypeHelperComponent
+export type CommonFieldType = typeof TypeHelperComponent;
 
 export const CommonWidgetPropsDefine = {
   value: {},
@@ -71,8 +71,8 @@ export const CommonWidgetPropsDefine = {
   //   type: Object as PropType<{ [keys: string]: any }>,
   // },
   placeholder: {
-    type: String
-  }
+    type: String,
+  },
 } as const;
 
 export const SelectionWidgetPropsDefine = {
@@ -80,8 +80,8 @@ export const SelectionWidgetPropsDefine = {
   options: {
     type: Array as PropType<
       {
-        label: string
-        value: string | number
+        label: string;
+        value: string | number;
       }[]
     >,
     require: true,
@@ -89,8 +89,8 @@ export const SelectionWidgetPropsDefine = {
   placeholder: {
     type: String,
     default: "请选择",
-  }
-} as const
+  },
+} as const;
 
 export type CommonWidgetDefine = DefineComponent<
   typeof CommonWidgetPropsDefine,
@@ -102,7 +102,7 @@ export type SelectionWidgetDefine = DefineComponent<
   typeof SelectionWidgetPropsDefine,
   {},
   {}
->
+>;
 
 export enum SelectionWidgetNames {
   SelectionWidget = "SelectionWidget",
@@ -115,10 +115,10 @@ export enum CommonWidgetNames {
 
 export interface Theme {
   widgets: {
-    [SelectionWidgetNames.SelectionWidget]: SelectionWidgetDefine
-    [CommonWidgetNames.TextWidget]: CommonWidgetDefine
-    [CommonWidgetNames.NumberWidget]: CommonWidgetDefine
-  }
+    [SelectionWidgetNames.SelectionWidget]: SelectionWidgetDefine;
+    [CommonWidgetNames.TextWidget]: CommonWidgetDefine;
+    [CommonWidgetNames.NumberWidget]: CommonWidgetDefine;
+  };
 }
 
 interface ErrorSchemaObject {
