@@ -23,7 +23,8 @@
     "src/**/*.ts",
     "src/**/*.d.ts",
     "src/**/*.tsx",
-    "src/**/*.vue"
+    "src/**/*.vue",
+    "src/shims.d.ts",
   ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

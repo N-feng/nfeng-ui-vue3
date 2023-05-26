@@ -1,0 +1,32 @@
+%divider {
+  width: auto;
+  height: 1px;
+  background-color: #ebedf0;
+}
+%vertical {
+  width: 1px;
+  height: auto;
+}
+%virtual {
+  position: absolute;
+}
+
+@include b(divider) {
+  @extend %divider;
+
+  @include m(vertical) {
+    @extend %vertical;
+    @extend %divider;
+  }
+
+  @include m(virtual) {
+    @extend %virtual;
+    @extend %divider;
+  }
+
+  @include m(vertical__virtual) {
+    @extend %vertical;
+    @extend %virtual;
+    @extend %divider;
+  }
+}

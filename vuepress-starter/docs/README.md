@@ -1,5 +1,0 @@
----
-layout: CustomLayout
----
-
-# Hello VuePress

@@ -3,7 +3,7 @@ import { createApp } from 'vue'
 import App from './App'
 import router from "./router";
 import antdIcons from "@/plugins/antd-icons";
-import Nfeng from "nfeng-vue3-components";
+import Nfeng from "../../src";
 
 const app = createApp(App)
 

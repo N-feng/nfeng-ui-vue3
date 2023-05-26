@@ -1,4 +1,4 @@
-import type { App } from "vue";
+import { App } from "vue";
 import components from "./components";
 import "./styles/index.scss";
 
@@ -7,7 +7,7 @@ import "./styles/index.scss";
  * @param {App} app Vue 对象
  * @returns {Void}
  */
-const install = (app: App) => {
+const install = (app: App<Element>) => {
   // 注册组件
   components.forEach((component) => app.component(component.name, component));
 };

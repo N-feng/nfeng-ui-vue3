@@ -1,0 +1,39 @@
+// _bem.scss
+$namespace: 'n';
+$element-separator: '__';
+$modifier-separator: '--';
+$state-prefix: 'is-';
+$B: null;
+$parentSelector: null;
+
+// _color.scss
+$color: (
+  fff: #fff,
+  1c1d21: #1c1d21,
+  262626: #262626,
+  76777b: #76777b,
+);
+
+// _flex.scss
+$flex: (
+  // 默认值：nowrap
+  flex-wrap: (wrap wrap-reverse),
+  // 默认值：center
+  justify-content: (flex-start flex-end space-between space-evenly space-around),
+  // 默认值：center
+  align-items: (stretch flex-start flex-end baseline),
+  // 默认值：stretch
+  align-content: (center flex-start flex-end space-between space-around)
+);
+
+// _height.scss
+$height: (
+  100vh: 100vh,
+);
+
+// _width.scss
+$width: (
+  100p: 100%,
+  180: 180px,
+  400: 400px,
+);

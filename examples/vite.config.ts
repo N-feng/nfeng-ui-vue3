@@ -1,4 +1,5 @@
 import { defineConfig } from "vite";
+import VitePluginVuedoc, { vueDocFiles } from "vite-plugin-vuedoc";
 import Vue from "@vitejs/plugin-vue";
 import VueJsx from "@vitejs/plugin-vue-jsx";
 import Components from "unplugin-vue-components/vite";
@@ -17,8 +18,12 @@ export default defineConfig({
     port: Number(process.env.SERVER_PORT || 3000),
   },
   plugins: [
+    VitePluginVuedoc({
+      markdownIt: { plugins: [] },
+      previewComponent: 'preview',
+    }),
     Vue({
-      include: [/\.vue$/, /\.md$/],
+      include: [...vueDocFiles],
     }),
     VueJsx({
       // options are passed on to @vue/babel-plugin-jsx

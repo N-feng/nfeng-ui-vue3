@@ -25,3 +25,21 @@
       }
     }
   }
+
+  // SiderLayout
+  .ant-menu-inline,
+  .ant-menu-inline-collapsed {
+    height: calc(100% - 53px);
+    margin-top: 4px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border-right: 0;
+  }
+
+  .icons__wrapper {
+    position: absolute;
+    bottom: 16px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+  }

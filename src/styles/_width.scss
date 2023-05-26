@@ -1,10 +1,4 @@
-$with: (
-  100p: 100%,
-  180: 180px,
-  400: 400px,
-);
-
-@each $k, $v in $with {
+@each $k, $v in $width {
   .w-#{$k} {
     width: #{$v} !important;
   }

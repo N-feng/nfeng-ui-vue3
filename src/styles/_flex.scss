@@ -1,16 +1,5 @@
 @use 'sass:map';
 
-$flex: (
-  // 默认值：nowrap
-  flex-wrap: (wrap wrap-reverse),
-  // 默认值：center
-  justify-content: (flex-start flex-end space-between space-evenly space-around),
-  // 默认值：center
-  align-items: (stretch flex-start flex-end baseline),
-  // 默认值：stretch
-  align-content: (center flex-start flex-end space-between space-around)
-);
-
 // flex布局
 @mixin flex-layout($blocks) {
   @each $block in $blocks {
