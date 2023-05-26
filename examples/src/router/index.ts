@@ -14,9 +14,9 @@ const expandRoutes = () => {
   data.forEach((item: any) => {
     if (item.children) {
       item.children.forEach((child: any) => {
-        child.path = item.path + child.path
         current.push({
           ...child,
+          path: config.baseUrl + item.path + child.path,
           meta: {
             title: child.title,
             ...(child.meta || {}),
@@ -26,6 +26,7 @@ const expandRoutes = () => {
     } else {
       current.push({
         ...item,
+        path: config.baseUrl + item.path,
         meta: {
           title: item.title,
           ...(item.meta || {}),
@@ -37,19 +38,23 @@ const expandRoutes = () => {
   return current
 }
 
-const routes = [
-  {
-    path: "/",
-    name: "Layout",
-    component: Layout,
-    redirect: config.routes[0].path,
-    children: expandRoutes(),
-  }
-]
+const routes = expandRoutes()
 
 const router = _createRouter({
   history: createWebHistory(),
-  routes: routes,
+  routes: [
+    {
+      path: '/',
+      redirect: '/component/introduce'
+    },
+    {
+      path: "/component",
+      name: "Layout",
+      component: Layout,
+      redirect: config.baseUrl + config.routes[0].path,
+      children: routes,
+    }
+  ],
 })
 
 export default router;

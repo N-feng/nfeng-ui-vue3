@@ -11,7 +11,7 @@ export default defineComponent({
       return (
         <a-layout-header>
           <RouterLink to={"/"} class={"w-180 f-l"}>
-            <Image src={"logo.png"} height={24} />
+            {/* <Image src={"logo.png"} height={24} /> */}
           </RouterLink>
           <Row justify="space-between" class={"text-nowrap"}>
             <HeaderSystemMenu />

@@ -5,51 +5,67 @@ import { SelectEventHandler } from "ant-design-vue/es/menu/src/interface";
 import { uResolve } from "../../utils/path";
 
 export interface SystemMenu {
+  tenementId: number;
   baseUrl: string;
   title: string;
-  routes: Menu[];
+  menuList: Menu[];
+  redirectUrl?: string;
 }
 
 export default defineComponent({
   name: "SiderSystemMenu",
   props: {
     systemMenus: {
-      type: Object as PropType<SystemMenu>,
+      type: Array as PropType<SystemMenu[]>,
+      required: true,
+    },
+    headerSelectedKeys: {
+      type: Array as PropType<String[]>,
       required: true,
     },
   },
   setup(props) {
-    const selectedKeysRef = ref<string[]>([])
+    const openKeysRef = ref<string[]>([]);
+    const selectedKeysRef = ref<string[]>([]);
     const route = useRoute();
     const router = useRouter();
     const activeKey = ref<string>("");
-    console.log("activeKey: ", activeKey);
+    const { systemMenus, headerSelectedKeys } = props;
+
+    const systemMenuRef = computed(() =>
+      systemMenus.find((i: SystemMenu) => i.baseUrl === headerSelectedKeys[0])
+    );
+
     const handleSelect: SelectEventHandler = ({ key, item }) => {
       if (item.href) {
         window.open(item.href);
       } else {
-        const path = key.toString().replace(props.systemMenus.baseUrl, "");
-        router.push(path);
+        router.push(`${key}`);
       }
       // activeKey.value = path as string;
     };
 
     watchEffect(() => {
-      const {path} = uResolve(route.path)
-      console.log('path: ', path);
+      const { path, subPaths } = uResolve(route.path);
 
-      selectedKeysRef.value = [`${props.systemMenus.baseUrl}${path}`];
-      console.log('`${props.systemMenus.baseUrl}${path}`: ', `${props.systemMenus.baseUrl}${path}`);
+      openKeysRef.value = subPaths.map(
+        (item) => `${headerSelectedKeys}${item}`
+      );
+      selectedKeysRef.value = [`${headerSelectedKeys}${path}`];
     });
 
     return () => {
-      const { systemMenus } = props;
-      console.log('systemMenus: ', systemMenus);
+      const openKeys = openKeysRef.value;
       const selectedKeys = selectedKeysRef.value;
-      console.log('selectedKeys: ', selectedKeys);
+      const systemMenu = systemMenuRef.value;
       return (
-        <a-menu mode={"inline"} selectedKeys={selectedKeys} onSelect={handleSelect}>
-          <MenuTree menus={systemMenus.routes} baseUrl={systemMenus.baseUrl} />
+        <a-menu
+          mode={"inline"}
+          openKeys={openKeys}
+          selectedKeys={selectedKeys}
+          onSelect={handleSelect}
+        >
+          <MenuTree menus={systemMenu?.menuList} baseUrl={systemMenu?.baseUrl} />
         </a-menu>
       );
     };

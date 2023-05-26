@@ -1,12 +1,17 @@
 import { PropType } from "vue";
 import { SystemMenu } from "../menus/SiderSystemMenu";
 import SiderSystemMenu from "../menus/SiderSystemMenu";
+import Divider from "../divider/Divider";
 
 export default defineComponent({
   name: "SiderLayout",
   props: {
     systemMenus: {
-      type: Object as PropType<SystemMenu>,
+      type: Array as PropType<SystemMenu[]>,
+      required: true,
+    },
+    headerSelectedKeys: {
+      type: Array as PropType<String[]>,
       required: true,
     },
   },
@@ -18,11 +23,14 @@ export default defineComponent({
     };
     return () => {
       const collapsed = collapsedRef.value;
-      const { systemMenus } = props;
+      const { systemMenus, headerSelectedKeys } = props;
       return (
         <a-layout-sider theme="light" collapsed={collapsed}>
-          <SiderSystemMenu systemMenus={systemMenus} />
-          <divider />
+          <SiderSystemMenu
+            systemMenus={systemMenus}
+            headerSelectedKeys={headerSelectedKeys}
+          />
+          <Divider />
           <div
             class="icons__wrapper"
             style={{ left: `${collapsed ? 32 : 24}px` }}

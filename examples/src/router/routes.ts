@@ -2,6 +2,7 @@ import Introduce from "../__docs__/Introduct.md";
 import Guide from "../__docs__/Guide.md";
 import Theme from "../__docs__/styles/Theme.md";
 import Image from "../__docs__/components/Image.md";
+import Divider from "../__docs__/components/Divider.md";
 
 export const routes = [
   {
@@ -32,7 +33,7 @@ export const routes = [
   {
     path: "/basic-component",
     title: "基础组件",
-    children: [{ path: "/divider", title: "Divider 分割线" }],
+    children: [{ path: "/divider", title: "Divider 分割线", component: Divider }],
   },
 ];
 

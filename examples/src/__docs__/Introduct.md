@@ -12,7 +12,7 @@ yarn add nfeng-ui-vue3 -S
 
 ## 使用
 
-<n-image />
+<n-divider />
 
 `src/main.ts`
 

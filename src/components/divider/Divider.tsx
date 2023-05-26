@@ -1,10 +1,12 @@
-import { KEY_CLASS_NAME } from "../../global/variable";
+import { getPrefix } from "../../_utils/common";
 
 import type { CSSProperties } from "vue";
 type CSSPositionProperties = Pick<
   CSSProperties,
-  'height' | 'width' | 'marginLeft'
->
+  "height" | "width" | "marginLeft"
+>;
+
+const [prefixName, prefixCls] = getPrefix("divider");
 
 const props = {
   vertical: {
@@ -22,11 +24,11 @@ const props = {
 } as const;
 
 export default defineComponent({
-  name: "Divider",
+  name: prefixName,
   props: props,
   setup(props) {
     const classObjRef = computed(() => ({
-      [`${KEY_CLASS_NAME}divider${
+      [`${prefixCls}${
         props.vertical
           ? `--vertical${props.virtual ? "__virtual" : ""}`
           : `${props.virtual ? "--virtual" : ""}`
@@ -36,9 +38,7 @@ export default defineComponent({
     return () => {
       const classObj = classObjRef.value;
 
-      return (
-        <div class={classObj} />
-      )
-    }
+      return <div class={classObj} />;
+    };
   },
 });
