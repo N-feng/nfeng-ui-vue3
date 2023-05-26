@@ -1,0 +1,19 @@
+@each $k, $v in $margin {
+  .m#{$k} {
+    @if str-index($k, l) == 1 {
+      margin-left: #{$v} !important;
+    } @else if str-index($k, r) == 1 {
+      margin-right: #{$v} !important;
+    } @else if str-index($k, t) == 1 {
+      margin-top: #{$v} !important;
+    } @else if str-index($k, b) == 1 {
+      margin-bottom: #{$v} !important;
+    } @else if str-index($k, v) == 1 {
+      margin: #{$v} 0 !important;
+    } @else if str-index($k, h) == 1 {
+      margin: 0 #{$v} !important;
+    } @else if str-index($k, g) == 1 {
+      margin: #{$v} !important;
+    }
+  }
+}

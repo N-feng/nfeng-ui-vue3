@@ -37,13 +37,12 @@ const expandRoutes = () => {
   return current
 }
 
-console.log(expandRoutes());
-
 const routes = [
   {
     path: "/",
     name: "Layout",
     component: Layout,
+    redirect: config.routes[0].path,
     children: expandRoutes(),
   }
 ]

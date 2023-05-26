@@ -1,6 +1,7 @@
 import { PropType } from "vue";
 
 export interface Menu {
+  href: string;
   path: string;
   icon: string;
   level: number;
@@ -36,7 +37,7 @@ const MenuTree = defineComponent({
                 <MenuTree menus={menu.children} baseUrl={baseUrl} />
               </a-sub-menu>
             ) : (
-              <a-menu-item key={`${baseUrl}${menu.path}`}>{menu.title}</a-menu-item>
+              <a-menu-item key={`${baseUrl}${menu.path}`} href={menu.href}>{menu.title}</a-menu-item>
             )}
           </>
         );

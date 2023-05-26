@@ -1,4 +1,4 @@
-import { KEY_COMPONENT_NAME } from "../../global/variable";
+import { KEY_CLASS_NAME } from "../../global/variable";
 
 import type { CSSProperties } from "vue";
 type CSSPositionProperties = Pick<
@@ -26,7 +26,7 @@ export default defineComponent({
   props: props,
   setup(props) {
     const classObjRef = computed(() => ({
-      [`${KEY_COMPONENT_NAME}divider${
+      [`${KEY_CLASS_NAME}divider${
         props.vertical
           ? `--vertical${props.virtual ? "__virtual" : ""}`
           : `${props.virtual ? "--virtual" : ""}`

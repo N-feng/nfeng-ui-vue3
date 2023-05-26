@@ -19,8 +19,8 @@ export default defineConfig({
   },
   plugins: [
     VitePluginVuedoc({
-      markdownIt: { plugins: [] },
-      previewComponent: 'preview',
+      // markdownIt: { plugins: [] },
+      // previewComponent: 'preview',
     }),
     Vue({
       include: [...vueDocFiles],

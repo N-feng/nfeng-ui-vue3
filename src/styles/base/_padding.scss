@@ -1,0 +1,19 @@
+@each $k, $v in $padding {
+  .p#{$k} {
+    @if str-index($k, l) == 1 {
+      padding-left: #{$v} !important;
+    } @else if str-index($k, r) == 1 {
+      padding-right: #{$v} !important;
+    } @else if str-index($k, t) == 1 {
+      padding-top: #{$v} !important;
+    } @else if str-index($k, b) == 1 {
+      padding-bottom: #{$v} !important;
+    } @else if str-index($k, v) == 1 {
+      padding: #{$v} 0 !important;
+    } @else if str-index($k, h) == 1 {
+      padding: 0 #{$v} !important;
+    } @else if str-index($k, d) == 1 {
+      padding: #{$v} !important;
+    }
+  }
+}

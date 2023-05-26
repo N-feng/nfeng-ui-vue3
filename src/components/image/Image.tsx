@@ -1,7 +1,10 @@
+import { getPrefix } from "../../_utils/common";
 import { defineComponent } from "vue";
 
-export default defineComponent({
-  name: "Image",
+const [prefixName, prefixCls] = getPrefix("image");
+
+const Image = defineComponent({
+  name: prefixName,
   props: {
     src: {
       type: String,
@@ -41,6 +44,7 @@ export default defineComponent({
       let url = urlRef.value;
       return (
         <img
+          class={prefixCls}
           src={url}
           width={size || width}
           height={size || height}
@@ -52,3 +56,5 @@ export default defineComponent({
     };
   },
 });
+
+export default Image;

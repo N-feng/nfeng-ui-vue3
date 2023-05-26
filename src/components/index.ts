@@ -7,6 +7,7 @@ import Divider from "./divider/Divider";
 import Image from "./image/Image";
 import Row from "./row/Row";
 
+import ContentLayout from "./layouts/ContentLayout";
 import HeaderLayout from "./layouts/HeaderLayout";
 import SiderLayout from "./layouts/SiderLayout";
 
@@ -20,6 +21,7 @@ const components = [
   Divider,
   Image,
   Row,
+  ContentLayout,
   HeaderLayout,
   SiderLayout,
   HeaderSystemMenu,

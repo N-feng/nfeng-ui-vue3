@@ -1,20 +1,29 @@
 @import "./variable";
 
-@import "./bem";
-@import "./color";
-@import "./divider";
-@import "./flex";
-@import "./height";
-@import "./layout";
-@import "./margin";
-@import "./spacing";
-@import "./text";
-@import "./width";
+@import "./mixin/bem";
+@import "./mixin/flex";
 
-@include margin-init(60, 5, true true true true true);
-@include padding-init(60, 5, true true true true true);
+@import "./base/color";
+@import "./base/divider";
+@import "./base/height";
+@import "./base/margin";
+@import "./base/padding";
+@import "./base/text";
+@import "./base/width";
+
+@import "./components/image";
+
+@import "./reset/layout";
+@import "./reset/vuedoc";
+
+// Row.tsx
 @include flex-layout(row row-reverse);
 
 .f-l {
   float: left;
+}
+
+.vuedoc {
+  background-color: white;
+  padding: 15px;
 }
