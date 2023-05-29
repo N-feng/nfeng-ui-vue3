@@ -6,7 +6,7 @@ type CSSPositionProperties = Pick<
   "height" | "width" | "marginLeft"
 >;
 
-const [prefixName, prefixCls] = getPrefix("divider");
+const { prefixName, prefixCls } = getPrefix("divider");
 
 const props = {
   vertical: {

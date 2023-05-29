@@ -16,8 +16,8 @@ import { KEY_CLASS_NAME, KEY_COMPONENT_NAME } from "../global/variable";
 export function getPrefix<T extends string>(name: T) {
   const compName = upperFirst(camelize(name));
 
-  return [
-    `${KEY_COMPONENT_NAME}${compName}`,
-    `${KEY_CLASS_NAME}${kebabCase(name)}`,
-  ];
+  return {
+    prefixName: `${KEY_COMPONENT_NAME}${compName}`,
+    prefixCls: `${KEY_CLASS_NAME}${kebabCase(name)}`,
+  };
 }

@@ -3,9 +3,14 @@
 // import ObjectField from "./fields/ObjectField";
 // import ArrayField from "./fields/ArrayField";
 
-import Divider from "./divider/Divider";
-import Image from "./image/Image";
 import Row from "./row/Row";
+
+import Form from "./form/Form";
+import Image from "./image/Image";
+
+import Divider from "./divider/Divider";
+
+import Input from "./input/Input";
 
 import ContentLayout from "./layouts/ContentLayout";
 import HeaderLayout from "./layouts/HeaderLayout";
@@ -18,9 +23,11 @@ const components = [
   // ThemeProvider,
   // ObjectField,
   // ArrayField,
-  Divider,
-  Image,
   Row,
+  Form,
+  Image,
+  Divider,
+  Input,
   ContentLayout,
   HeaderLayout,
   SiderLayout,

@@ -1,7 +1,7 @@
 import { getPrefix } from "../../_utils/common";
 import { defineComponent } from "vue";
 
-const [prefixName, prefixCls] = getPrefix("image");
+const { prefixName, prefixCls } = getPrefix("image");
 
 const Image = defineComponent({
   name: prefixName,
