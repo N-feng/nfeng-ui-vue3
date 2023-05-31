@@ -1,4 +1,4 @@
-import { TableOption } from "./types";
+import { TableOption } from "../components/form/types";
 
 export default function useInit(option: TableOption) {
   let tableOption = option;

@@ -1,7 +1,7 @@
 import { defineComponent } from "vue";
-import SchemaItem from "../schema-form/SchemaItem";
-import { FieldPropsDefine } from "../schema-form/types";
-import { isObject } from "../schema-form/utils";
+import SchemaItem from "../SchemaItem";
+import { FieldPropsDefine } from "../types";
+import { isObject } from "../utils";
 
 export default defineComponent({
   name: "ObjectField",

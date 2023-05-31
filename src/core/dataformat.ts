@@ -34,7 +34,7 @@ export const calcCount = (ele: Column, spanDefault = 12, init = false) => {
  * 动态获取组件
  */
 export const getComponent = (type: string, component: any) => {
-  let result = type || 'Input';
+  let result = type || 'input';
   if (!validatenull(component)) {
     return component;
   } else if (ARRAY_LIST.includes(type)) {
@@ -48,7 +48,7 @@ export const getComponent = (type: string, component: any) => {
   } else if (INPUT_LIST.includes(type)) {
     result = 'input-' + type;
   }
-  return KEY_COMPONENT_NAME + result;
+  return KEY_CLASS_NAME + result;
 };
 
 /**

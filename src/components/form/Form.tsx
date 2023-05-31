@@ -3,11 +3,12 @@ import { getPrefix } from "../../_utils/common";
 import FormMenu from "./Menu";
 import FormTemp from "./FormTemp";
 import { TableOption, Column } from "./types";
-import useInit from "./useInIt";
+import useInit from "../../_hooks/useInIt";
 import { getColumn } from "../../utils/util";
 import config from "./config";
 import { calcCount, formInitVal } from "../../core/dataformat";
 import { validatenull } from "../../utils/validate";
+import { globalOptions } from "../../theme-antd";
 
 const { prefixName, prefixCls } = getPrefix("Form");
 
@@ -91,7 +92,9 @@ export default defineComponent({
     }
 
     let formData = dataFormat();
-    console.log('formData: ', formData);
+    console.log("formData: ", formData);
+
+    const { COMPONENT_MAP } = globalOptions;
 
     return () => {
       const columnOption = columnOptionRef.value;
@@ -102,16 +105,23 @@ export default defineComponent({
       return (
         <div>
           <>
+            {h(COMPONENT_MAP.form, null, {
+              default: () => {
+                return <>{h(COMPONENT_MAP.row, {
+                  span: 24
+                })}</>;
+              },
+            })}
+          </>
+          <>
             {columnOption.map((item) => {
               return (
                 <>
                   {item.column?.map((column) => {
-                    return (
-                      <FormTemp column={column}></FormTemp>
-                    )
+                    return <FormTemp column={column}></FormTemp>;
                   })}
                 </>
-              )
+              );
             })}
           </>
           {!isDetail && !isMenu ? (
@@ -124,6 +134,6 @@ export default defineComponent({
           )}
         </div>
       );
-    }
-  }
-})
+    };
+  },
+});

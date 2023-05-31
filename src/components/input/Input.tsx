@@ -7,7 +7,7 @@ export default defineComponent({
   setup() {
     return () => {
       return (
-        <div>Input</div>
+        <a-input></a-input>
       )
     }
   }

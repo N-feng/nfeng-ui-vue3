@@ -1,10 +1,5 @@
-// import SchemaForm from "./schema-form/SchemaForm";
-// import ThemeProvider from "./schema-form/theme";
-// import ObjectField from "./fields/ObjectField";
-// import ArrayField from "./fields/ArrayField";
-
 import Row from "./row/Row";
-
+import Theme from "../_hooks/useTheme";
 import Form from "./form/Form";
 import Image from "./image/Image";
 
@@ -19,11 +14,8 @@ import SiderLayout from "./layouts/SiderLayout";
 import HeaderSystemMenu from "./menus/HeaderSystemMenu";
 
 const components = [
-  // SchemaForm,
-  // ThemeProvider,
-  // ObjectField,
-  // ArrayField,
   Row,
+  Theme,
   Form,
   Image,
   Divider,
