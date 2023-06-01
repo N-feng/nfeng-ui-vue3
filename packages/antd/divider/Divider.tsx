@@ -1,4 +1,4 @@
-import { getPrefix } from "../../_utils/common";
+import { getPrefix } from "../../../src/_utils/common";
 
 import type { CSSProperties } from "vue";
 type CSSPositionProperties = Pick<

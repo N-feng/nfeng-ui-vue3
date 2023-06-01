@@ -1,6 +1,6 @@
 import { PropType } from "vue";
-import { Column } from "./types";
-import { getComponent } from "../../core/dataformat";
+import { Column } from "../../../antd/form/types";
+import { getComponent } from "../../../../src/core/dataformat";
 
 export default defineComponent({
   props: {
@@ -10,6 +10,7 @@ export default defineComponent({
   },
   setup(props) {
     const { column } = props;
+
     return () => {
       return (
         <>

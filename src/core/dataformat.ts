@@ -1,4 +1,4 @@
-import { Column } from "../components/form/types";
+import { Column } from "../../packages/antd/form/types";
 import { validatenull } from "../utils/validate";
 import {
   KEY_COMPONENT_NAME,

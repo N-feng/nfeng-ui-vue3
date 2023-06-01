@@ -1,5 +1,5 @@
 import { RowProps } from "ant-design-vue";
-import useAttrs from "../../../_hooks/useAttrs";
+import useAttrs from "../../../src/_hooks/useAttrs";
 
 type ARowProps = {} & RowProps
 

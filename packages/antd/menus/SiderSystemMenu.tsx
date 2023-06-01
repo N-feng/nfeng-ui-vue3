@@ -2,7 +2,7 @@ import { PropType } from "vue";
 
 import MenuTree, { Menu } from "./MenuTree";
 import { SelectEventHandler } from "ant-design-vue/es/menu/src/interface";
-import { uResolve } from "../../utils/path";
+import { uResolve } from "../../../src/utils/path";
 
 export interface SystemMenu {
   tenementId: number;

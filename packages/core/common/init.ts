@@ -1,4 +1,4 @@
-import { TableOption } from "../components/form/types";
+import { TableOption } from "../../antd/form/types";
 
 export default function useInit(option: TableOption) {
   let tableOption = option;

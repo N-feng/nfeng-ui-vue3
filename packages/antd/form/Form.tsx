@@ -1,14 +1,13 @@
 import { PropType } from "vue";
-import { getPrefix } from "../../_utils/common";
+import { getPrefix } from "../../../src/_utils/common";
 import FormMenu from "./Menu";
-import FormTemp from "./FormTemp";
+import FormTemp from "../../core/components/form";
 import { TableOption, Column } from "./types";
-import useInit from "../../_hooks/useInIt";
-import { getColumn } from "../../utils/util";
+import useInit from "../../core/common/init";
+import { getColumn } from "../../../src/utils/util";
 import config from "./config";
-import { calcCount, formInitVal } from "../../core/dataformat";
-import { validatenull } from "../../utils/validate";
-import { globalOptions } from "../../theme-antd";
+import { calcCount, formInitVal } from "../../../src/core/dataformat";
+import { validatenull } from "../../../src/utils/validate";
 
 const { prefixName, prefixCls } = getPrefix("Form");
 
@@ -92,9 +91,6 @@ export default defineComponent({
     }
 
     let formData = dataFormat();
-    console.log("formData: ", formData);
-
-    const { COMPONENT_MAP } = globalOptions;
 
     return () => {
       const columnOption = columnOptionRef.value;
@@ -104,34 +100,27 @@ export default defineComponent({
 
       return (
         <div>
-          <>
-            {h(COMPONENT_MAP.form, null, {
-              default: () => {
-                return <>{h(COMPONENT_MAP.row, {
-                  span: 24
-                })}</>;
-              },
-            })}
-          </>
-          <>
-            {columnOption.map((item) => {
-              return (
-                <>
-                  {item.column?.map((column) => {
-                    return <FormTemp column={column}></FormTemp>;
-                  })}
-                </>
-              );
-            })}
-          </>
-          {!isDetail && !isMenu ? (
-            <FormMenu
-              parentOption={parentOption}
-              v-slots={{ menuForm: () => slots.menuForm && slots.menuForm() }}
-            />
-          ) : (
-            ""
-          )}
+          <a-form>
+            <a-row span={24}>
+              {columnOption.map((item) => {
+                return (
+                  <>
+                    {item.column?.map((column) => {
+                      return <FormTemp column={column} />;
+                    })}
+                    {!isDetail && !isMenu && (
+                      <FormMenu
+                        parentOption={parentOption}
+                        v-slots={{
+                          menuForm: () => slots.menuForm && slots.menuForm(),
+                        }}
+                      />
+                    )}
+                  </>
+                );
+              })}
+            </a-row>
+          </a-form>
         </div>
       );
     };

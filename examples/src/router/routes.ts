@@ -33,7 +33,7 @@ export const routes = [
     title: "数据展示",
     children: [
       { path: "/form", title: "Form 表单", component: Form },
-      { path: "/image", title: "Image 图片", component: Image },
+      // { path: "/image", title: "Image 图片", component: Image },
     ],
   },
   {

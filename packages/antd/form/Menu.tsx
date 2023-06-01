@@ -1,5 +1,5 @@
 import { PropType } from "vue";
-import { vaildData } from "../../utils/util";
+import { vaildData } from "../../../src/utils/util";
 import { TableOption, Column } from "./types";
 
 export default defineComponent({

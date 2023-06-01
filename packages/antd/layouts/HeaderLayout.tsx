@@ -2,7 +2,7 @@ import { defineComponent } from "vue";
 import { RouterLink } from "vue-router";
 import Image from "../image/Image";
 import HeaderSystemMenu from "../menus/HeaderSystemMenu";
-import Row from "../row/Row";
+import Row from "./Row";
 
 export default defineComponent({
   name: "HeaderLayout",

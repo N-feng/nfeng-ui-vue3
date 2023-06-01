@@ -1,8 +1,6 @@
 import { App } from "vue";
-import components from "./components";
-import "./styles/index.scss";
-import { useTheme } from "./_hooks/useTheme";
-import { globalOptions } from "./theme-antd";
+import components from "./ui/antd";
+import "../styles/index.scss";
 
 /**
  * 组件注册
