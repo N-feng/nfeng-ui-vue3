@@ -9,6 +9,7 @@ import {
   ARRAY_VALUE_LIST,
   MULTIPLE_LIST,
   RANGE_LIST,
+  SELECT_LIST,
 } from "../global/variable";
 
 /**
@@ -80,4 +81,18 @@ export const formInitVal = (list: Column[] = []) => {
   return {
     tableForm
   };
+};
+
+
+export const getPlaceholder = function (column: Column) {
+  const placeholder = column.placeholder;
+  const label = column.label;
+  if (validatenull(placeholder)) {
+    if (SELECT_LIST.includes(column.type)) {
+      return `请选择 ${label}`;
+    } else {
+      return `请输入 ${label}`;
+    }
+  }
+  return placeholder;
 };

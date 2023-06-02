@@ -3,6 +3,8 @@ let form = {
   name: "我是名字",
 };
 let option = {
+  menuSpan: 10,
+  menuPosition: "right",
   column: [
     {
       label: "姓名",

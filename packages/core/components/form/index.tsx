@@ -1,11 +1,12 @@
 import { PropType } from "vue";
 import { Column } from "../../../antd/form/types";
-import { getComponent } from "../../../../src/core/dataformat";
+import { getComponent, getPlaceholder } from "../../../../src/core/dataformat";
 
 export default defineComponent({
   props: {
     column: {
       type: Object as PropType<Column>,
+      required: true,
     },
   },
   setup(props) {
@@ -17,7 +18,10 @@ export default defineComponent({
           {h(
             resolveComponent(
               getComponent(column?.type as string, column?.component)
-            )
+            ),
+            {
+              placeholder: getPlaceholder(column),
+            }
           )}
         </>
       );

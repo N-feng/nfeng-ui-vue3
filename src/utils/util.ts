@@ -17,6 +17,19 @@ export const getColumn = (column: any) => {
 };
 
 /**
+ * 设置px像素
+ */
+export const setPx = (val: string, defval = '') => {
+  if (validatenull(val)) val = defval;
+  if (validatenull(val)) return '';
+  val = val + '';
+  if (val.indexOf('%') === -1) {
+    val = val + 'px';
+  }
+  return val;
+};
+
+/**
  * 验证是否存在true/false
  */
 export const vaildData = (val: any, dafult: any) => {

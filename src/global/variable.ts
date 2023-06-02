@@ -29,3 +29,14 @@ export const ARRAY_VALUE_LIST = ARRAY_LIST.concat([
   "datetimerange",
   "dates",
 ]);
+export const SELECT_LIST = DATE_LIST.concat([
+  "select",
+  "checkbox",
+  "radio",
+  "cascader",
+  "tree",
+  "color",
+  "icon",
+  "table",
+  "map",
+]);

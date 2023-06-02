@@ -4,7 +4,7 @@ import FormMenu from "./Menu";
 import FormTemp from "../../core/components/form";
 import { TableOption, Column } from "./types";
 import useInit from "../../core/common/init";
-import { getColumn } from "../../../src/utils/util";
+import { getColumn, setPx, vaildData } from "../../../src/utils/util";
 import config from "./config";
 import { calcCount, formInitVal } from "../../../src/core/dataformat";
 import { validatenull } from "../../../src/utils/validate";
@@ -23,6 +23,22 @@ export default defineComponent({
   },
   setup(props, { slots }) {
     let { tableOption, isMobile } = Object.assign({}, useInit(props.option));
+
+    const propOptionRef = computed(() => {
+      let list: Column[] = [];
+      columnOptionRef.value.forEach((option: TableOption) => {
+        if (option.display !== false) {
+          (option?.column || []).forEach((column) => {
+            list.push(column);
+          });
+        }
+      });
+      return list;
+    });
+
+    const parentOptionRef = computed(() => {
+      return tableOption || {};
+    });
 
     const columnOptionRef = computed(() => {
       let column = getColumn(tableOption.column);
@@ -45,20 +61,12 @@ export default defineComponent({
       return group;
     });
 
-    const propOptionRef = computed(() => {
-      let list: Column[] = [];
-      columnOptionRef.value.forEach((option: TableOption) => {
-        if (option.display !== false) {
-          (option?.column || []).forEach((column) => {
-            list.push(column);
-          });
-        }
-      });
-      return list;
-    });
-
-    const parentOptionRef = computed(() => {
-      return tableOption || {};
+    const menuPositionRef = computed(() => {
+      if (parentOptionRef.value.menuPosition) {
+        return parentOptionRef.value.menuPosition;
+      } else {
+        return "center";
+      }
     });
 
     const detailRef = computed(() => {
@@ -90,27 +98,66 @@ export default defineComponent({
       return formData;
     }
 
+    function getItemParams(
+      column: Column ,
+      item: TableOption,
+      type: "span" | "xsSpan" | "offset" | "push" | "pull" | "labelWidth",
+      isPx?: boolean
+    ) {
+      let result;
+      if (!validatenull(column[type])) {
+        result = column?.type;
+      } else if (!validatenull(item[type])) {
+        result = item?.type;
+      } else {
+        result = parentOptionRef.value[type];
+      }
+      result = vaildData(result, config[type]);
+      return isPx ? setPx(result) : result;
+    }
+
     let formData = dataFormat();
 
+    provide("formSafe", {
+      parentOption: parentOptionRef.value
+    });
+
     return () => {
+      const parentOption = parentOptionRef.value;
       const columnOption = columnOptionRef.value;
+      const menuPosition = menuPositionRef.value;
       const isMenu = isMenuRef.value;
       const isDetail = isDetailRef.value;
-      const parentOption = parentOptionRef.value;
 
       return (
         <div>
           <a-form>
-            <a-row span={24}>
+            <a-row>
               {columnOption.map((item) => {
                 return (
                   <>
-                    {item.column?.map((column) => {
-                      return <FormTemp column={column} />;
+                    {item.column?.map((column, cindex) => {
+                      return (
+                        <a-col
+                          key={cindex}
+                          span={getItemParams(column, item, "span")}
+                          md={getItemParams(column, item, "span")}
+                          sm={getItemParams(column, item, "span")}
+                          xs={getItemParams(column, item, "xsSpan")}
+                          offset={getItemParams(column, item, "offset")}
+                          push={getItemParams(column, item, "push")}
+                          pull={getItemParams(column, item, "pull")}
+                        >
+                          <a-form-item label={column.label}>
+                            <FormTemp column={column} />
+                          </a-form-item>
+                        </a-col>
+                      );
                     })}
                     {!isDetail && !isMenu && (
                       <FormMenu
                         parentOption={parentOption}
+                        menuPosition={menuPosition}
                         v-slots={{
                           menuForm: () => slots.menuForm && slots.menuForm(),
                         }}
