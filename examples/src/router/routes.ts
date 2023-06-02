@@ -45,8 +45,34 @@ export const routes = [
   },
 ];
 
+function filter(arr: any) {
+  return arr.map((row: any) => {
+    const anchor = row.component && row.component?.$vd?.toc;
+    if (row.children) {
+      if (anchor) {
+        return {
+          ...row,
+          children: filter(row.children),
+          anchor
+        }
+      }
+      return {
+        ...row,
+        children: filter(row.children)
+      }
+    }
+    if (anchor) {
+      return {
+        ...row,
+        anchor
+      }
+    }
+    return row
+  })
+};
+
 export default {
   baseUrl: "/component",
   title: "组件库",
-  routes: routes,
+  routes: filter(routes),
 };

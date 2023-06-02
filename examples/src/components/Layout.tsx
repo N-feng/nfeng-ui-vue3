@@ -1,6 +1,7 @@
 import { defineComponent } from "vue";
 
 import routes from "@/router/routes";
+import { useRoute } from "vue-router";
 
 function getMenus(routes: any, parentPath: string) {
   return routes.map((node: any) => {
@@ -37,6 +38,7 @@ function getMenus(routes: any, parentPath: string) {
 
 export default defineComponent({
   setup() {
+    const route = useRoute()
     const systemMenus = [
       {
         baseUrl: "/component",
