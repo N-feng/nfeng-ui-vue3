@@ -1,7 +1,7 @@
 import { PropType } from "vue";
 import { SystemMenu } from "../menus/SiderSystemMenu";
 import SiderSystemMenu from "../menus/SiderSystemMenu";
-import Divider from "../divider/Divider";
+import SiderTrigger from "./SiderTrigger";
 
 export default defineComponent({
   name: "SiderLayout",
@@ -16,31 +16,30 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const collapsedRef = ref();
+    let collapsedRef = ref<boolean>(false);
 
     const handleClick = (v: boolean) => {
       collapsedRef.value = v;
     };
+
     return () => {
-      const collapsed = collapsedRef.value;
       const { systemMenus, headerSelectedKeys } = props;
+      let collapsed = collapsedRef.value;
       return (
-        <a-layout-sider theme="light" collapsed={collapsed}>
+        <a-layout-sider
+          theme="light"
+          v-model:collapsed={collapsedRef.value}
+          trigger={null}
+          collapsible
+        >
           <SiderSystemMenu
             systemMenus={systemMenus}
             headerSelectedKeys={headerSelectedKeys}
           />
-          <Divider />
-          <div
-            class="icons__wrapper"
-            style={{ left: `${collapsed ? 32 : 24}px` }}
-          >
-            {collapsed ? (
-              <menu-unfold-outlined onClick={() => handleClick(false)} />
-            ) : (
-              <menu-fold-outlined onClick={() => handleClick(true)} />
-            )}
-          </div>
+          <SiderTrigger
+            modelValue={collapsed}
+            onUpdate:modelValue={(v) => handleClick(v)}
+          />
         </a-layout-sider>
       );
     };

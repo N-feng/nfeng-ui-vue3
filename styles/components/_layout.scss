@@ -1,0 +1,16 @@
+ .layout-anchor {
+    position: absolute;
+    right: 30px;
+    top: 100px;
+    z-index: 1;
+    width: 150px;
+  }
+
+  @include b(sider-trigger) {
+    width: 200px;
+    position: fixed;
+    bottom: 0;
+    z-index: 1;
+    height: 48px;
+    cursor: pointer;
+  }
