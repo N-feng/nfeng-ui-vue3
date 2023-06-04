@@ -10,20 +10,16 @@ export default defineComponent({
       type: Boolean,
     },
   },
-  emits: ["update:modelValue"],
-  setup(props, { emit }) {
-    const handleClick = (v: boolean) => {
-      emit("update:modelValue", v);
-    };
+  setup(props) {
 
     return () => {
       let collapsed = props.modelValue;
       return (
-        <div class={prefixCls} onClick={() => handleClick(!collapsed)}>
+        <div class={prefixCls}
+            style={{ width: `${collapsed ? 80 : 200}px` }} >
           <Divider />
           <div
             class="icons__wrapper"
-            style={{ left: `${collapsed ? 32 : 24}px` }}
           >
             {collapsed ? <menu-unfold-outlined /> : <menu-fold-outlined />}
           </div>

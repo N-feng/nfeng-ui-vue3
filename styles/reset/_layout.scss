@@ -10,6 +10,12 @@
   width: 100%;
 }
 
+// ContentLayout
+.ant-layout-content {
+  background-color: #fff;
+  padding: 0 260px 60px 80px;
+}
+
 // HeaderSystemMenu
 .ant-menu-horizontal {
     width: calc(100% - 200px);
@@ -41,7 +47,7 @@
   }
 
   .icons__wrapper {
-    position: absolute;
+    // position: absolute;
     bottom: 16px;
     font-size: 16px;
     cursor: pointer;

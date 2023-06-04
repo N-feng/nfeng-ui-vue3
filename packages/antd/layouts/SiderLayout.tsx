@@ -29,17 +29,18 @@ export default defineComponent({
         <a-layout-sider
           theme="light"
           v-model:collapsed={collapsedRef.value}
-          trigger={null}
+          trigger={<SiderTrigger
+            modelValue={collapsed}
+            
+          />
+          }
           collapsible
         >
           <SiderSystemMenu
             systemMenus={systemMenus}
             headerSelectedKeys={headerSelectedKeys}
           />
-          <SiderTrigger
-            modelValue={collapsed}
-            onUpdate:modelValue={(v) => handleClick(v)}
-          />
+          
         </a-layout-sider>
       );
     };
