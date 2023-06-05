@@ -7,7 +7,7 @@ import "../styles/index.scss";
  * @param {App} app Vue 对象
  * @returns {Void}
  */
-const install = (app: App<Element>) => {
+const install = (app: any) => {
   // 注册组件
   // components.forEach((component) => app.component(component.name, component));
   Object.keys(components).forEach((ele) => {
