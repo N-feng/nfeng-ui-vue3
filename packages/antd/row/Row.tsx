@@ -1,7 +1,10 @@
-import { RowProps } from "ant-design-vue";
+import { RowProps as ARowProps } from "ant-design-vue";
 import useAttrs from "../../../src/_hooks/useAttrs";
+import {
+  GlobalComponentConstructor,
+  PropsType,
+} from "../../../src/types/ts-helpers";
 
-type ARowProps = {} & RowProps
 
 const Row = defineComponent<ARowProps>({
   setup() {
@@ -12,5 +15,9 @@ const Row = defineComponent<ARowProps>({
     };
   },
 });
+
+export type RowProps = PropsType<typeof Row> & PropsType<ARowProps>;
+
+// export default Row as GlobalComponentConstructor<RowProps>;
 
 export default Row;

@@ -1,12 +1,20 @@
 export default defineComponent({
   name: "ContentLayout",
-  setup() {
+  props: {
+    collapsed: {
+      type: Boolean
+    }
+  },
+  setup(props) {
     return () => {
+      const { collapsed } = props;
       return (
-        <a-layout-content class={"mg-10-10-0 f-oya1"}>
+        <a-layout-content style={{
+          marginLeft: collapsed ? "90px" : "210px"
+        }}>
           <router-view />
         </a-layout-content>
-      )
-    }
-  }
-})
+      );
+    };
+  },
+});

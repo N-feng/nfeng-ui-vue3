@@ -6,6 +6,7 @@ import Form from "../__docs__/components/Form.md";
 import Image from "../__docs__/components/Image.md";
 
 import Divider from "../__docs__/components/Divider.md";
+import Select from "../__docs__/components/Select.md";
 
 export const routes = [
   {
@@ -43,6 +44,13 @@ export const routes = [
       { path: "/divider", title: "Divider 分割线", component: Divider },
     ],
   },
+  {
+    path: "/form-component",
+    title: "表单组件",
+    children: [
+      { path: "/select", title: "Select 下拉选择", component: Select }
+    ]
+  }
 ];
 
 function filter(arr: any) {

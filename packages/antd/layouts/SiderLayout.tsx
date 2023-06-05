@@ -24,23 +24,27 @@ export default defineComponent({
 
     return () => {
       const { systemMenus, headerSelectedKeys } = props;
-      let collapsed = collapsedRef.value;
+      const collapsed = collapsedRef.value;
+      const style = {
+        overflow: "auto",
+        height: "100vh",
+        position: "fixed",
+        left: 0,
+        top: "58px",
+        bottom: 0,
+      };
       return (
         <a-layout-sider
           theme="light"
           v-model:collapsed={collapsedRef.value}
-          trigger={<SiderTrigger
-            modelValue={collapsed}
-            
-          />
-          }
+          trigger={<SiderTrigger modelValue={collapsed} />}
           collapsible
+          style={style}
         >
           <SiderSystemMenu
             systemMenus={systemMenus}
             headerSelectedKeys={headerSelectedKeys}
           />
-          
         </a-layout-sider>
       );
     };

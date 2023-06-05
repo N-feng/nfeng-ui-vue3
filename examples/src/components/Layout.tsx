@@ -1,4 +1,4 @@
-import { computed, defineComponent } from "vue";
+import { computed, defineComponent, ref } from "vue";
 
 import routes from "@/router/routes";
 import { useRoute } from "vue-router";
@@ -51,11 +51,15 @@ export default defineComponent({
     ];
 
     const onClick = (e: Event, link: Object) => {
-      console.log('e: ', e);
       e.preventDefault();
     };
 
+
+    const collapsedRef = ref<boolean>(false);
+
     return () => {
+      const collapsed = collapsedRef.value;
+
       return (
         <a-layout class={"min-h100vh"}>
           <header-layout />
@@ -63,8 +67,9 @@ export default defineComponent({
             <sider-layout
               systemMenus={systemMenus}
               headerSelectedKeys={[routes.baseUrl]}
+              v-model:collapsed={collapsedRef.value}
             />
-            <content-layout />
+            <content-layout v-model:collapsed={collapsedRef.value} />
             <a-anchor class="layout-anchor" offsetTop={30} onClick={onClick}>
               {anchor.value.map((item: any) => {
                 return (
