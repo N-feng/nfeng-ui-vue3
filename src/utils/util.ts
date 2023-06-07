@@ -30,6 +30,20 @@ export const setPx = (val: string, defval = '') => {
 };
 
 /**
+ * 字符串数据类型转化
+ */
+export const detailDataType = (value: any, type: string) => {
+  if (validatenull(value)) return value
+  if (type === 'number') {
+    return Number(value);
+  } else if (type === 'string') {
+    return value + '';
+  } else {
+    return value;
+  }
+};
+
+/**
  * 验证是否存在true/false
  */
 export const vaildData = (val: any, dafult: any) => {

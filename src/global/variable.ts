@@ -1,5 +1,20 @@
 export const KEY_COMPONENT_NAME = "N";
 export const KEY_CLASS_NAME = "n-";
+export const DIC_PROPS = {
+  rowKey: "id",
+  rowParentKey: "parentId",
+  nodeKey: "id",
+  label: "label",
+  value: "value",
+  desc: "desc",
+  groups: "groups",
+  title: "title",
+  leaf: "leaf",
+  children: "children",
+  hasChildren: "hasChildren",
+  labelText: "名称",
+  disabled: "disabled",
+};
 export const DATE_LIST = [
   "dates",
   "date",

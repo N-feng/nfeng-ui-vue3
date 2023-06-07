@@ -2,7 +2,6 @@ import Divider from "../divider/Divider";
 import { getPrefix } from "../../../src/_utils/common";
 
 const { prefixCls } = getPrefix("SiderTrigger");
-console.log("prefixCls: ", prefixCls);
 
 export default defineComponent({
   props: {

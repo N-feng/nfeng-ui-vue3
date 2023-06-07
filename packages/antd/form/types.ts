@@ -13,10 +13,7 @@ export type TableOption = {
 };
 
 export type Column = {
-  label?: string;
   prop: string;
-  value?: any;
-  disabled?: boolean;
   order?: number;
   span?: number;
   xsSpan?: number;
@@ -30,10 +27,19 @@ export type Column = {
   styles?: object;
   dataType?: string;
   component?: any;
+  // Column-字典属性
+  dicMap?: Object;
+  dicData?: [];
+  // Column-Props
+  label?: string;
+  value?: any;
+  children?: string;
+  disabled?: boolean;
   // Column-Input
   placeholder?: string;
   // Column-Select
   multiple?: boolean;
+  filterable?: boolean;
   // Column-Slider
   range?: boolean;
   // Column-Dynamic

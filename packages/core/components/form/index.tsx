@@ -4,27 +4,27 @@ import { getComponent, getPlaceholder } from "../../../../src/core/dataformat";
 
 export default defineComponent({
   props: {
+    dic: {
+      type: Array,
+    },
     column: {
       type: Object as PropType<Column>,
-      required: true,
+      default: () => {
+        return {}
+      },
     },
   },
   setup(props) {
-    const { column } = props;
+    const { column, dic } = props;
 
     return () => {
-      return (
-        <>
-          {h(
-            resolveComponent(
-              getComponent(column?.type as string, column?.component)
-            ),
-            {
-              placeholder: getPlaceholder(column),
-            }
-          )}
-        </>
-      );
+      const componentProps = {
+        ...Object.assign({}, column),
+        placeholder: getPlaceholder(column),
+        dic: dic,
+      }
+      const Component = resolveComponent(getComponent(column?.type as string, column?.component));
+      return <>{h(Component, componentProps)}</>;
     };
   },
 });

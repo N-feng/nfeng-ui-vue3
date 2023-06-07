@@ -4,9 +4,9 @@ import FormMenu from "./Menu";
 import FormTemp from "../../core/components/form";
 import { TableOption, Column } from "./types";
 import useInit from "../../core/common/init";
-import { getColumn, setPx, vaildData } from "../../../src/utils/util";
+import { setPx, vaildData } from "../../../src/utils/util";
 import config from "./config";
-import { calcCount, formInitVal } from "../../../src/core/dataformat";
+import { formInitVal } from "../../../src/core/dataformat";
 import { validatenull } from "../../../src/utils/validate";
 
 const { prefixName, prefixCls } = getPrefix("Form");
@@ -22,43 +22,16 @@ export default defineComponent({
     modelValue: {},
   },
   setup(props, { slots }) {
-    let { tableOption, isMobile } = Object.assign({}, useInit(props.option));
 
-    const propOptionRef = computed(() => {
-      let list: Column[] = [];
-      columnOptionRef.value.forEach((option: TableOption) => {
-        if (option.display !== false) {
-          (option?.column || []).forEach((column) => {
-            list.push(column);
-          });
-        }
-      });
-      return list;
-    });
+    const {
+      tableOption,
+      columnOptionRef,
+      propOptionRef,
+      DIC,
+    } = useInit(props.option);
 
     const parentOptionRef = computed(() => {
       return tableOption || {};
-    });
-
-    const columnOptionRef = computed(() => {
-      let column = getColumn(tableOption.column);
-      let group = tableOption.group || [];
-      group.unshift({
-        column: column,
-      });
-      group.forEach((ele, index) => {
-        ele.column = getColumn(ele.column);
-        // 循环列的全部属性
-        ele.column.forEach((column, cindex) => {
-          //动态计算列的位置，如果为隐藏状态则或则手机状态不计算
-          if (column.display !== false && !isMobile) {
-            column = calcCount(column, config.span, cindex === 0);
-          }
-        });
-        //根据order排序
-        ele.column = ele.column.sort((a, b) => (b.order || 0) - (a.order || 0));
-      });
-      return group;
     });
 
     const menuPositionRef = computed(() => {
@@ -149,7 +122,7 @@ export default defineComponent({
                           pull={getItemParams(column, item, "pull")}
                         >
                           <a-form-item label={column.label}>
-                            <FormTemp column={column} />
+                            <FormTemp column={column} dic={(DIC as any)[column.prop]} />
                           </a-form-item>
                         </a-col>
                       );
