@@ -44,6 +44,24 @@ let option = {
       type: "select",
       allowCreate:true,
       filterable:true,
+      row: true,
+      span: 12,
+      dicData: [{
+        label: "字典1",
+        value: 0
+      },{
+        label: "字典2",
+        value: 1
+      }]
+    },
+    {
+      label: "姓名",
+      prop: "name",
+      type: "select",
+      // allowCreate:true,
+      filterable:true,
+      // row: true,
+      span: 12,
       dicData: [{
         label: "字典1",
         value: 0

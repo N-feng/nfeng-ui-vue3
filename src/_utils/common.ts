@@ -3,6 +3,14 @@ import upperFirst from "lodash-es/upperFirst";
 import { camelize } from "vue";
 import { KEY_CLASS_NAME, KEY_COMPONENT_NAME } from "../global/variable";
 
+export function isBasicType(val: any) {
+  return (
+    typeof val === "number" ||
+    typeof val === "string" ||
+    typeof val === "boolean"
+  );
+}
+
 /**
  * 根据组件名称生成具有前缀的组件名称和具有前缀的基础类样式，例如
  *

@@ -79,7 +79,7 @@ export default defineComponent({
     ) {
       let result;
       if (!validatenull(column[type])) {
-        result = column?.type;
+        result = column[type];
       } else if (!validatenull(item[type])) {
         result = item?.type;
       } else {
@@ -104,14 +104,14 @@ export default defineComponent({
 
       return (
         <div>
-          <a-form>
+          <a-form class={prefixCls}>
             <a-row>
               {columnOption.map((item) => {
                 return (
                   <>
                     {item.column?.map((column, cindex) => {
                       return (
-                        <a-col
+                        <><a-col
                           key={cindex}
                           span={getItemParams(column, item, "span")}
                           md={getItemParams(column, item, "span")}
@@ -122,9 +122,14 @@ export default defineComponent({
                           pull={getItemParams(column, item, "pull")}
                         >
                           <a-form-item label={column.label}>
-                            <FormTemp column={column} dic={(DIC as any)[column.prop]} />
+                            <FormTemp
+                              column={column}
+                              dic={(DIC as any)[column.prop]}
+                            />
                           </a-form-item>
-                        </a-col>
+                        </a-col>{ column.row && column.span !== 24 && column.count && <a-col class={`${prefixCls}__line`} key={cindex} style={{width: (column.count/24*100) + '%'}} />}
+                        </>
+                        
                       );
                     })}
                     {!isDetail && !isMenu && (
@@ -136,6 +141,7 @@ export default defineComponent({
                         }}
                       />
                     )}
+                    
                   </>
                 );
               })}
