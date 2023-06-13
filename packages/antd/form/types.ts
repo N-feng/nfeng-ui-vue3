@@ -12,6 +12,11 @@ export type TableOption = {
   [key: string]: any;
 };
 
+export type ColumnProps = {
+  label?: string;
+  value?: string;
+}
+
 export type Column = {
   prop: string;
   order?: number;
@@ -28,7 +33,7 @@ export type Column = {
   dataType?: string;
   component?: any;
   // Column-字典属性
-  dicMap?: Object;
+  props?: ColumnProps;
   dicData?: [];
   // Column-Props
   label?: string;

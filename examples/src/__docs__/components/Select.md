@@ -29,6 +29,38 @@ let option = {
 </template>
 ```
 
+## 字典属性
+
+```vue demo
+<script setup>
+let option = {
+  column: [
+    {
+      label: "下拉框",
+      prop: "select",
+      type: "select",
+      span: 12,
+      props:{
+        label:'name',
+        value:'code'
+      },
+      dicData:[{
+        name:'字典1',
+        code:0
+      },{
+        name:'字典2',
+        code:1
+      }]
+    },
+  ],
+};
+</script>
+
+<template>
+  <n-form :option="option" />
+</template>
+```
+
 ## 创建条目和搜索
 
 ```vue demo
@@ -58,9 +90,7 @@ let option = {
       label: "姓名",
       prop: "name",
       type: "select",
-      // allowCreate:true,
       filterable:true,
-      // row: true,
       span: 12,
       dicData: [{
         label: "字典1",

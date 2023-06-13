@@ -89,7 +89,7 @@ export default defineComponent({
       return isPx ? setPx(result) : result;
     }
 
-    let formData = dataFormat();
+    let formDataRef = ref(dataFormat());
 
     provide("formSafe", {
       parentOption: parentOptionRef.value
@@ -110,26 +110,39 @@ export default defineComponent({
                 return (
                   <>
                     {item.column?.map((column, cindex) => {
+                      const formTempProps = {
+                        column: column,
+                        dic: (DIC as any)[column.prop] || [],
+                        value: formDataRef.value[column.prop],
+                        "onChange": (val: any) => {
+                          formDataRef.value[column.prop] = val;
+                        },
+                      };
                       return (
-                        <><a-col
-                          key={cindex}
-                          span={getItemParams(column, item, "span")}
-                          md={getItemParams(column, item, "span")}
-                          sm={getItemParams(column, item, "span")}
-                          xs={getItemParams(column, item, "xsSpan")}
-                          offset={getItemParams(column, item, "offset")}
-                          push={getItemParams(column, item, "push")}
-                          pull={getItemParams(column, item, "pull")}
-                        >
-                          <a-form-item label={column.label}>
-                            <FormTemp
-                              column={column}
-                              dic={(DIC as any)[column.prop]}
+                        <>
+                          {formDataRef.value[column.prop]}
+                          <a-col
+                            key={cindex}
+                            span={getItemParams(column, item, "span")}
+                            md={getItemParams(column, item, "span")}
+                            sm={getItemParams(column, item, "span")}
+                            xs={getItemParams(column, item, "xsSpan")}
+                            offset={getItemParams(column, item, "offset")}
+                            push={getItemParams(column, item, "push")}
+                            pull={getItemParams(column, item, "pull")}
+                          >
+                            <a-form-item label={column.label}>
+                              <FormTemp {...formTempProps} />
+                            </a-form-item>
+                          </a-col>
+                          {column.row && column.span !== 24 && column.count && (
+                            <a-col
+                              class={`${prefixCls}__line`}
+                              key={cindex}
+                              style={{ width: (column.count / 24) * 100 + "%" }}
                             />
-                          </a-form-item>
-                        </a-col>{ column.row && column.span !== 24 && column.count && <a-col class={`${prefixCls}__line`} key={cindex} style={{width: (column.count/24*100) + '%'}} />}
+                          )}
                         </>
-                        
                       );
                     })}
                     {!isDetail && !isMenu && (
@@ -141,7 +154,6 @@ export default defineComponent({
                         }}
                       />
                     )}
-                    
                   </>
                 );
               })}

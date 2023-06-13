@@ -1,6 +1,6 @@
 import { getPrefix } from "../../../src/_utils/common";
 import { defineProps } from "../../core/common/props";
-import { useInit } from "../../core/common/props";
+import { useProps } from "../../core/common/props";
 import { getLabelText } from "../../core/common/event";
 
 const { prefixName } = getPrefix("Select");
@@ -9,18 +9,6 @@ const Select = defineComponent({
   name: prefixName,
   props: {
     typeformat: Function,
-    dic: {
-      type: Array<any>,
-      default: () => {
-        return {};
-      },
-    },
-    column: {
-      type: Object,
-      default: () => {
-        return {};
-      },
-    },
     filterable: {
       type: Boolean,
       default: false,
@@ -36,7 +24,7 @@ const Select = defineComponent({
     let netDic = ref(props.dic);
     let { column, filterable } = props;
 
-    const { valueKey, labelKey } = useInit(props);
+    const { valueKey, labelKey } = useProps(props);
 
     const optionsRef = computed(() => {
       const options = netDic.value.map((row: any) => {

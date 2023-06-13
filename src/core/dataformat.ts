@@ -10,7 +10,9 @@ import {
   MULTIPLE_LIST,
   RANGE_LIST,
   SELECT_LIST,
+  DIC_SPLIT,
 } from "../global/variable";
+import { detailDataType } from "../utils/util";
 
 /**
  * 计算空白列row
@@ -29,6 +31,43 @@ export const calcCount = (ele: Column, spanDefault = 12, init = false) => {
     count = 0;
   }
   return ele;
+};
+
+/**
+ * 初始化数据格式
+ */
+export const initVal = (value: any, props: any) => {
+  let {
+    type,
+    multiple,
+    dataType,
+    separator = DIC_SPLIT,
+    alone,
+    emitPath,
+    range,
+  } = props;
+  let list = value;
+  if (
+    (MULTIPLE_LIST.includes(type) && multiple == true) ||
+    (ARRAY_VALUE_LIST.includes(type) && emitPath !== false) ||
+    (RANGE_LIST.includes(type) && range == true)
+  ) {
+    if (!Array.isArray(list)) {
+      if (validatenull(list)) {
+        list = [];
+      } else {
+        list = (list + '').split(separator) || [];
+      }
+    }
+    // 数据转化
+    list.forEach((ele: any, index: number) => {
+      list[index] = detailDataType(ele, dataType);
+    });
+    if (ARRAY_LIST.includes(type) && validatenull(list) && alone) list = [''];
+  } else {
+    list = detailDataType(list, dataType)
+  }
+  return list;
 };
 
 /**

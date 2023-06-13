@@ -55,3 +55,4 @@ export const SELECT_LIST = DATE_LIST.concat([
   "table",
   "map",
 ]);
+export const DIC_SPLIT = ",";
