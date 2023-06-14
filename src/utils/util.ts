@@ -19,7 +19,7 @@ export const getColumn = (column: any) => {
 /**
  * 设置px像素
  */
-export const setPx = (val: string, defval = '') => {
+export const setPx = (val: string | undefined, defval: any = '') => {
   if (validatenull(val)) val = defval;
   if (validatenull(val)) return '';
   val = val + '';

@@ -1,14 +1,16 @@
 <script setup>
-let form = {
+let form = ref({
   name: "我是名字",
-};
+});
 let option = {
-  menuSpan: 10,
-  menuPosition: "right",
+  // menuSpan: 15,
+  // menuPosition: "right",
   column: [
     {
       label: "姓名",
       prop: "name",
+      span: 12,
+      // row: true,
     },
   ],
 };

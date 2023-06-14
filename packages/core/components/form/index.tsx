@@ -11,21 +11,24 @@ export default defineComponent({
   setup(props) {
     const { column, dic } = props;
     const { textRef } = useEvent(props);
-
-    return () => {
-      const componentProps = {
-        ...Object.assign({}, column),
-        placeholder: getPlaceholder(column),
-        dic: dic,
+    const compProps = computed(() => {
+      return {
         value: textRef.value,
+        ...Object.assign({}, column),
+        dic: dic,
+        placeholder: getPlaceholder(column),
+        props: column?.props || props.props,
         onChange: (val: any) => {
           props.onChange?.(val);
         },
       };
+    });
+
+    return () => {
       const Component = resolveComponent(
         getComponent(column?.type as string, column?.component)
       ) as string;
-      return <>{h(Component, { ...componentProps })}</>;
+      return <>{h(Component, { ...compProps.value })}</>;
     };
   },
 });

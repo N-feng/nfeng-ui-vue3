@@ -3,7 +3,7 @@
 ```vue demo
 <script setup>
 let form = {
-  name: "我是名字",
+  name: 1,
 };
 let option = {
   column: [
@@ -11,6 +11,7 @@ let option = {
       label: "姓名",
       prop: "name",
       type: "select",
+      span: 12,
       dicData: [{
         label: "字典1",
         value: 0
@@ -24,8 +25,7 @@ let option = {
 </script>
 
 <template>
-  {{ form }}
-  <!-- <n-form :option="option" v-model="form" /> -->
+  <n-form :option="option" v-model="form" />
 </template>
 ```
 
@@ -33,6 +33,9 @@ let option = {
 
 ```vue demo
 <script setup>
+let form = {
+  select: "下拉框"
+}
 let option = {
   column: [
     {
@@ -57,7 +60,7 @@ let option = {
 </script>
 
 <template>
-  <n-form :option="option" />
+  <n-form :option="option" v-model="form" />
 </template>
 ```
 
@@ -66,7 +69,7 @@ let option = {
 ```vue demo
 <script setup>
 let form = {
-  name: "我是名字",
+  name: 0,
 };
 let option = {
   column: [
@@ -105,7 +108,6 @@ let option = {
 </script>
 
 <template>
-  {{ form }}
   <n-form :option="option" v-model="form" />
 </template>
 ```

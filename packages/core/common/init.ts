@@ -6,7 +6,7 @@ import config from "../../antd/form/config";
 
 export default function useInit(option: TableOption) {
   let DIC = {};
-  let tableOption = Object.assign({}, option);
+  let tableOption = option;
   let isMobile: boolean = false;
 
   function getIsMobile() {
@@ -14,7 +14,7 @@ export default function useInit(option: TableOption) {
   }
 
   const columnOptionRef = computed(() => {
-    let column = getColumn(option.column);
+    let column = getColumn(Object.assign({}, tableOption)?.column);
     let group = option.group || [];
     group.unshift({
       column: column,
@@ -48,7 +48,7 @@ export default function useInit(option: TableOption) {
 
   const resultOptionRef = computed(() => {
     return {
-      ...option,
+      ...tableOption,
       ...{
         column: propOptionRef.value,
       },
@@ -60,10 +60,19 @@ export default function useInit(option: TableOption) {
     loadLocalDic(resultOptionRef.value, DIC);
   }
 
-  function init() {
+  function init(type?: boolean) {
     getIsMobile();
     handleLocalDic();
+    if (type !== false) return false;
   }
+
+  watch(
+    () => option,
+    (val) => {
+      init(false);
+    },
+    { deep: true }
+  );
 
   init();
 

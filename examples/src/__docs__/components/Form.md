@@ -6,15 +6,15 @@
 
 ## 基本用法
 
-<!-- ```vue demo src="./form/FormBasic.vue"
+```vue demo src="./form/FormBasic.vue"
 
-``` -->
+```
 
 ## 表单操作按钮
 
-<!-- ```vue demo src="./form/FormMenu.vue"
+```vue demo src="./form/FormMenu.vue"
 
-``` -->
+```
 
 ## 表单对象形式
 

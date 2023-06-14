@@ -43,7 +43,6 @@ export const defineProps = () => ({
 });
 
 export function useProps(props: any) {
-  const textRef = ref(undefined);
   const propsDefault = DIC_PROPS;
 
   const valueKey = computed(() => {
@@ -55,7 +54,6 @@ export function useProps(props: any) {
   });
 
   return {
-    textRef,
     valueKey,
     labelKey,
   };

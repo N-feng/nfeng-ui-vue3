@@ -1,12 +1,13 @@
 <script setup>
-let form = {
+let form = ref({
   name: "我是名字",
-};
+});
 let option = {
   column: [
     {
       label: "姓名",
       prop: "name",
+      span: 12,
     },
   ],
 };
@@ -14,9 +15,5 @@ let option = {
 
 <template>
   {{ form }}
-  <n-form :option="option" v-model="form">
-    <template #menuForm>
-      <a-button type="primary">自定义提交</a-button>
-    </template>
-  </n-form>
+  <n-form :option="option" v-model="form" />
 </template>

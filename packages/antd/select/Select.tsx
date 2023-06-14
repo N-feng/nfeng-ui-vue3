@@ -1,7 +1,7 @@
 import { getPrefix } from "../../../src/_utils/common";
 import { defineProps } from "../../core/common/props";
 import { useProps } from "../../core/common/props";
-import { getLabelText } from "../../core/common/event";
+import { useEvent, getLabelText } from "../../core/common/event";
 
 const { prefixName } = getPrefix("Select");
 
@@ -20,9 +20,9 @@ const Select = defineComponent({
     ...defineProps(),
   },
   setup(props) {
-    let textRef: any = ref(undefined);
-    let netDic = ref(props.dic);
-    let { column, filterable } = props;
+    const { textRef } = useEvent(props);
+    const netDic = ref(props.dic);
+    const { filterable } = props;
 
     const { valueKey, labelKey } = useProps(props);
 
@@ -60,13 +60,17 @@ const Select = defineComponent({
       if (value) {
         res = value;
       }
-      if (props.allowCreate && value && !netDic.value.find((item: any) => item[valueKey.value] === value)) {
+      if (
+        props.allowCreate &&
+        value &&
+        !netDic.value.find((item: any) => item[valueKey.value] === value)
+      ) {
         createOption = [
           {
             [labelKey.value]: value,
             [valueKey.value]: value,
-          }
-        ]
+          },
+        ];
         netDic.value = [...createOption, ...props.dic];
       }
     }
@@ -83,15 +87,16 @@ const Select = defineComponent({
     return () => {
       const options = optionsRef.value;
       return (
-          <a-select
-            v-model={textRef.value}
-            show-search={filterable}
-            filter-option={filterOption}
-            onSearch={onChangeSelect}
-            onBlur={getValue}
-            onSelect={onSelect}
-            options={optionsRef.value}
-          />
+        <a-select
+          v-model:value={textRef.value}
+          show-search={filterable}
+          filter-option={filterOption}
+          placeholder={props.placeholder}
+          onSearch={filterable ? onChangeSelect : void 0}
+          onBlur={getValue}
+          onSelect={onSelect}
+          options={optionsRef.value}
+        />
       );
     };
   },

@@ -6,12 +6,13 @@ const { prefixName } = getPrefix("Input");
 
 export default defineComponent({
   name: prefixName,
+  inheritAttrs: false,
   props: {
     ...defineProps(),
   },
   emits: ["onOk"],
-  setup(props) {
-    let { textRef } = useEvent(props);
+  setup(props, { attrs }) {
+    const { textRef } = useEvent(props);
 
     return () => {
       return (

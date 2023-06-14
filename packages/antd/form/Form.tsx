@@ -21,14 +21,11 @@ export default defineComponent({
     value: {},
     modelValue: {},
   },
-  setup(props, { slots }) {
-
-    const {
-      tableOption,
-      columnOptionRef,
-      propOptionRef,
-      DIC,
-    } = useInit(props.option);
+  emits: ["update:modelValue", "change"],
+  setup(props, { slots, emit }) {
+    const { tableOption, columnOptionRef, propOptionRef, DIC } = useInit(
+      props.option
+    );
 
     const parentOptionRef = computed(() => {
       return tableOption || {};
@@ -72,7 +69,7 @@ export default defineComponent({
     }
 
     function getItemParams(
-      column: Column ,
+      column: Column,
       item: TableOption,
       type: "span" | "xsSpan" | "offset" | "push" | "pull" | "labelWidth",
       isPx?: boolean
@@ -89,10 +86,19 @@ export default defineComponent({
       return isPx ? setPx(result) : result;
     }
 
+    function setVal() {
+      emit("update:modelValue", formDataRef.value);
+      emit("change", formDataRef.value);
+    }
+
     let formDataRef = ref(dataFormat());
 
     provide("formSafe", {
-      parentOption: parentOptionRef.value
+      parentOption: parentOptionRef.value,
+    });
+
+    watch(formDataRef.value, (val) => {
+      setVal();
     });
 
     return () => {
@@ -104,7 +110,14 @@ export default defineComponent({
 
       return (
         <div>
-          <a-form class={prefixCls}>
+          <a-form
+            class={prefixCls}
+            labelCol={{
+              style: {
+                width: setPx(parentOption.labelWidth, config.labelWidth),
+              },
+            }}
+          >
             <a-row>
               {columnOption.map((item) => {
                 return (
@@ -114,13 +127,12 @@ export default defineComponent({
                         column: column,
                         dic: (DIC as any)[column.prop] || [],
                         value: formDataRef.value[column.prop],
-                        "onChange": (val: any) => {
+                        onChange: (val: any) => {
                           formDataRef.value[column.prop] = val;
                         },
                       };
                       return (
                         <>
-                          {formDataRef.value[column.prop]}
                           <a-col
                             key={cindex}
                             span={getItemParams(column, item, "span")}

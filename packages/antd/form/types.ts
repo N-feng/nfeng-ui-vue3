@@ -44,6 +44,7 @@ export type Column = {
   placeholder?: string;
   // Column-Select
   multiple?: boolean;
+  allowCreate?: boolean;
   filterable?: boolean;
   // Column-Slider
   range?: boolean;
