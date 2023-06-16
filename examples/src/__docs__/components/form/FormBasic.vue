@@ -1,8 +1,9 @@
-<script setup>
-let form = ref({
+<script setup lang="ts">
+import { ref } from "vue";
+const form = ref({
   name: "我是名字",
 });
-let option = {
+const option = {
   column: [
     {
       label: "姓名",
@@ -15,5 +16,5 @@ let option = {
 
 <template>
   {{ form }}
-  <n-form :option="option" v-model="form" />
+  <n-form :option="option" :model="form" />
 </template>

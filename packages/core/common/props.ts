@@ -38,9 +38,6 @@ export const defineProps = () => ({
     type: Object as PropType<Props>,
     default: () => DIC_PROPS,
   },
-  // onChange: {
-  //   type: Function as PropType<(value: any) => void>,
-  // },
 });
 
 export function useProps(props: any) {

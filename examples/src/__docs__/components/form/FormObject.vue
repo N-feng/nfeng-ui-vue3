@@ -1,9 +1,16 @@
-<script setup>
-let form = ref({
+<script lang="ts">
+export default {
+  name: 'FormObject',
+}
+</script>
+
+<script setup lang="ts">
+import { reactive, watch } from 'vue'
+let form = reactive({
   name: '姓名',
   sex: 14
 });
-let option = ref({
+let option = reactive({
   labelWidth: 120,
   column: {
     name: {
@@ -16,16 +23,12 @@ let option = ref({
     }
   }
 });
-const handleChange = (value) => {
-  option.value.column.name.label = value.name;
-};
+watch(form, (value) => {
+  option.column.name.label = value.name;
+});
 </script>
 
 <template>
   {{ form }}
-  <n-form :option="option" v-model="form" @change="handleChange">
-    <template #menuForm>
-      <a-button type="primary">自定义提交</a-button>
-    </template>
-  </n-form>
+  <n-form :option="option" :model="form" />
 </template>

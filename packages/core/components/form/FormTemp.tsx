@@ -35,7 +35,7 @@ export default defineComponent({
     const { setValue } = inject(FormKey) as any;
 
     function setVal(val: any) {
-      setValue(props.column, val);
+      setValue(props.column.prop, val);
       emit("change", val);
     }
 
@@ -49,6 +49,7 @@ export default defineComponent({
           {h(Component, {
             value: text.value,
             ...column,
+            column: Object.assign({}, column),
             dic,
             placeholder: getPlaceholder(column),
             props: column.props || props.props,

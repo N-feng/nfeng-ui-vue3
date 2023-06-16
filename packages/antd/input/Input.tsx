@@ -10,7 +10,7 @@ export default defineComponent({
   props: {
     ...defineProps(),
   },
-  emits: ["onOk"],
+  emits: ["update:modelValue"],
   setup(props, { attrs, emit }) {
     const { textRef } = useEvent(props, emit);
 

@@ -3,6 +3,15 @@ import upperFirst from "lodash-es/upperFirst";
 import { camelize } from "vue";
 import { KEY_CLASS_NAME, KEY_COMPONENT_NAME } from "../global/variable";
 
+export function isEmpty(value: any) {
+  return (
+    value === void 0 ||
+    value === null ||
+    (Array.isArray(value) && value.length === 0) ||
+    (typeof value === "string" && value.trim() === "")
+  );
+}
+
 export function isBasicType(val: any) {
   return (
     typeof val === "number" ||
