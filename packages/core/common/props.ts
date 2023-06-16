@@ -8,6 +8,7 @@ export type Props = {
 };
 
 export const defineProps = () => ({
+  change: Function,
   value: {},
   column: {
     type: Object as PropType<Column>,
@@ -37,9 +38,9 @@ export const defineProps = () => ({
     type: Object as PropType<Props>,
     default: () => DIC_PROPS,
   },
-  onChange: {
-    type: Function as PropType<(value: any) => void>,
-  },
+  // onChange: {
+  //   type: Function as PropType<(value: any) => void>,
+  // },
 });
 
 export function useProps(props: any) {

@@ -5,7 +5,7 @@ import { loadLocalDic } from "../../../src/core/dic";
 import config from "../../antd/form/config";
 
 export default function useInit(option: TableOption) {
-  let DIC = {};
+  let DIC: any = ref({});
   let tableOption = option;
   let isMobile: boolean = false;
 
@@ -55,17 +55,6 @@ export default function useInit(option: TableOption) {
     };
   });
 
-  // 本地字典
-  function handleLocalDic() {
-    loadLocalDic(resultOptionRef.value, DIC);
-  }
-
-  function init(type?: boolean) {
-    getIsMobile();
-    handleLocalDic();
-    if (type !== false) return false;
-  }
-
   watch(
     () => option,
     (val) => {
@@ -73,6 +62,20 @@ export default function useInit(option: TableOption) {
     },
     { deep: true }
   );
+
+  // 本地字典
+  function handleLocalDic() {
+    const result = loadLocalDic(resultOptionRef.value, DIC);
+    Object.keys(result).forEach(ele => {
+      DIC.value[ele] = result[ele];
+    })
+  }
+
+  function init(type?: boolean) {
+    getIsMobile();
+    handleLocalDic();
+    if (type !== false) return false;
+  }
 
   init();
 

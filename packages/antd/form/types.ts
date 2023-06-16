@@ -42,7 +42,9 @@ export type Column = {
   disabled?: boolean;
   // Column-Input
   placeholder?: string;
+  change?: Function;
   // Column-Select
+  cascader?: [];
   multiple?: boolean;
   allowCreate?: boolean;
   filterable?: boolean;

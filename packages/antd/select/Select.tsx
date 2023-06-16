@@ -7,6 +7,7 @@ const { prefixName } = getPrefix("Select");
 
 const Select = defineComponent({
   name: prefixName,
+  inheritAttrs: false,
   props: {
     typeformat: Function,
     filterable: {
@@ -19,14 +20,15 @@ const Select = defineComponent({
     },
     ...defineProps(),
   },
-  setup(props) {
-    const { textRef } = useEvent(props);
-    const netDic = ref(props.dic);
-    const { filterable } = props;
+  emits: ["update:modelValue"],
+  setup(props, { attrs, emit }) {
+    let { textRef } = useEvent(props, emit);
+    let netDic = ref(props.dic);
+    let { filterable } = props;
 
-    const { valueKey, labelKey } = useProps(props);
+    let { valueKey, labelKey } = useProps(props);
 
-    const optionsRef = computed(() => {
+    let optionsRef = computed(() => {
       const options = netDic.value.map((row: any) => {
         return {
           ...row,
@@ -41,6 +43,10 @@ const Select = defineComponent({
         };
       });
       return options;
+    });
+
+    watch(() => props.dic, (val) => {
+      netDic.value = val;
     });
 
     const filterOption = (input: string, option: any) => {
@@ -88,10 +94,11 @@ const Select = defineComponent({
       const options = optionsRef.value;
       return (
         <a-select
+          { ...attrs }
           v-model:value={textRef.value}
           show-search={filterable}
           filter-option={filterOption}
-          placeholder={props.placeholder}
+          placeholder={props.placeholder || "请选择"}
           onSearch={filterable ? onChangeSelect : void 0}
           onBlur={getValue}
           onSelect={onSelect}

@@ -11,8 +11,8 @@ export default defineComponent({
     ...defineProps(),
   },
   emits: ["onOk"],
-  setup(props, { attrs }) {
-    const { textRef } = useEvent(props);
+  setup(props, { attrs, emit }) {
+    const { textRef } = useEvent(props, emit);
 
     return () => {
       return (

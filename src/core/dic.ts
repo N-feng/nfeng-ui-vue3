@@ -19,8 +19,8 @@ export const loadLocalDic = (option: TableOption, safe: any) => {
     if (ele.dicData) columnData[ele.prop] = getDataType(ele.dicData, ele.props, ele.dataType);
   })
   let result = { ...optionData, ...columnData };
-  Object.keys(result).forEach(ele => {
-    safe[ele] = result[ele];
-  })
+  // Object.keys(result).forEach(ele => {
+  //   safe[ele] = result[ele];
+  // })
   return result;
 };
