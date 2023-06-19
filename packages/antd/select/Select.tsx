@@ -1,4 +1,4 @@
-import { getPrefix } from "../../../src/_utils/common";
+import { getPrefix, isBasicType } from "../../../src/_utils/common";
 import { defineProps } from "../../core/common/props";
 import { useProps } from "../../core/common/props";
 import { useEvent, getLabelText } from "../../core/common/event";
@@ -9,7 +9,6 @@ const Select = defineComponent({
   name: prefixName,
   inheritAttrs: false,
   props: {
-    typeformat: Function,
     filterable: {
       type: Boolean,
       default: false,
@@ -22,32 +21,31 @@ const Select = defineComponent({
   },
   emits: ["update:modelValue"],
   setup(props, { attrs, emit }) {
-    let { textRef } = useEvent(props, emit);
-    let netDic = ref(props.dic);
-    let { filterable } = props;
+    const netDic = ref(props.dic);
 
-    let { valueKey, labelKey } = useProps(props);
+    const { valueKey, labelKey } = useProps(props);
+    const { text, handleFocus, handleBlur } = useEvent(props, emit);
 
-    let optionsRef = computed(() => {
+    const computedOptions = computed(() => {
       const options = netDic.value.map((row: any) => {
-        return {
-          ...row,
-          value: row[valueKey.value],
-          label: getLabelText(
+        const option = {
+          label: isBasicType(row) ? row : getLabelText(
             row,
             props.typeformat,
             labelKey.value,
             valueKey.value
           ),
+          value: isBasicType(row) ? row : row[valueKey.value],
           item: row,
-        };
+        }
+        return option;
       });
       return options;
     });
 
-    watch(() => props.dic, (val) => {
-      netDic.value = val;
-    });
+    // watch(() => props.dic, (val) => {
+    //   netDic.value = val;
+    // });
 
     const filterOption = (input: string, option: any) => {
       return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
@@ -80,29 +78,30 @@ const Select = defineComponent({
         netDic.value = [...createOption, ...props.dic];
       }
     }
-    function getValue() {
-      if (res && !choose) {
-        textRef.value = res;
+    function getValue(event: any) {
+      if (res && !choose && props.allowCreate) {
+        text.value = res;
       }
       isBlur = true;
+      handleBlur(event);
     }
     function onSelect(value: string) {
       choose = true;
-      textRef.value = value;
+      text.value = value;
     }
     return () => {
-      const options = optionsRef.value;
       return (
         <a-select
-          { ...attrs }
-          v-model:value={textRef.value}
-          show-search={filterable}
+          {...attrs}
+          v-model:value={text.value}
+          show-search={props.filterable}
           filter-option={filterOption}
           placeholder={props.placeholder || "请选择"}
-          onSearch={filterable ? onChangeSelect : void 0}
+          onSearch={props.filterable ? onChangeSelect : void 0}
+          onFocus={handleFocus}
           onBlur={getValue}
           onSelect={onSelect}
-          options={optionsRef.value}
+          options={computedOptions.value}
         />
       );
     };

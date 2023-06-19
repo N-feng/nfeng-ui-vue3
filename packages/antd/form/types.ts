@@ -35,6 +35,7 @@ export type Column = {
   // Column-字典属性
   props?: ColumnProps;
   dicData?: [];
+  dicUrl?: string;
   // Column-Props
   label?: string;
   value?: any;

@@ -12,12 +12,12 @@ export default defineComponent({
   },
   emits: ["update:modelValue"],
   setup(props, { attrs, emit }) {
-    const { textRef } = useEvent(props, emit);
+    const { text } = useEvent(props, emit);
 
     return () => {
       return (
         <>
-          <a-input v-model:value={textRef.value} />
+          <a-input v-model:value={text.value} />
         </>
       );
     };

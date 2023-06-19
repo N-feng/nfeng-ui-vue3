@@ -2,7 +2,6 @@ import { PropType } from "vue";
 import { Column } from "../../../antd/form/types";
 import { getComponent, getPlaceholder } from "../../../../src/core/dataformat";
 import { FormKey } from "../../../antd/form/common";
-import { set } from "lodash-es";
 
 export default defineComponent({
   props: {

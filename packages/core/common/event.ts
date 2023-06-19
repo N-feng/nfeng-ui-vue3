@@ -11,28 +11,40 @@ export function getLabelText(item: any, typeformat: any, labelKey: string, value
 }
 
 export function useEvent(props: any, emit?: any) {
-  let textRef = ref(initVal(props.value, props));
+  const text = ref(initVal(props.value, props));
 
-  watch(() => textRef.value, (n) => {
+  watch(() => text.value, (n) => {
     handleChange(n);
   });
 
   watch(() => props.value, (val) => {
-    textRef.value = initVal(val, props);
+    text.value = initVal(val, props);
   });
 
   function bindEvent(name: string, params: any) {
-    let item = findNode(props.dic, props.props, textRef.value);
+    let item = findNode(props.dic, props.props, text.value);
     params = Object.assign(params, { column: props.column, dic: props.dic, item: item });
     if (typeof props[name] === "function") {
       if (name == "change") {
         if (props.column.cell != true) {
           props[name](params);
-        } else {
-          props[name](params);
         }
+      } else {
+        props[name](params);
       }
     }
+  }
+
+  function handleFocus (event: any) {
+    bindEvent("focus", { value: text.value, event });
+  }
+
+  function handleBlur (event: any) {
+    bindEvent("blur", { value: text.value, event });
+  }
+
+  function handleClick (event: any) {
+    bindEvent("click", { value: text.value, event });
   }
 
   function handleChange(value: any) {
@@ -50,6 +62,9 @@ export function useEvent(props: any, emit?: any) {
   }
 
   return {
-    textRef,
+    text,
+    handleFocus,
+    handleBlur,
+    handleClick,
   };
 }

@@ -88,7 +88,7 @@ let option = {
 </script>
 
 <template>
-  <!-- <n-form :option="option" v-model="form" /> -->
+  <n-form :option="option" :model="form" />
 </template>
 ```
 
@@ -142,6 +142,6 @@ let option = {
 </script>
 
 <template>
-  <!-- <n-form :option="option" v-model="form" /> -->
+  <n-form :option="option" :model="form" />
 </template>
 ```

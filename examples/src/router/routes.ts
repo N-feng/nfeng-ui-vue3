@@ -3,6 +3,7 @@ import Guide from "../__docs__/Guide.md";
 import Theme from "../__docs__/styles/Theme.md";
 
 import Form from "../__docs__/components/Form.md";
+import Crud from "../__docs__/components/Crud.md";
 import Image from "../__docs__/components/Image.md";
 
 import Divider from "../__docs__/components/Divider.md";
@@ -34,6 +35,7 @@ export const routes = [
     title: "数据展示",
     children: [
       { path: "/form", title: "Form 表单", component: Form },
+      { path: "/crud", title: "Crud 表格", component: Crud },
       // { path: "/image", title: "Image 图片", component: Image },
     ],
   },

@@ -4,7 +4,6 @@ import FormMenu from "./Menu";
 import FormTemp from "../../core/components/form/FormTemp";
 import { FormKey } from "./common";
 import set from "lodash-es/set";
-import get from "lodash-es/get";
 import unset from "lodash-es/unset";
 import { TableOption, Column } from "./types";
 import useInit from "../../core/common/init";
@@ -12,6 +11,7 @@ import { setPx, vaildData, findObject } from "../../../src/utils/util";
 import config from "./config";
 import { formInitVal } from "../../../src/core/dataformat";
 import { validatenull } from "../../../src/utils/validate";
+import { sendDic } from "../../../src/core/dic";
 
 const { prefixName, prefixCls } = getPrefix("Form");
 
@@ -28,37 +28,38 @@ export default defineComponent({
     const formData: any = reactive({});
     const formList: any[] = [];
 
-    const { tableOption, columnOptionRef, propOptionRef, DIC } = useInit(
+    const { tableOption, columnOption, propOption, DIC } = useInit(
       props.option
     );
 
-    const parentOptionRef = computed(() => {
+    const parentOption = computed(() => {
       return tableOption || {};
     });
 
-    const menuPositionRef = computed(() => {
-      if (parentOptionRef.value.menuPosition) {
-        return parentOptionRef.value.menuPosition;
+    const menuPosition = computed(() => {
+      if (parentOption.value.menuPosition) {
+        return parentOption.value.menuPosition;
       } else {
         return "center";
       }
     });
 
-    const detailRef = computed(() => {
-      return parentOptionRef.value.detail;
+    const detail = computed(() => {
+      return parentOption.value.detail;
     });
 
-    const isMenuRef = computed(() => {
-      return columnOptionRef.value.length != 1;
+    const isDetail = computed(() => {
+      return detail.value === true;
     });
 
-    const isDetailRef = computed(() => {
-      return detailRef.value === true;
+    const isMenu = computed(() => {
+      return columnOption.value.length != 1;
     });
 
     const model = computed(() => (attrs['model'] as object) || {});
     provide(FormKey, {
-      parentOption: parentOptionRef.value,
+      parentOption,
+      menuPosition,
       setValue: (name: string | string[], value: any | any[]) => {
         if (typeof name === "string") {
           if (isEmpty(value)) {
@@ -84,7 +85,7 @@ export default defineComponent({
 
     //初始化表单
     function dataFormat() {
-      let formDefault = formInitVal(propOptionRef.value).tableForm;
+      let formDefault = formInitVal(propOption.value).tableForm;
       let formValue: any = model.value;
       let form: any = {};
       Object.entries(Object.assign(formDefault, formValue)).forEach((ele) => {
@@ -111,7 +112,7 @@ export default defineComponent({
       } else if (!validatenull(item[type])) {
         result = item?.type;
       } else {
-        result = parentOptionRef.value[type];
+        result = parentOption.value[type];
       }
       result = vaildData(result, config[type]);
       return isPx ? setPx(result) : result;
@@ -147,6 +148,11 @@ export default defineComponent({
           return;
         }
         // TODO:根据当前节点值获取下一个节点的字典
+        sendDic({
+          column: columnNext,
+          value: value,
+          form: formData,
+        })
       });
     }
 
@@ -157,24 +163,18 @@ export default defineComponent({
     dataFormat();
 
     return () => {
-      const parentOption = parentOptionRef.value;
-      const columnOption = columnOptionRef.value;
-      const menuPosition = menuPositionRef.value;
-      const isMenu = isMenuRef.value;
-      const isDetail = isDetailRef.value;
-
       return (
         <div>
           <a-form
             class={prefixCls}
             labelCol={{
               style: {
-                width: setPx(parentOption.labelWidth, config.labelWidth),
+                width: setPx(parentOption.value.labelWidth, config.labelWidth),
               },
             }}
           >
             <a-row>
-              {columnOption.map((item) => {
+              {columnOption.value.map((item) => {
                 return (
                   <>
                     {item.column?.map((column, cindex) => {
@@ -209,10 +209,8 @@ export default defineComponent({
                         </>
                       );
                     })}
-                    {!isDetail && !isMenu && (
+                    {!isDetail.value && !isMenu.value && (
                       <FormMenu
-                        parentOption={parentOption}
-                        menuPosition={menuPosition}
                         v-slots={{
                           menuForm: () => slots.menuForm && slots.menuForm(),
                         }}

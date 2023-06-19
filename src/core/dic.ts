@@ -1,7 +1,8 @@
-import { TableOption, Column } from "../../packages/antd/form/types";
-import { DIC_PROPS } from "../global/variable";
+import { TableOption } from "../../packages/antd/form/types";
 import { detailDataType } from "../utils/util";
-
+import { validatenull } from "../utils/validate";
+import { DIC_PROPS } from "../global/variable";
+const key = "key";
 function getDataType(list = [], props = {}, type: any) {
   let valueKey = (props as any).value || DIC_PROPS.value;
   let childrenKey = (props as any).children || DIC_PROPS.children;
@@ -23,4 +24,20 @@ export const loadLocalDic = (option: TableOption, safe: any) => {
   //   safe[ele] = result[ele];
   // })
   return result;
+};
+
+export const sendDic = (params: any) => {
+  let { url, value, column = {}, form = {} } = params;
+  url = column.dicUrl || url;
+  let list = url.match(/[^\{\}]+(?=\})/g) || [];
+  list.forEach((ele: any) => {
+    let result = ele === key ? value : form[ele];
+    if (validatenull(result)) result = "";
+    url = url.replace(`{{${ele}}}`, result);
+  });
+
+  return new Promise((resolve, reject) => {
+    if (!url) resolve([]);
+    console.log('url: ', url);
+  });
 };

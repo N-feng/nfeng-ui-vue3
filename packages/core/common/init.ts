@@ -13,7 +13,7 @@ export default function useInit(option: TableOption) {
     isMobile = document.body.clientWidth <= 768;
   }
 
-  const columnOptionRef = computed(() => {
+  const columnOption = computed(() => {
     let column = getColumn(Object.assign({}, tableOption)?.column);
     let group = option.group || [];
     group.unshift({
@@ -34,9 +34,9 @@ export default function useInit(option: TableOption) {
     return group;
   });
 
-  const propOptionRef = computed(() => {
+  const propOption = computed(() => {
     let list: Column[] = [];
-    columnOptionRef.value.forEach((option: TableOption) => {
+    columnOption.value.forEach((option: TableOption) => {
       if (option.display !== false) {
         (option?.column || []).forEach((column) => {
           list.push(column);
@@ -46,26 +46,26 @@ export default function useInit(option: TableOption) {
     return list;
   });
 
-  const resultOptionRef = computed(() => {
+  const resultOption = computed(() => {
     return {
       ...tableOption,
       ...{
-        column: propOptionRef.value,
+        column: propOption.value,
       },
     };
   });
 
-  watch(
-    () => option,
-    (val) => {
-      init(false);
-    },
-    { deep: true }
-  );
+  // watch(
+  //   () => option,
+  //   (val) => {
+  //     init(false);
+  //   },
+  //   { deep: true }
+  // );
 
   // 本地字典
   function handleLocalDic() {
-    const result = loadLocalDic(resultOptionRef.value, DIC);
+    const result = loadLocalDic(resultOption.value, DIC);
     Object.keys(result).forEach(ele => {
       DIC.value[ele] = result[ele];
     })
@@ -81,9 +81,9 @@ export default function useInit(option: TableOption) {
 
   return {
     tableOption,
-    columnOptionRef,
-    propOptionRef,
-    resultOptionRef,
+    columnOption,
+    propOption,
+    resultOption,
     isMobile,
     DIC,
   };

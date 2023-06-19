@@ -50,6 +50,14 @@ const option = reactive({
           });
         }
       },
+      focus: ({ value,column }: any) => {
+        // this.$message.success('focus事件查看控制台')
+        console.log('获取焦点',value,column)
+      },
+      blur: ({ value, column }: any) => {
+        // this.$message.success('blur事件查看控制台')
+        console.log("失去焦点", value, column);
+      }
     },
     city: {
       label: "城市",

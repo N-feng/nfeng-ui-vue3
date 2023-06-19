@@ -8,7 +8,11 @@ export type Props = {
 };
 
 export const defineProps = () => ({
+  blur: Function,
+  focus: Function,
   change: Function,
+  click: Function,
+  typeformat: Function,
   value: {},
   column: {
     type: Object as PropType<Column>,

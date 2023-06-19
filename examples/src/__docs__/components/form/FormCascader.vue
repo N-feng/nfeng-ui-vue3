@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
+const baseUrl = "";
 const form = ref({
   province: "110000",
   city: "110100",
@@ -31,6 +32,7 @@ const option = ref({
       label: "城市",
       type: "select",
       span: 12,
+      dicUrl: `${baseUrl}/getCity/{{key}}?params={{params}}`,
     },
   },
 });
