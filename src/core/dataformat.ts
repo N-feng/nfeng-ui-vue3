@@ -12,8 +12,23 @@ import {
   SELECT_LIST,
   DIC_SPLIT,
 } from "../global/variable";
-import { detailDataType } from "../utils/util";
-
+import { detailDataType, findObject } from "../utils/util";
+/**
+ * 计算级联属性
+ */
+export const calcCascader = (list = []) => {
+  list.forEach((ele: any) => {
+    let cascader = ele.cascader
+    if (!validatenull(cascader)) {
+      let parentProp = ele.prop;
+      cascader.forEach((citem: any) => {
+        let column = findObject(list, citem);
+        if (column) column.parentProp = parentProp;
+      });
+    }
+  });
+  return list;
+};
 /**
  * 计算空白列row
  */

@@ -4,14 +4,21 @@ import { calcCount } from "../../../src/core/dataformat";
 import { loadLocalDic } from "../../../src/core/dic";
 import config from "../../antd/form/config";
 
+export const defineInit = () => ({
+  option: {
+    type: Object,
+    required: true,
+    default: () => {
+      return {};
+    },
+  },
+});
+
 export default function useInit(option: TableOption) {
-  let DIC: any = ref({});
+  const DIC: any = ref({});
+  const cascaderDIC: any = ref({});
   let tableOption = option;
   let isMobile: boolean = false;
-
-  function getIsMobile() {
-    isMobile = document.body.clientWidth <= 768;
-  }
 
   const columnOption = computed(() => {
     let column = getColumn(Object.assign({}, tableOption)?.column);
@@ -63,6 +70,10 @@ export default function useInit(option: TableOption) {
   //   { deep: true }
   // );
 
+  function getIsMobile() {
+    isMobile = document.body.clientWidth <= 768;
+  }
+
   // 本地字典
   function handleLocalDic() {
     const result = loadLocalDic(resultOption.value, DIC);
@@ -80,11 +91,12 @@ export default function useInit(option: TableOption) {
   init();
 
   return {
+    DIC,
+    cascaderDIC,
     tableOption,
+    isMobile,
     columnOption,
     propOption,
     resultOption,
-    isMobile,
-    DIC,
   };
 }

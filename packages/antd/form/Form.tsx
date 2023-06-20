@@ -57,6 +57,7 @@ export default defineComponent({
     });
 
     const model = computed(() => (attrs['model'] as object) || {});
+
     provide(FormKey, {
       parentOption,
       menuPosition,

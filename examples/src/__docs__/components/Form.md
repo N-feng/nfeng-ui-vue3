@@ -14,7 +14,7 @@
 
 ```
 
-## 表单对象形式
+## Object对象形式
 ```vue demo src="./form/FormObject.vue"
 
 ```

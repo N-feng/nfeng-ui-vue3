@@ -1,7 +1,7 @@
 # Crud 表格
 
-```vue demo
-<template>
-  <n-crud></n-crud>
-</template>
+## Object对象形式
+
+```vue demo src="./crud/CrudObject.vue"
+
 ```

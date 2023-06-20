@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { reactive, watch } from 'vue'
-let form = reactive({
+import { reactive, ref, watch } from 'vue'
+let data = ref([{
   name: '姓名',
   sex: 14
-});
+}]);
 let option = reactive({
   labelWidth: 120,
   column: {
@@ -17,12 +17,9 @@ let option = reactive({
     }
   }
 });
-watch(form, (value) => {
-  option.column.name.label = value.name;
-});
 </script>
 
 <template>
-  {{ form }}
-  <n-form :option="option" :model="form" />
+  {{ data }}
+  <n-crud :option="option" :data="data" />
 </template>
