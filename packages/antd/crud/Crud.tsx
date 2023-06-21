@@ -1,11 +1,10 @@
-import {
-  BodyCellParams,
-} from "./types";
-import { isEmpty, getPrefix } from "../../../src/_utils/common";
+import { BodyCellParams } from "./types";
+import { getPrefix } from "../../../src/_utils/common";
 import useInit, { defineInit } from "../../core/common/init";
-import { deepClone, getColumn } from "../../../src/utils/util";
-import { calcCascader, formInitVal } from "../../../src/core/dataformat";
-import Column from "./Column";
+import useTablePage from "./TablePage";
+import { deepClone, getColumn, arraySort } from "../../../src/utils/util";
+import { calcCascader } from "../../../src/core/dataformat";
+import ColumnSlot from "./ColumnSlot";
 import { CrudKey } from "./common";
 
 const { prefixName, prefixCls } = getPrefix("Crud");
@@ -22,12 +21,13 @@ export default defineComponent({
     },
     ...defineInit(),
   },
-  setup(props, { attrs, slots }) {
+  setup(props, { attrs, slots, emit }) {
     const cellForm: any = reactive({
       list: [],
     });
 
     const { DIC, cascaderDIC, tableOption, isMobile } = useInit(props.option);
+    useTablePage(props, emit);
 
     const columnOption = computed(() => {
       return getColumn(deepClone(tableOption.column));
@@ -55,6 +55,24 @@ export default defineComponent({
       return result;
     });
 
+    const columns = computed(() => {
+      let result: any = [...columnOption.value];
+      result = arraySort(
+        result,
+        "index",
+        (a: any, b: any) =>
+          (objectOption.value as any)[a.prop]?.index - (objectOption.value as any)[b.prop]?.index
+      );
+      return result.map((ele: any) => {
+        return {
+          ...ele,
+          title: ele.label,
+          dataIndex: ele.prop,
+          key: ele.prop,
+        };
+      });
+    });
+
     provide(CrudKey, {
       crud: {
         cellForm,
@@ -78,10 +96,17 @@ export default defineComponent({
           <>
             <a-table
               dataSource={cellForm.list}
+              columns={columns.value}
               v-slots={{
                 bodyCell: (prop: BodyCellParams) => {
                   const { column, index, text, record } = prop;
-                  return <Column columnOption={columnOption.value} record={record} />;
+                  return (
+                    <ColumnSlot
+                      column={column}
+                      columnOption={columnOption.value}
+                      record={record}
+                    />
+                  );
                 },
               }}
             />
