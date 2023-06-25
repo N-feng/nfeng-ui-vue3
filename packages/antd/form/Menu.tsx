@@ -15,11 +15,21 @@ export default defineComponent({
           span={menuSpan.value}
           md={menuSpan.value}
         >
-          {vaildData(parentOption.value.submitBtn, true) && (
-            <a-button type="primary">提交</a-button>
-          )}
-          <a-button>取消</a-button>
-          <>{slots.menuForm && slots.menuForm()}</>
+          <a-form-item
+            labelCol={{
+              style: {
+                width: "0px",
+              },
+            }}
+          >
+            {vaildData(parentOption.value.submitBtn, true) && (
+              <a-button type="primary">提交</a-button>
+            )}
+            {vaildData(parentOption.value.emptyBtn, true) && (
+              <a-button>取消</a-button>
+            )}
+            {slots.menuForm && slots.menuForm()}
+          </a-form-item>
         </a-col>
       );
     };

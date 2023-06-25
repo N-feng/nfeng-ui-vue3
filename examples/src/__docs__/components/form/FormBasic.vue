@@ -15,6 +15,6 @@ const option = {
 </script>
 
 <template>
-  {{ form }}
+  <div>{{ form }}</div>
   <n-form :option="option" :model="form" />
 </template>

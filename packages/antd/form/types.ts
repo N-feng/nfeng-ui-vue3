@@ -1,6 +1,7 @@
 export type TableOption = {
   detail?: boolean;
   display?: boolean;
+  page?: object;
   // Option
   column?: Column[];
   labelWidth?: string;

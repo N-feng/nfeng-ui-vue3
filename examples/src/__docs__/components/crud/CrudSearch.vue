@@ -1,15 +1,16 @@
 <script setup lang="ts">
-import { reactive, watch } from 'vue'
-const form = reactive({
+import { reactive, ref, watch } from 'vue'
+const data = ref([{
   name: '姓名',
   sex: 14
-});
+}]);
 const option = reactive({
   labelWidth: 120,
   column: {
     name: {
       label: '姓名',
-      span: 12,
+      searchSpan: 12,
+      search:true,
     },
     sex: {
       label: '年龄',
@@ -17,12 +18,12 @@ const option = reactive({
     }
   }
 });
-watch(form, (value) => {
-  option.column.name.label = value.name;
+const search = reactive({
+  name:'small'
 });
 </script>
 
 <template>
-  <div>{{ form }}</div>
-  <n-form :option="option" :model="form" />
+  <div>{{ search }}</div>
+  <n-crud :option="option" :data="data" :search="search" />
 </template>

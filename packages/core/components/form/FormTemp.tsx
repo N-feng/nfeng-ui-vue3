@@ -46,8 +46,8 @@ export default defineComponent({
       return (
         <>
           {h(Component, {
-            value: text.value,
             ...column,
+            value: text.value,
             column: Object.assign({}, column),
             dic,
             placeholder: getPlaceholder(column),

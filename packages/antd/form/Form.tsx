@@ -1,17 +1,17 @@
 import { PropType } from "vue";
-import { isEmpty, getPrefix } from "../../../src/_utils/common";
-import FormMenu from "./Menu";
-import FormTemp from "../../core/components/form/FormTemp";
-import { FormKey } from "./common";
 import set from "lodash-es/set";
 import unset from "lodash-es/unset";
+import { isEmpty, getPrefix } from "../../../src/_utils/common";
+import { FormKey } from "./common";
 import { TableOption, Column } from "./types";
 import useInit from "../../core/common/init";
 import { setPx, vaildData, findObject } from "../../../src/utils/util";
-import config from "./config";
-import { formInitVal } from "../../../src/core/dataformat";
 import { validatenull } from "../../../src/utils/validate";
+import { formInitVal } from "../../../src/core/dataformat";
 import { sendDic } from "../../../src/core/dic";
+import config from "./config";
+import FormMenu from "./Menu";
+import FormTemp from "../../core/components/form/FormTemp";
 
 const { prefixName, prefixCls } = getPrefix("Form");
 
@@ -23,6 +23,7 @@ export default defineComponent({
       required: true,
     },
     value: {},
+    model: {},
   },
   setup(props, { attrs, slots }) {
     const formData: any = reactive({});
@@ -56,7 +57,7 @@ export default defineComponent({
       return columnOption.value.length != 1;
     });
 
-    const model = computed(() => (attrs['model'] as object) || {});
+    const model = computed(() => (props.model as object) || {});
 
     provide(FormKey, {
       parentOption,

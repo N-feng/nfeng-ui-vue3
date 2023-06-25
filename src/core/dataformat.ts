@@ -86,6 +86,31 @@ export const initVal = (value: any, props: any) => {
 };
 
 /**
+ * 搜索框获取动态组件
+ */
+export const getSearchType = (column: any) => {
+  const type = column.type;
+  const range = column.searchRange;
+  let result = type;
+  if (column.searchType) return column.searchType;
+  if (['radio', 'checkbox', 'switch'].includes(type)) {
+    result = 'select';
+  } else if (DATE_LIST.includes(type)) {
+    let rangeKey = 'range';
+    if (range) {
+      if (!type.includes(rangeKey)) {
+        result = type + rangeKey;
+      } else {
+        result = type;
+      }
+    } else result = type.replace(rangeKey, '');
+  } else if (['textarea'].includes(type)) {
+    result = 'input';
+  }
+  return result;
+};
+
+/**
  * 动态获取组件
  */
 export const getComponent = (type: string, component: any) => {

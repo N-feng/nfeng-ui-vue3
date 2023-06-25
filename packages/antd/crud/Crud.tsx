@@ -1,17 +1,36 @@
 import { BodyCellParams } from "./types";
 import { getPrefix } from "../../../src/_utils/common";
-import useInit, { defineInit } from "../../core/common/init";
-import useTablePage from "./TablePage";
-import { deepClone, getColumn, arraySort } from "../../../src/utils/util";
-import { calcCascader } from "../../../src/core/dataformat";
-import ColumnSlot from "./ColumnSlot";
 import { CrudKey } from "./common";
+import useInit, { defineInit } from "../../core/common/init";
+import { calcCascader } from "../../../src/core/dataformat";
+import { deepClone, getColumn, arraySort, vaildData } from "../../../src/utils/util";
+import useTablePage from "./TablePage";
+import HeaderSearch from "./HeaderSearch";
+import ColumnSlot from "./ColumnSlot";
 
 const { prefixName, prefixCls } = getPrefix("Crud");
 
 export default defineComponent({
   name: prefixName,
   props: {
+    value: {
+      type: Object,
+      default: () => {
+        return {};
+      },
+    },
+    search: {
+      type: Object,
+      default() {
+        return {};
+      },
+    },
+    page: {
+      type: Object,
+      default() {
+        return {};
+      },
+    },
     data: {
       type: Array,
       required: true,
@@ -27,7 +46,9 @@ export default defineComponent({
     });
 
     const { DIC, cascaderDIC, tableOption, isMobile } = useInit(props.option);
-    useTablePage(props, emit);
+    const { pageFlag, defaultPage, onChage } = useTablePage(props, emit, {
+      isMobile,
+    });
 
     const columnOption = computed(() => {
       return getColumn(deepClone(tableOption.column));
@@ -61,7 +82,8 @@ export default defineComponent({
         result,
         "index",
         (a: any, b: any) =>
-          (objectOption.value as any)[a.prop]?.index - (objectOption.value as any)[b.prop]?.index
+          (objectOption.value as any)[a.prop]?.index -
+          (objectOption.value as any)[b.prop]?.index
       );
       return result.map((ele: any) => {
         return {
@@ -80,8 +102,11 @@ export default defineComponent({
         cascaderDIC,
         tableOption,
         isMobile,
+        propOption,
         objectOption,
-      }
+        option: props.option,
+        search: props.search,
+      },
     });
 
     function dataInit() {
@@ -93,10 +118,17 @@ export default defineComponent({
     return () => {
       return (
         <div class={prefixCls}>
+          <HeaderSearch />
           <>
             <a-table
               dataSource={cellForm.list}
               columns={columns.value}
+              onChange={onChage}
+              pagination={
+                pageFlag.value &&
+                vaildData(tableOption.page, true) &&
+                defaultPage
+              }
               v-slots={{
                 bodyCell: (prop: BodyCellParams) => {
                   const { column, index, text, record } = prop;

@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { reactive, ref, watch } from 'vue'
-let data = ref([{
+const data = ref([{
   name: '姓名',
   sex: 14
 }]);
-let option = reactive({
+const option = reactive({
   labelWidth: 120,
   column: {
     name: {
@@ -20,6 +20,6 @@ let option = reactive({
 </script>
 
 <template>
-  {{ data }}
+  <div>{{ data }}</div>
   <n-crud :option="option" :data="data" />
 </template>

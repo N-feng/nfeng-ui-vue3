@@ -1,12 +1,12 @@
 import { TableOption, Column } from "../../antd/form/types";
-import { getColumn } from "../../../src/utils/util";
+import { deepClone, getColumn } from "../../../src/utils/util";
 import { calcCount } from "../../../src/core/dataformat";
 import { loadLocalDic } from "../../../src/core/dic";
 import config from "../../antd/form/config";
 
 export const defineInit = () => ({
   option: {
-    type: Object,
+    type: Object as PropType<TableOption>,
     required: true,
     default: () => {
       return {};
@@ -21,7 +21,7 @@ export default function useInit(option: TableOption) {
   let isMobile: boolean = false;
 
   const columnOption = computed(() => {
-    let column = getColumn(Object.assign({}, tableOption)?.column);
+    let column = getColumn(deepClone(tableOption)?.column);
     let group = option.group || [];
     group.unshift({
       column: column,
