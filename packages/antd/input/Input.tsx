@@ -12,12 +12,17 @@ export default defineComponent({
   },
   emits: ["update:modelValue"],
   setup(props, { attrs, emit }) {
+    const { clearableVal } = useProps(props);
     const { text } = useEvent(props, emit);
 
     return () => {
       return (
         <>
-          <a-input v-model:value={text.value} />
+          <a-input
+            v-model:value={text.value}
+            allow-clear={clearableVal.value}
+            placeholder={props.placeholder}
+          />
         </>
       );
     };

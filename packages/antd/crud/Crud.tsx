@@ -4,6 +4,7 @@ import { CrudKey } from "./common";
 import useInit, { defineInit } from "../../core/common/init";
 import { calcCascader } from "../../../src/core/dataformat";
 import { deepClone, getColumn, arraySort, vaildData } from "../../../src/utils/util";
+import config from "./config";
 import useTablePage from "./TablePage";
 import HeaderSearch from "./HeaderSearch";
 import ColumnSlot from "./ColumnSlot";
@@ -40,18 +41,19 @@ export default defineComponent({
     },
     ...defineInit(),
   },
+  emits: ["search-change", "on-load"],
   setup(props, { attrs, slots, emit }) {
     const cellForm: any = reactive({
       list: [],
     });
 
-    const { DIC, cascaderDIC, tableOption, isMobile } = useInit(props.option);
+    const { DIC, cascaderDIC, isMobile } = useInit(props.option);
     const { pageFlag, defaultPage, onChage } = useTablePage(props, emit, {
       isMobile,
     });
 
     const columnOption = computed(() => {
-      return getColumn(deepClone(tableOption.column));
+      return getColumn(props.option.column);
     });
 
     const propOption = computed(() => {
@@ -95,17 +97,23 @@ export default defineComponent({
       });
     });
 
+    function getBtnIcon(value: string) {
+      const name = value + "Icon";
+      return props.option[name] || (config as any)[name];
+    };
+
     provide(CrudKey, {
       crud: {
         cellForm,
         DIC,
         cascaderDIC,
-        tableOption,
         isMobile,
         propOption,
         objectOption,
         option: props.option,
         search: props.search,
+        emit,
+        getBtnIcon,
       },
     });
 
@@ -126,7 +134,7 @@ export default defineComponent({
               onChange={onChage}
               pagination={
                 pageFlag.value &&
-                vaildData(tableOption.page, true) &&
+                vaildData(props.option.page, true) &&
                 defaultPage
               }
               v-slots={{

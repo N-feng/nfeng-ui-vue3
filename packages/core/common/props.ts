@@ -24,6 +24,14 @@ export const defineProps = () => ({
     type: String,
     default: "",
   },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
+  clearable: {
+    type: Boolean,
+    default: true,
+  },
   prop: {
     type: String,
     default: "",
@@ -47,6 +55,10 @@ export const defineProps = () => ({
 export function useProps(props: any) {
   const propsDefault = DIC_PROPS;
 
+  const clearableVal = computed(() => {
+    return props.disabled ? false : props.clearable;
+  });
+
   const valueKey = computed(() => {
     return props?.props?.value || propsDefault.value;
   });
@@ -56,6 +68,7 @@ export function useProps(props: any) {
   });
 
   return {
+    clearableVal,
     valueKey,
     labelKey,
   };

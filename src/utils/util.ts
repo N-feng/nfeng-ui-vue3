@@ -191,7 +191,37 @@ export const getDicValue = (list: any, value: any, props: any = {}) => {
     return result.join('')
   }
 };
+/**
+ * 过滤字典翻译字段和空字段
+ */
+export const filterParams = (form: any, list = ['', '$'], deep = true) => {
+  let data = deep ? deepClone(form) : form
+  for (let o in data) {
+    if (list.includes('')) {
+      if (validatenull(data[o])) delete data[o];
+    }
+    if (list.includes('$')) {
+      if (o.indexOf('$') !== -1) delete data[o];
+    }
 
+  }
+  return data
+};
+export const clearVal = (obj: any, propList: any, list: any[] = []) => {
+  if (!obj) return {};
+  propList.forEach((ele: string) => {
+    if (list.includes(ele)) return;
+    else if (ele.includes("$")) delete obj[ele];
+    else if (!validatenull(obj[ele])) {
+      let type = getObjType(obj[ele]);
+      if (type === "array") obj[ele] = [];
+      else if (type === "object") obj[ele] = {};
+      else if (["number", "boolean"].includes(type)) obj[ele] = undefined;
+      else obj[ele] = "";
+    }
+  });
+  return obj;
+};
 /**
  * 验证是否存在true/false
  */

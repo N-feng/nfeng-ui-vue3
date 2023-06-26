@@ -23,7 +23,7 @@ const Select = defineComponent({
   setup(props, { attrs, emit }) {
     const netDic = ref(props.dic);
 
-    const { valueKey, labelKey } = useProps(props);
+    const { clearableVal, valueKey, labelKey } = useProps(props);
     const { text, handleFocus, handleBlur } = useEvent(props, emit);
 
     const computedOptions = computed(() => {
@@ -96,6 +96,7 @@ const Select = defineComponent({
           v-model:value={text.value}
           show-search={props.filterable}
           filter-option={filterOption}
+          allow-clear={clearableVal.value}
           placeholder={props.placeholder || "请选择"}
           onSearch={props.filterable ? onChangeSelect : void 0}
           onFocus={handleFocus}

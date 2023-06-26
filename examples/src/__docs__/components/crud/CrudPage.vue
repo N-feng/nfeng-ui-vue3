@@ -5,7 +5,6 @@ const data = ref([{
   sex: 14
 }]);
 const option = reactive({
-  labelWidth: 120,
   column: {
     name: {
       label: '姓名',

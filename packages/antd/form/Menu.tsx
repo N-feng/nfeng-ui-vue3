@@ -6,8 +6,11 @@ const { prefixCls } = getPrefix("Menu");
 
 export default defineComponent({
   setup(props, { slots }) {
-    const { parentOption, menuPosition } = inject(FormKey) as any;
+    const { allDisabled, parentOption, menuPosition, submit, resetForm } =
+      inject(FormKey) as any;
     const menuSpan = computed(() => parentOption.value.menuSpan || 24);
+    const SubmitIcon = resolveComponent(parentOption.value.submitIcon);
+    const EmptyIcon = resolveComponent(parentOption.value.emptyIcon);
     return () => {
       return (
         <a-col
@@ -23,10 +26,25 @@ export default defineComponent({
             }}
           >
             {vaildData(parentOption.value.submitBtn, true) && (
-              <a-button type="primary">提交</a-button>
+              <a-button
+                type="primary"
+                onClick={submit}
+                loading={allDisabled.value}
+                v-slots={{
+                  icon: () => h(SubmitIcon),
+                }}
+              >
+                {vaildData(parentOption.value.submitText, "提交")}
+              </a-button>
             )}
             {vaildData(parentOption.value.emptyBtn, true) && (
-              <a-button>取消</a-button>
+              <a-button
+                disabled={allDisabled.value}
+                onClick={() => resetForm()}
+                v-slots={{ icon: () => h(EmptyIcon) }}
+              >
+                {vaildData(parentOption.value.emptyText, "取消")}
+              </a-button>
             )}
             {slots.menuForm && slots.menuForm()}
           </a-form-item>

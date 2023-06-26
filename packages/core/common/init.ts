@@ -3,6 +3,7 @@ import { deepClone, getColumn } from "../../../src/utils/util";
 import { calcCount } from "../../../src/core/dataformat";
 import { loadLocalDic } from "../../../src/core/dic";
 import config from "../../antd/form/config";
+import { DIC_PROPS } from "../../../src/global/variable";
 
 export const defineInit = () => ({
   option: {
@@ -14,29 +15,29 @@ export const defineInit = () => ({
   },
 });
 
-export default function useInit(option: TableOption) {
+export default function useInit(option: any) {
   const DIC: any = ref({});
   const cascaderDIC: any = ref({});
-  let tableOption = option;
   let isMobile: boolean = false;
 
   const columnOption = computed(() => {
-    let column = getColumn(deepClone(tableOption)?.column);
-    let group = option.group || [];
+    let tableOption = deepClone(option.value);
+    let column = getColumn(tableOption?.column);
+    let group = option.value?.group || [];
     group.unshift({
       column: column,
     });
-    group.forEach((ele, index) => {
+    group.forEach((ele: any, index: number) => {
       ele.column = getColumn(ele.column);
       // 循环列的全部属性
-      ele.column.forEach((column, cindex) => {
+      ele.column.forEach((column: any, cindex: number) => {
         //动态计算列的位置，如果为隐藏状态则或则手机状态不计算
         if (column.display !== false && !isMobile) {
           column = calcCount(column, config.span, cindex === 0);
         }
       });
       //根据order排序
-      ele.column = ele.column.sort((a, b) => (b.order || 0) - (a.order || 0));
+      ele.column = ele.column.sort((a: any, b: any) => (b.order || 0) - (a.order || 0));
     });
     return group;
   });
@@ -55,11 +56,15 @@ export default function useInit(option: TableOption) {
 
   const resultOption = computed(() => {
     return {
-      ...tableOption,
+      ...option,
       ...{
         column: propOption.value,
       },
     };
+  });
+
+  const rowKey = computed(() => {
+    return option.value?.rowKey || DIC_PROPS.rowKey;
   });
 
   // watch(
@@ -93,10 +98,11 @@ export default function useInit(option: TableOption) {
   return {
     DIC,
     cascaderDIC,
-    tableOption,
+    tableOption: option,
     isMobile,
     columnOption,
     propOption,
     resultOption,
+    rowKey,
   };
 }

@@ -44,6 +44,7 @@ export type Column = {
   disabled?: boolean;
   // Column-Input
   placeholder?: string;
+  clearable?: boolean;
   change?: Function;
   // Column-Select
   cascader?: [];

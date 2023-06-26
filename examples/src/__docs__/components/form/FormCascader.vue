@@ -6,7 +6,6 @@ const form = ref({
   city: "110100",
 });
 const option = ref({
-  labelWidth: 120,
   column: {
     province: {
       label: "省份",

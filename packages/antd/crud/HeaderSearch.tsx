@@ -1,5 +1,5 @@
 import { CrudKey } from "./common";
-import { deepClone, vaildData } from "../../../src/utils/util";
+import { deepClone, vaildData, filterParams } from "../../../src/utils/util";
 import { getSearchType } from "../../../src/core/dataformat";
 import config from "./config";
 import Form from "../../antd/form/Form";
@@ -9,6 +9,11 @@ export default defineComponent({
     const { crud } = inject(CrudKey) as any;
     const show = ref(false);
     const searchIndex = crud.option.searchIndex || 2;
+
+    watch(crud.propOption, (val) => {
+      console.log('val: ', val);
+
+    }, { deep: true });
 
     const search = computed(() => {
       return crud.search;
@@ -28,7 +33,7 @@ export default defineComponent({
 
     const isSearchIcon = computed(() => {
       return (
-        vaildData(crud.option.searchIcon, false) && searchLen > searchIndex
+        vaildData(crud.option.searchIcon, false) && searchLen.value > searchIndex
       );
     });
 
@@ -99,19 +104,19 @@ export default defineComponent({
           group: false,
           printBtn: false,
           mockBtn: false,
-          submitText: crud.option.searchBtnText || "搜索",
+          submitText: crud.option.searchBtnText || "搜 索",
           submitBtn: vaildData(crud.option.searchBtn, config.searchSubBtn),
-          // submitIcon: crud.getBtnIcon("searchBtn"),
-          emptyText: crud.option.emptyBtnText || "暂无数据",
+          submitIcon: crud.getBtnIcon("searchBtn"),
+          emptyText: crud.option.emptyBtnText || "清 空",
           emptyBtn: vaildData(crud.option.emptyBtn, config.emptyBtn),
-          // emptyIcon: crud.getBtnIcon("emptyBtn"),
+          emptyIcon: crud.getBtnIcon("emptyBtn"),
           menuSpan: (() => {
             if (show.value || !isSearchIcon.value) {
               return crud.option.searchMenuSpan;
             } else {
-              return crud.option.searchMenuSpan < 6
+              return crud.option.searchMenuSpan < config.searchBtnSpan
                 ? crud.option.searchMenuSpan
-                : 6;
+                : config.searchBtnSpan;
             }
           })(),
           menuPosition: crud.option.searchMenuPosition || "center",
@@ -123,9 +128,52 @@ export default defineComponent({
       return detailOption(crud.option);
     });
 
+    // 搜索回调
+    function searchChange (form: any, done: Function) {
+      form = filterParams(form);
+      crud.propOption.value.forEach((ele: any) => {
+        if (ele.searchProp) {
+          form[ele.searchProp] = form[ele.prop];
+          delete form[ele.prop];
+        }
+      });
+      crud.emit("search-change", form, done);
+    }
+
+    function showChange () {
+      show.value = !show.value;
+    }
+
     return () => {
       return (
-        <>{searchFlag.value && <Form option={option.value} model={search.value} />}</>
+        <>
+          {searchFlag.value && (
+            <Form
+              option={option.value}
+              model={search.value}
+              onSubmit={searchChange}
+              v-slots={{
+                menuForm: () => (
+                  <>
+                    {isSearchIcon.value && (
+                      <a
+                        style="font-size: 12px;margin: 0 8px"
+                        onClick={showChange}
+                      >
+                        {show.value ? (
+                          <up-outlined style="margin-right: 5px" />
+                        ) : (
+                          <down-outlined style="margin-right: 5px" />
+                        )}
+                        Collapse
+                      </a>
+                    )}
+                  </>
+                ),
+              }}
+            />
+          )}
+        </>
       );
     };
   },

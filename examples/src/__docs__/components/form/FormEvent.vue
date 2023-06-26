@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref, reactive, watch } from "vue";
+const baseUrl = 'https://cli.avuejs.com/api/area'
 const form = reactive({
   province: "110000",
   city: "110100",
 });
 const option = reactive({
-  labelWidth: 120,
   column: {
     province: {
       label: "省份",
@@ -34,25 +34,27 @@ const option = reactive({
         Object.assign(form, {
           city: value,
         });
-        if (
-          option.column.city.dicData.findIndex(
-            (item: any) => item.value === value
-          ) === -1
-        ) {
-          option.column.city.dicData.push({
-            label: `我选择了：${item.name}`,
-            value,
-          });
-        } else {
-          option.column.city.dicData.push({
-            label: `我又选择了：${item.name}`,
-            value,
-          });
+        if (value) {
+          if (
+            option.column.city.dicData.findIndex(
+              (item: any) => item.value === value
+            ) === -1
+          ) {
+            option.column.city.dicData.push({
+              label: `我选择了：${item.name}`,
+              value,
+            });
+          } else {
+            option.column.city.dicData.push({
+              label: `我又选择了：${item.name}`,
+              value,
+            });
+          }
         }
       },
       focus: ({ value,column }: any) => {
         // this.$message.success('focus事件查看控制台')
-        console.log('获取焦点',value,column)
+        console.log('获取焦点',value,column);
       },
       blur: ({ value, column }: any) => {
         // this.$message.success('blur事件查看控制台')
@@ -64,6 +66,7 @@ const option = reactive({
       type: "select",
       span: 24,
       row: true,
+      dicUrl: `${baseUrl}/getCity/{{key}}`,
       dicData: [
         {
           label: "字典1",

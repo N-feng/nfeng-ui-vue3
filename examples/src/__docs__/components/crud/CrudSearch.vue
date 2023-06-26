@@ -5,7 +5,8 @@ const data = ref([{
   sex: 14
 }]);
 const option = reactive({
-  labelWidth: 120,
+  searchIndex:1,
+  searchIcon:true,
   column: {
     name: {
       label: '姓名',
@@ -13,17 +14,29 @@ const option = reactive({
       search:true,
     },
     sex: {
-      label: '年龄',
-      span: 12,
-    }
+      label: '性别',
+      searchSpan: 12,
+      search:true,
+      searchOrder:1,
+    },
   }
 });
 const search = reactive({
   name:'small'
 });
+
+const searchChange = (params: any,done: Function) => {
+  // this.$message.success('2s后关闭锁定')
+  console.log('2s后关闭锁定');
+  setTimeout(()=>{
+    done();
+    // this.$message.success(JSON.stringify(params));
+    console.log(JSON.stringify(params));
+  },2000);
+}
 </script>
 
 <template>
   <div>{{ search }}</div>
-  <n-crud :option="option" :data="data" :search="search" />
+  <n-crud :option="option" :data="data" :search="search" @search-change="searchChange" />
 </template>

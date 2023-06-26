@@ -1,11 +1,17 @@
 import { PropType } from "vue";
+import type { FormInstance } from "ant-design-vue";
 import set from "lodash-es/set";
 import unset from "lodash-es/unset";
 import { isEmpty, getPrefix } from "../../../src/_utils/common";
 import { FormKey } from "./common";
 import { TableOption, Column } from "./types";
 import useInit from "../../core/common/init";
-import { setPx, vaildData, findObject } from "../../../src/utils/util";
+import {
+  setPx,
+  vaildData,
+  findObject,
+  clearVal,
+} from "../../../src/utils/util";
 import { validatenull } from "../../../src/utils/validate";
 import { formInitVal } from "../../../src/core/dataformat";
 import { sendDic } from "../../../src/core/dic";
@@ -25,16 +31,21 @@ export default defineComponent({
     value: {},
     model: {},
   },
-  setup(props, { attrs, slots }) {
+  emits: ["submit", "error"],
+  setup(props, { attrs, slots, emit }) {
+    const formRef: any = ref<FormInstance>();
+    const allDisabled = ref(false);
     const formData: any = reactive({});
     const formList: any[] = [];
 
-    const { tableOption, columnOption, propOption, DIC } = useInit(
-      props.option
-    );
+    const option = computed(() => {
+      return props.option;
+    });
+    const { DIC, tableOption, columnOption, propOption, rowKey } =
+      useInit(option);
 
     const parentOption = computed(() => {
-      return tableOption || {};
+      return props.option;
     });
 
     const menuPosition = computed(() => {
@@ -57,33 +68,56 @@ export default defineComponent({
       return columnOption.value.length != 1;
     });
 
+    const boxType = computed(() => {
+      return parentOption.value.boxType;
+    });
+
+    const isAdd = computed(() => {
+      return boxType.value === "add";
+    });
+
+    const isEdit = computed(() => {
+      return boxType.value === "edit";
+    });
+
+    const isView = computed(() => {
+      return boxType.value === "view";
+    });
+
     const model = computed(() => (props.model as object) || {});
 
     provide(FormKey, {
+      allDisabled,
+      tableOption,
       parentOption,
+      columnOption,
       menuPosition,
-      setValue: (name: string | string[], value: any | any[]) => {
-        if (typeof name === "string") {
-          if (isEmpty(value)) {
-            unset(model.value, name);
-          } else {
-            set(model.value, name, value);
-          }
-        } else if (Array.isArray(name)) {
-          name.forEach((field, index) => {
-            if (isEmpty(value)) {
-              unset(model.value, field);
-            } else {
-              if (Array.isArray(value)) {
-                set(model.value, field, value[index]);
-              } else {
-                set(model.value, field, value);
-              }
-            }
-          });
-        }
-      },
+      setValue: setValue,
+      submit,
+      resetForm,
     });
+
+    function setValue(name: string | string[], value: any | any[]) {
+      if (typeof name === "string") {
+        if (isEmpty(value)) {
+          unset(model.value, name);
+        } else {
+          set(model.value, name, value);
+        }
+      } else if (Array.isArray(name)) {
+        name.forEach((field, index) => {
+          if (isEmpty(value)) {
+            unset(model.value, field);
+          } else {
+            if (Array.isArray(value)) {
+              set(model.value, field, value[index]);
+            } else {
+              set(model.value, field, value);
+            }
+          }
+        });
+      }
+    }
 
     //初始化表单
     function dataFormat() {
@@ -162,12 +196,76 @@ export default defineComponent({
       if (column?.cascader) handleChange(option, column);
     }
 
+    // 验证表单是否显隐
+    function vaildDisplay(column: Column) {
+      let key: any;
+      if (!validatenull(column.display)) {
+        key = "display";
+      } else if (isAdd.value) {
+        key = "addDisplay";
+      } else if (isEdit.value) {
+        key = "editDisplay";
+      } else if (isView.value) {
+        key = "viewDisplay";
+      }
+      return vaildData((column as any)[key], true);
+    }
+
+    function show() {
+      allDisabled.value = true;
+    }
+
+    function hide() {
+      allDisabled.value = false;
+    }
+
+    async function validate(callback: Function) {
+      // TODO: dynamicOption validate
+      try {
+        const values = await formRef.value.validateFields();
+        // console.log("Success:", values);
+        show();
+        callback(true, hide);
+      } catch (errorInfo) {
+        // console.log("Failed:", errorInfo);
+        callback(false, hide, errorInfo);
+      }
+    }
+
+    function resetForm(reset: boolean = true) {
+      console.log('reset: ', reset);
+      if (reset) {
+        let propList = propOption.value.map((ele: any) => ele.prop);
+        // Object.assign(
+        //   formData,
+        //   clearVal(
+        //     formData,
+        //     propList,
+        //     (tableOption.value.filterParams || []).concat([rowKey.value])
+        //   )
+        // );
+        // formRef.value.resetFields();
+      }
+    }
+
+    function submit() {
+      validate((valid: boolean, msg: string) => {
+        if (valid) {
+          emit("submit", formData, hide);
+        } else {
+          emit("error", msg);
+        }
+      })
+    }
+
     dataFormat();
 
     return () => {
       return (
         <div>
           <a-form
+            ref={formRef}
+            model={model.value}
             class={prefixCls}
             labelCol={{
               style: {
@@ -176,36 +274,42 @@ export default defineComponent({
             }}
           >
             <a-row>
-              {columnOption.value.map((item) => {
+              {columnOption.value.map((item: any) => {
                 return (
                   <>
-                    {item.column?.map((column, cindex) => {
+                    {item.column?.map((column: any, cindex: number) => {
                       return (
                         <>
-                          <a-col
-                            key={cindex}
-                            span={getItemParams(column, item, "span")}
-                            md={getItemParams(column, item, "span")}
-                            sm={getItemParams(column, item, "span")}
-                            xs={getItemParams(column, item, "xsSpan")}
-                            offset={getItemParams(column, item, "offset")}
-                            push={getItemParams(column, item, "push")}
-                            pull={getItemParams(column, item, "pull")}
-                          >
-                            <a-form-item label={column.label}>
-                              <FormTemp
-                                column={column}
-                                dic={DIC.value[column.prop] || []}
-                                value={(formData as any)[column.prop]}
-                                onChange={() => propChange(item.column, column)}
-                              />
-                            </a-form-item>
-                          </a-col>
+                          {vaildDisplay(column) && (
+                            <a-col
+                              key={cindex}
+                              span={getItemParams(column, item, "span")}
+                              md={getItemParams(column, item, "span")}
+                              sm={getItemParams(column, item, "span")}
+                              xs={getItemParams(column, item, "xsSpan")}
+                              offset={getItemParams(column, item, "offset")}
+                              push={getItemParams(column, item, "push")}
+                              pull={getItemParams(column, item, "pull")}
+                            >
+                              <a-form-item label={column.label}>
+                                <FormTemp
+                                  column={column}
+                                  dic={DIC.value[column.prop] || []}
+                                  value={(formData as any)[column.prop]}
+                                  onChange={() =>
+                                    propChange(item.column, column)
+                                  }
+                                />
+                              </a-form-item>
+                            </a-col>
+                          )}
                           {column.row && column.span !== 24 && column.count && (
                             <a-col
                               class={`${prefixCls}__line`}
                               key={cindex}
-                              style={{ width: (column.count / 24) * 100 + "%" }}
+                              style={{
+                                width: (column.count / 24) * 100 + "%",
+                              }}
                             />
                           )}
                         </>
@@ -221,6 +325,7 @@ export default defineComponent({
                   </>
                 );
               })}
+              {!isDetail.value && isMenu.value && <div>222</div>}
             </a-row>
           </a-form>
         </div>
