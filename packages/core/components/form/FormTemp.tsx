@@ -35,7 +35,8 @@ export default defineComponent({
 
     function setVal(val: any) {
       setValue(props.column.prop, val);
-      emit("change", val);
+      text.value = val;
+      // emit("change", val);
     }
 
     return () => {

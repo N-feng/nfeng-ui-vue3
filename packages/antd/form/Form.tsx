@@ -119,6 +119,16 @@ export default defineComponent({
       }
     }
 
+    function resetFields() {
+      propOption.value.forEach((item) => {
+        if (typeof item.prop === "string") {
+          if (isEmpty(formData[item.prop])) {
+            unset(model.value, item.prop);
+          }
+        }
+      });
+    }
+
     //初始化表单
     function dataFormat() {
       let formDefault = formInitVal(propOption.value).tableForm;
@@ -233,18 +243,19 @@ export default defineComponent({
     }
 
     function resetForm(reset: boolean = true) {
-      console.log('reset: ', reset);
       if (reset) {
         let propList = propOption.value.map((ele: any) => ele.prop);
-        // Object.assign(
-        //   formData,
-        //   clearVal(
-        //     formData,
-        //     propList,
-        //     (tableOption.value.filterParams || []).concat([rowKey.value])
-        //   )
-        // );
+        Object.assign(
+          formData,
+          clearVal(
+            formData,
+            propList,
+            (tableOption.value.filterParams || []).concat([rowKey.value])
+          )
+        );
+        console.log("formData: ", formData);
         // formRef.value.resetFields();
+        resetFields();
       }
     }
 
@@ -258,6 +269,10 @@ export default defineComponent({
       })
     }
 
+    function onInput(name: string, val: any) {
+      formData[name] = val;
+    }
+
     dataFormat();
 
     return () => {
@@ -265,7 +280,7 @@ export default defineComponent({
         <div>
           <a-form
             ref={formRef}
-            model={model.value}
+            model={formData}
             class={prefixCls}
             labelCol={{
               style: {
@@ -299,6 +314,7 @@ export default defineComponent({
                                   onChange={() =>
                                     propChange(item.column, column)
                                   }
+                                  onUpdate:modelValue={(val) => onInput(column.prop, val)}
                                 />
                               </a-form-item>
                             </a-col>

@@ -34,7 +34,7 @@ export default defineComponent({
                   icon: () => h(SubmitIcon),
                 }}
               >
-                {vaildData(parentOption.value.submitText, "提交")}
+                {vaildData(parentOption.value.submitText, "提 交")}
               </a-button>
             )}
             {vaildData(parentOption.value.emptyBtn, true) && (
@@ -43,7 +43,7 @@ export default defineComponent({
                 onClick={() => resetForm()}
                 v-slots={{ icon: () => h(EmptyIcon) }}
               >
-                {vaildData(parentOption.value.emptyText, "取消")}
+                {vaildData(parentOption.value.emptyText, "清 空")}
               </a-button>
             )}
             {slots.menuForm && slots.menuForm()}

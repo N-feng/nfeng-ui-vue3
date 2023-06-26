@@ -18,7 +18,6 @@ export function useEvent(props: any, emit?: any) {
   });
 
   watch(() => props.value, (val) => {
-    console.log('val: ', val);
     text.value = initVal(val, props);
   });
 

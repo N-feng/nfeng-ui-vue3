@@ -217,7 +217,7 @@ export const clearVal = (obj: any, propList: any, list: any[] = []) => {
       if (type === "array") obj[ele] = [];
       else if (type === "object") obj[ele] = {};
       else if (["number", "boolean"].includes(type)) obj[ele] = undefined;
-      else obj[ele] = "";
+      else obj[ele] = undefined;
     }
   });
   return obj;
