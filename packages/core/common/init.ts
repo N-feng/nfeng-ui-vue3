@@ -18,7 +18,7 @@ export const defineInit = () => ({
 export default function useInit(option: any) {
   const DIC: any = ref({});
   const cascaderDIC: any = ref({});
-  let isMobile: boolean = false;
+  const isMobile = ref(false);
 
   const columnOption = computed(() => {
     let tableOption = deepClone(option.value);
@@ -67,6 +67,14 @@ export default function useInit(option: any) {
     return option.value?.rowKey || DIC_PROPS.rowKey;
   });
 
+  const controlSize = computed(() => {
+    return option.value?.size || "small";
+  });
+
+  const isMediumSize = computed(() => {
+    return controlSize.value;
+  });
+
   // watch(
   //   () => option,
   //   (val) => {
@@ -76,7 +84,7 @@ export default function useInit(option: any) {
   // );
 
   function getIsMobile() {
-    isMobile = document.body.clientWidth <= 768;
+    isMobile.value = document.body.clientWidth <= 768;
   }
 
   // 本地字典
@@ -98,11 +106,13 @@ export default function useInit(option: any) {
   return {
     DIC,
     cascaderDIC,
-    tableOption: option,
-    isMobile,
+    controlSize,
     columnOption,
+    isMediumSize,
+    isMobile,
     propOption,
     resultOption,
     rowKey,
+    tableOption: option,
   };
 }

@@ -3,9 +3,14 @@ export default {
   // 图标
   searchBtnIcon: "SearchOutlined",
   emptyBtnIcon: "rest-outlined",
+  // 显隐
+  editBtn: true,
+  delBtn: true,
+  cellBtn: false,
   searchLabelWidth: 80,
   searchSpan: 6,
   searchBtnSpan: 24,
   searchSubBtn: undefined,
   emptyBtn: true,
+  menu: true,
 };

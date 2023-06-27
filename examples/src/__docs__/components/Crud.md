@@ -17,3 +17,9 @@
 ```vue demo src="./crud/CrudSearch.vue"
 
 ```
+
+## 增删改查方法
+
+```vue demo src="./crud/CrudFun.vue"
+
+```

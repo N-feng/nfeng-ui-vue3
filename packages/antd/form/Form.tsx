@@ -31,8 +31,8 @@ export default defineComponent({
     value: {},
     model: {},
   },
-  emits: ["submit", "error"],
-  setup(props, { attrs, slots, emit }) {
+  emits: ["submit", "error", "ResetChange"],
+  setup(props, { attrs, slots, emit, expose }) {
     const formRef: any = ref<FormInstance>();
     const allDisabled = ref(false);
     const formData: any = reactive({});
@@ -198,7 +198,7 @@ export default defineComponent({
           column: columnNext,
           value: value,
           form: formData,
-        })
+        });
       });
     }
 
@@ -257,6 +257,9 @@ export default defineComponent({
         // formRef.value.resetFields();
         resetFields();
       }
+      nextTick(() => {
+        emit("ResetChange");
+      });
     }
 
     function submit() {
@@ -266,7 +269,7 @@ export default defineComponent({
         } else {
           emit("error", msg);
         }
-      })
+      });
     }
 
     function onInput(name: string, val: any) {
@@ -274,6 +277,11 @@ export default defineComponent({
     }
 
     dataFormat();
+
+    expose({
+      submit: submit,
+      resetForm: resetForm,
+    });
 
     return () => {
       return (
@@ -314,7 +322,9 @@ export default defineComponent({
                                   onChange={() =>
                                     propChange(item.column, column)
                                   }
-                                  onUpdate:modelValue={(val) => onInput(column.prop, val)}
+                                  onUpdate:modelValue={(val) =>
+                                    onInput(column.prop, val)
+                                  }
                                 />
                               </a-form-item>
                             </a-col>

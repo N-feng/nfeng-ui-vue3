@@ -10,11 +10,13 @@ const option = reactive({
   column: {
     name: {
       label: '姓名',
+      span: 12,
       searchSpan: 12,
       search:true,
     },
     sex: {
       label: '性别',
+      span: 12,
       searchSpan: 12,
       search:true,
       searchOrder:1,

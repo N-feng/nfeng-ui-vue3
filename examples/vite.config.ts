@@ -7,7 +7,7 @@ import AutoImport from "unplugin-auto-import/vite";
 import { AntDesignVueResolver } from "unplugin-vue-components/resolvers";
 import {
   createStyleImportPlugin,
-  AndDesignVueResolve,
+  // AndDesignVueResolve,
 } from "vite-plugin-style-import";
 import { fileURLToPath, URL } from "node:url";
 
@@ -40,9 +40,9 @@ export default defineConfig({
     AutoImport({
       imports: ["vue", "vue-router", "pinia"],
     }),
-    createStyleImportPlugin({
-      resolves: [AndDesignVueResolve()],
-    }),
+    // createStyleImportPlugin({
+    //   resolves: [AndDesignVueResolve()],
+    // }),
   ],
   css: {
     preprocessorOptions: {
