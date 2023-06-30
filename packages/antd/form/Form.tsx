@@ -31,16 +31,28 @@ export default defineComponent({
     value: {},
     model: {},
   },
-  emits: ["submit", "error", "ResetChange"],
+  emits: ["submit", "error", "reset-change", "update:status"],
   setup(props, { attrs, slots, emit, expose }) {
     const formRef: any = ref<FormInstance>();
     const allDisabled = ref(false);
     const formData: any = reactive({});
     const formList: any[] = [];
 
+    watch(
+      allDisabled,
+      (val) => {
+        emit("update:status", val);
+      },
+      {
+        deep: true,
+        immediate: true,
+      }
+    );
+
     const option = computed(() => {
       return props.option;
     });
+
     const { DIC, tableOption, columnOption, propOption, rowKey } =
       useInit(option);
 
@@ -253,12 +265,11 @@ export default defineComponent({
             (tableOption.value.filterParams || []).concat([rowKey.value])
           )
         );
-        console.log("formData: ", formData);
         // formRef.value.resetFields();
         resetFields();
       }
       nextTick(() => {
-        emit("ResetChange");
+        emit("reset-change");
       });
     }
 

@@ -7,7 +7,7 @@ import Form from "../form/Form";
 export default defineComponent({
   setup(props, { expose }) {
     const { crud } = inject(CrudKey) as any;
-
+    const disabled = ref<boolean>(false);
     const boxType = ref<string>("");
     const boxVisible = ref<boolean>(false);
     const tableForm = ref<any>();
@@ -80,19 +80,62 @@ export default defineComponent({
       tableForm.value.resetForm();
     }
 
+    // 隐藏菜单
+    function hide(done?: () => void) {
+      console.log('hide')
+      const callback = () => {
+        done && done();
+        boxVisible.value = false;
+      };
+      callback();
+    }
+
+    // 显示表单
+    function show(type: string) {
+      boxType.value = type;
+      const callback = () => {
+        boxVisible.value = true;
+      };
+      callback();
+    }
+
     function closeDialog(row: any) {
       row = deepClone(row);
       const callback = () => {
         if (isEdit.value) {
-          let { parentList, index } = crud.findData(row[crud.rowKey.value])
-          if (parentList) {
-            const oldRow = parentList.splice(index, 1)[0];
-            row[crud.childrenKey.value] = oldRow[crud.childrenKey.value];
-            parentList.splice(index, 0, row);
+          let { parentList, index } = crud.findData(row[crud.rowKey]);
+          if (parentList.value) {
+            const oldRow = parentList.value.splice(index, 1)[0];
+            row[crud.childrenKey.value] = oldRow[crud.childrenKey];
+            parentList.value.splice(index, 0, row);
+          }
+        } else if (isAdd.value) {
+          let { item } = crud.findData(row[crud.rowParentKey]);
+          if (item) {
+            if (!item[crud.childrenKey]) {
+              item[crud.childrenKey] = [];
+            }
+            if (crud.tableOption.lazy) {
+              item[crud.hasChildrenKey] = true;
+            }
+            item[crud.childrenKey].push(row);
+          } else {
+            crud.list.value.push(row);
           }
         }
       }
       if (row) callback();
+      hide();
+    }
+
+    // 保存
+    function rowSave(hide: Function) {
+      crud.emit(
+        "row-save",
+        filterParams(crud.tableForm, ["$"]),
+        closeDialog,
+        hide
+      );
     }
 
     // 更新
@@ -108,28 +151,10 @@ export default defineComponent({
 
     function handleSubmit(form: any, hide: Function) {
       if (isAdd.value) {
-        crud.handleAdd(tableForm.value);
+        rowSave(hide);
       } else if (isEdit.value) {
         rowUpdate(hide);
       }
-    }
-
-    // 隐藏菜单
-    function hide(done: () => void) {
-      const callback = () => {
-        done && done();
-        boxVisible.value = false;
-      };
-      callback();
-    }
-
-    // 显示表单
-    function show(type: string) {
-      boxType.value = type;
-      const callback = () => {
-        boxVisible.value = true;
-      };
-      callback();
     }
 
     expose({
@@ -155,9 +180,10 @@ export default defineComponent({
                         <Form
                           option={formOption.value}
                           model={crud.tableForm}
+                          v-model:status={disabled.value}
                           ref={tableForm}
                           onSubmit={handleSubmit}
-                          onResetChange={hide}
+                          onReset-change={hide}
                         />
                       )}
                     </>
@@ -166,10 +192,10 @@ export default defineComponent({
                 footer: () => {
                   return (
                     <>
-                      <a-button onClick={submit}>
+                      <a-button onClick={submit} loading={disabled.value}>
                         {formOption.value.submitText}
                       </a-button>
-                      <a-button onClick={reset}>
+                      <a-button onClick={reset} disabled={disabled.value}>
                         {formOption.value.emptyText}
                       </a-button>
                     </>

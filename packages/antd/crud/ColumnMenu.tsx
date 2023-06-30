@@ -53,6 +53,7 @@ export default defineComponent({
                     type={menuText("link")}
                     danger
                     size={crud.isMediumSize.value}
+                    onClick={() => crud.rowDel(props.record, props.index)}
                   >
                     {!isIconMenu.value && crud.menuIcon("delBtn")}
                   </a-button>

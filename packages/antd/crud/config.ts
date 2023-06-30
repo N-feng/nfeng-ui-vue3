@@ -4,6 +4,7 @@ export default {
   searchBtnIcon: "SearchOutlined",
   emptyBtnIcon: "rest-outlined",
   // 显隐
+  addBtn: true,
   editBtn: true,
   delBtn: true,
   cellBtn: false,

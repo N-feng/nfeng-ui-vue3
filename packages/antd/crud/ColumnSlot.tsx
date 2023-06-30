@@ -10,8 +10,6 @@ export default defineComponent({
     record: {},
   },
   setup(props, { attrs, slots }) {
-    const { column, record } = props;
-
     const { crud } = inject(CrudKey) as any;
     // const { getColumnProp } = inject(DynamicKey) as any;
 
@@ -67,8 +65,8 @@ export default defineComponent({
 
     return () => {
       return (
-        getColumnProp(column, "hide") && (
-          <span>{handleDetail(record, column)}</span>
+        getColumnProp(props.column, "hide") && (
+          <span>{handleDetail(props.record, props.column)}</span>
         )
       );
     };

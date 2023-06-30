@@ -9,6 +9,7 @@ import { calcCascader } from "../../../src/core/dataformat";
 import { deepClone, getColumn, arraySort, vaildData } from "../../../src/utils/util";
 import useTablePage from "./TablePage";
 import HeaderSearch from "./HeaderSearch";
+import HeaderMenu from "./HeaderMenu";
 import ColumnSlot from "./ColumnSlot";
 import ColumnMenu from "./ColumnMenu";
 import DialogForm from "./DialogForm";
@@ -62,7 +63,14 @@ export default defineComponent({
     ...defineInit(),
     ...tableProps(),
   },
-  emits: ["search-change", "on-load", "row-update"],
+  emits: [
+    "current-change",
+    "on-load",
+    "row-del",
+    "row-save",
+    "row-update",
+    "search-change",
+  ],
   setup(props, { attrs, slots, emit }) {
     const cellForm = reactive({
       list: [],
@@ -82,7 +90,7 @@ export default defineComponent({
       tableOption,
     } = useInit(props.option);
 
-    const { pageFlag, defaultPage, onChage } = useTablePage(props, emit, {
+    const {  defaultPage, onChange, pageFlag } = useTablePage(props, emit, {
       isMobile,
     });
 
@@ -92,6 +100,10 @@ export default defineComponent({
 
     const treeProps = computed(() => {
       return tableOption.treeProps || {};
+    });
+
+    const rowParentKey = computed(() => {
+      return props.option.rowParentKey || DIC_PROPS.rowParentKey;
     });
 
     const childrenKey = computed(() => {
@@ -152,6 +164,13 @@ export default defineComponent({
       return newColumns;
     });
 
+    watch(
+      () => props.data,
+      (val) => {
+        dataInit();
+      }
+    );
+
     function menuIcon(value: string) {
       return vaildData(
         tableOption[value + "Text"],
@@ -164,6 +183,18 @@ export default defineComponent({
       return props.option[name] || (config as any)[name];
     }
 
+    function rowAdd() {
+      dialogForm.value.show("add");
+    }
+
+    // 删除
+    function rowDel(row: any, index: number) {
+      emit("row-del", row, index, () => {
+        let { parentList, index } = findData(row[rowKey.value]);
+        if (parentList) parentList.value.splice(index, 1);
+      });
+    }
+
     // 编辑
     function rowEdit(row: any, index: number) {
       Object.assign(tableForm, deepClone(row));
@@ -174,21 +205,21 @@ export default defineComponent({
     function findData(id: number | string) {
       let result: any = {};
       const callback = (parentList: any, parent?: any) => {
-        parentList.forEach((ele: any, index: number) => {
+        parentList.value.forEach((ele: any, index: number) => {
           if (ele[rowKey.value] == id) {
             result = {
               item: ele,
               index: index,
               parentList: parentList,
               parent: parent,
-            }
+            };
           }
           if (ele[childrenKey.value]) {
             callback(ele[childrenKey.value], ele);
           }
-        })
-      }
-      callback(list.value);
+        });
+      };
+      callback(list);
       return result;
     }
 
@@ -197,18 +228,22 @@ export default defineComponent({
         DIC,
         cascaderDIC,
         cellForm,
-        childrenKey,
+        childrenKey: childrenKey.value,
         emit,
         findData,
         getBtnIcon,
         isMediumSize,
         isMobile,
+        list: list,
         menuIcon,
-        objectOption: objectOption,
+        objectOption: objectOption.value,
         option: props.option,
         propOption,
+        rowAdd,
+        rowDel,
         rowEdit,
-        rowKey,
+        rowKey: rowKey.value,
+        rowParentKey: rowParentKey.value,
         search: props.search,
         tableOption,
         tableForm,
@@ -221,20 +256,23 @@ export default defineComponent({
         list: props.data,
       });
       list.value = props.data;
-    }
+    };
 
-    dataInit();
+    onMounted(() => {
+      dataInit();
+    });
 
     return () => {
       return (
         <div class={prefixCls}>
           <HeaderSearch />
+          <HeaderMenu />
           <>
             <a-table
               size={controlSize.value}
               dataSource={cellForm.list}
               columns={columns.value}
-              onChange={onChage}
+              onChange={onChange}
               pagination={
                 pageFlag.value &&
                 vaildData(props.option.page, true) &&

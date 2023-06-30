@@ -20,9 +20,9 @@ export default function (props: any, emit?: any, crud?: any) {
     return defaultPage.total != 0;
   });
 
-  watch(() => props.page, (val) => {
-    pageInit();
-  }, { deep: true });
+  // watch(() => props.page, (val) => {
+  //   pageInit();
+  // }, { deep: true });
 
   function pageInit() {
     Object.assign(defaultPage, props.page);
@@ -58,19 +58,28 @@ export default function (props: any, emit?: any, crud?: any) {
     emit("current-change", props.page.current);
   }
 
-  function onChage(page: any, ...args: any[]) {
+  function onChange(page: any, ...args: any[]) {
+    if (
+      page.current === defaultPage.current &&
+      page.pageSize === defaultPage.pageSize
+    ) {
+      return;
+    }
     if (page.current != defaultPage.current) {
       currentChange(page.current);
     } else if (page.pageSize != defaultPage.pageSize) {
       sizeChange(page.pageSize);
     }
   }
-  pageInit();
-  emit("on-load", defaultPage);
+
+  onMounted(() => {
+    pageInit();
+    emit("on-load", defaultPage);
+  });
 
   return {
     pageFlag,
     defaultPage,
-    onChage,
+    onChange,
   };
 }
