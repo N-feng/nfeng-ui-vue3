@@ -104,7 +104,7 @@ export default defineComponent({
       parentOption,
       columnOption,
       menuPosition,
-      setValue: setValue,
+      // setValue: setValue,
       submit,
       resetForm,
     });
@@ -336,6 +336,7 @@ export default defineComponent({
                                   onUpdate:modelValue={(val) =>
                                     onInput(column.prop, val)
                                   }
+                                  onSetValue={setValue}
                                 />
                               </a-form-item>
                             </a-col>

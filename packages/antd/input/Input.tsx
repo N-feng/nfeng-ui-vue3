@@ -16,12 +16,14 @@ export default defineComponent({
     const { text } = useEvent(props, emit);
 
     return () => {
+      const { placeholder, disabled } = props;
       return (
         <>
           <a-input
             v-model:value={text.value}
             allow-clear={clearableVal.value}
-            placeholder={props.placeholder}
+            placeholder={placeholder}
+            disabled={disabled}
           />
         </>
       );

@@ -1,4 +1,8 @@
-@include b(crud) {}
+@include b(crud) {
+  .ant-table .ant-form-item {
+    margin-bottom: 0;
+  }
+}
 
 @include b(header-menu) {
   min-height: 40px;

@@ -1,3 +1,4 @@
+import type { FormInstance } from "ant-design-vue";
 import { BodyCellParams } from "./types";
 import { getPrefix } from "../../../src/_utils/common";
 import { CrudKey } from "./common";
@@ -6,7 +7,13 @@ import lang from "../../../src/locale/lang/zh";
 import { DIC_PROPS } from "../../../src/global/variable";
 import useInit, { defineInit } from "../../core/common/init";
 import { calcCascader } from "../../../src/core/dataformat";
-import { deepClone, getColumn, arraySort, vaildData } from "../../../src/utils/util";
+import {
+  deepClone,
+  getColumn,
+  arraySort,
+  vaildData,
+} from "../../../src/utils/util";
+import { validatenull } from "../../../src/utils/validate";
 import useTablePage from "./TablePage";
 import HeaderSearch from "./HeaderSearch";
 import HeaderMenu from "./HeaderMenu";
@@ -19,7 +26,6 @@ const { prefixName, prefixCls } = getPrefix("Crud");
 const defaultPropMap = {
   operation: "operation",
 };
-
 
 const tableProps = () => ({
   propMap: {
@@ -72,13 +78,30 @@ export default defineComponent({
     "search-change",
   ],
   setup(props, { attrs, slots, emit }) {
+    const btnDisabledList: any = reactive({});
+    const btnDisabled = ref(false);
     const cellForm = reactive({
-      list: [],
+      list: [
+        {
+          id: 1,
+          name: "张三",
+          sex: "男",
+          age: 24,
+          $cellEdit: true,
+        },
+        {
+          id: 2,
+          name: "李四",
+          sex: "女",
+          age: 18,
+        },
+      ],
     });
+    const dialogForm = ref();
+    const formRef: any = ref<FormInstance>();
     const list: any = ref([]);
     const tableForm = reactive({});
     const tableIndex = ref(-1);
-    const dialogForm = ref();
 
     const {
       DIC,
@@ -90,9 +113,11 @@ export default defineComponent({
       tableOption,
     } = useInit(props.option);
 
-    const {  defaultPage, onChange, pageFlag } = useTablePage(props, emit, {
+    const { defaultPage, onChange, pageFlag } = useTablePage(props, emit, {
       isMobile,
     });
+
+    const data = computed(() => props.data || []);
 
     const propMap = computed(() => {
       return Object.assign({}, defaultPropMap, props.propMap);
@@ -183,6 +208,53 @@ export default defineComponent({
       return props.option[name] || (config as any)[name];
     }
 
+    async function validateCellField(index: number) {
+      let result = true;
+      const r = await formRef.value.validate();
+      // const r = await formRef.value.validateFields([`cellForm.list.${index}`]);
+      console.log('r: ', r);
+      return result;
+    }
+
+    async function rowCellUpdate(row: any, index: number) {
+      row = deepClone(row);
+      var result = await validateCellField(index);
+      const done = () => {
+        btnDisabledList[index] = false;
+        btnDisabled.value = false;
+        list.value[index].$cellEdit = false;
+      };
+      const loading = () => {
+        btnDisabledList[index] = false;
+        btnDisabled.value = false;
+      };
+      if (result) {
+        btnDisabledList[index] = true;
+        btnDisabled.value = false;
+        if (validatenull(row[rowKey.value])) {
+          emit("row-save", row, done, loading);
+        } else {
+          emit("row-update", row, index, done, loading);
+        }
+      }
+    }
+
+    // 单元格编辑
+    function rowCellEdit(row: any, index: number) {
+      row.$cellEdit = true;
+      // 缓冲行数据
+      // cascaderFormList[index] = deepClone(row);
+    }
+
+    // 行编辑点击
+    function rowCell(row: any, index: number) {
+      if (row.$cellEdit) {
+        rowCellUpdate(row, index);
+      } else {
+        rowCellEdit(row, index);
+      }
+    }
+
     function rowAdd() {
       dialogForm.value.show("add");
     }
@@ -225,14 +297,15 @@ export default defineComponent({
 
     provide(CrudKey, {
       crud: {
-        DIC,
+        btnDisabledList,
         cascaderDIC,
         cellForm,
         childrenKey: childrenKey.value,
+        DIC,
         emit,
         findData,
         getBtnIcon,
-        isMediumSize,
+        isMediumSize: isMediumSize.value,
         isMobile,
         list: list,
         menuIcon,
@@ -240,6 +313,7 @@ export default defineComponent({
         option: props.option,
         propOption,
         rowAdd,
+        rowCell,
         rowDel,
         rowEdit,
         rowKey: rowKey.value,
@@ -253,10 +327,10 @@ export default defineComponent({
 
     function dataInit() {
       Object.assign(cellForm, {
-        list: props.data,
+        list: data.value,
       });
-      list.value = props.data;
-    };
+      list.value = data.value;
+    }
 
     onMounted(() => {
       dataInit();
@@ -267,7 +341,7 @@ export default defineComponent({
         <div class={prefixCls}>
           <HeaderSearch />
           <HeaderMenu />
-          <>
+          <a-form model={cellForm.list} ref={formRef}>
             <a-table
               size={controlSize.value}
               dataSource={cellForm.list}
@@ -294,13 +368,14 @@ export default defineComponent({
                         column={column}
                         columnOption={columnOption.value}
                         record={record}
+                        index={index}
                       />
                     );
                   }
                 },
               }}
             />
-          </>
+          </a-form>
           <DialogForm ref={dialogForm} />
         </div>
       );

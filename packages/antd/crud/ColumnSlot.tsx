@@ -2,16 +2,34 @@ import { CrudKey } from "./common";
 import { validatenull } from "../../../src/utils/validate";
 import { detail } from "../../../src/core/detail";
 import { DIC_PROPS } from "../../../src/global/variable";
+// import { FormKey } from "../form/common";
+import FormTemp from "../../core/components/form/FormTemp";
 
 export default defineComponent({
   props: {
     column: Object,
     columnOption: Array,
     record: {},
+    index: {
+      type: Number,
+    },
   },
   setup(props, { attrs, slots }) {
     const { crud } = inject(CrudKey) as any;
-    // const { getColumnProp } = inject(DynamicKey) as any;
+
+    // provide(FormKey, {
+    //   setValue: setValue,
+    // });
+
+    function setValue(prop: string, val: any) {
+      crud.cellForm.list[(props as any).index][prop] = val;
+    }
+
+    function vaildLabel(column: any, record: any, val: any) {
+      if (column.rules && record.$cellEdit) {
+        return val;
+      }
+    }
 
     //表格筛选字典
     function handleFilters(column: any, flag: boolean) {
@@ -63,11 +81,39 @@ export default defineComponent({
       return result;
     }
 
+    function setVal(val: any) {
+      console.log('val: ', val);
+    }
+
     return () => {
+      const column: any = props.column;
+      const record: any = props.record;
+      const index: any = props.index;
       return (
-        getColumnProp(props.column, "hide") && (
+        getColumnProp(column, "hide") &&
+        (record.$cellEdit && column.cell ? (
+          <a-form-item
+            label={vaildLabel(column, record, undefined)}
+            name={[index, column.prop]}
+            rules={column.rules}
+          >
+            <FormTemp
+              column={column}
+              dic={crud.DIC[column.prop] || []}
+              disabled={
+                crud.disabled ||
+                crud.tableOption.disabled ||
+                column.disabled ||
+                crud.btnDisabledList[index]
+              }
+              value={record[column.prop]}
+              onUpdate:modelValue={setVal}
+              onSetValue={setValue}
+            />
+          </a-form-item>
+        ) : (
           <span>{handleDetail(props.record, props.column)}</span>
-        )
+        ))
       );
     };
   },

@@ -8,6 +8,7 @@ export default {
   editBtn: true,
   delBtn: true,
   cellBtn: false,
+  saveBtn: true,
   searchLabelWidth: 80,
   searchSpan: 6,
   searchBtnSpan: 24,

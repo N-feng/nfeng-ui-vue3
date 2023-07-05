@@ -17,7 +17,7 @@ export const defineInit = () => ({
 
 export default function useInit(option: any) {
   const DIC: any = ref({});
-  const cascaderDIC: any = ref({});
+  const cascaderDIC: any = reactive({});
   const isMobile = ref(false);
 
   const columnOption = computed(() => {
