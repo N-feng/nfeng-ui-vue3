@@ -9,7 +9,7 @@ export default defineComponent({
       type: Number,
     },
   },
-  setup(props) {
+  setup(props, { slots }) {
     const { crud } = inject(CrudKey) as any;
 
     const menuType = computed(() => {
@@ -66,6 +66,7 @@ export default defineComponent({
                       type={menuText("link")}
                       size={crud.isMediumSize}
                       disabled={crud.btnDisabledList[index]}
+                      onClick={() => crud.rowCancel(record, index)}
                     >
                       {crud.menuIcon("cancelBtn")}
                     </a-button>
@@ -95,6 +96,14 @@ export default defineComponent({
                 )}
             </>
           )}
+          {slots.menu &&
+            slots.menu({
+              row: record,
+              type: menuText("link"),
+              disabled: crud.btnDisabled,
+              size: crud.isMediumSize,
+              index: index,
+            })}
         </>
       );
     };

@@ -1,27 +1,29 @@
-import Row from "../../../packages/antd/row/Row";
-import Form from "../../../packages/antd/form/Form";
+import ContentLayout from "../../../packages/antd/layouts/ContentLayout";
 import Crud from "../../../packages/antd/crud/Crud";
 import Divider from "../../../packages/antd/divider/Divider";
-import Input from "../../../packages/antd/input/Input";
-import Select from "../../../packages/antd/select/Select";
-import ContentLayout from "../../../packages/antd/layouts/ContentLayout";
+import Form from "../../../packages/antd/form/Form";
 import HeaderLayout from "../../../packages/antd/layouts/HeaderLayout";
-import SiderLayout from "../../../packages/antd/layouts/SiderLayout";
 import HeaderSystemMenu from "../../../packages/antd/menus/HeaderSystemMenu";
+import Input from "../../../packages/antd/input/Input";
+import Row from "../../../packages/antd/row/Row";
+import Select from "../../../packages/antd/select/Select";
+import SiderLayout from "../../../packages/antd/layouts/SiderLayout";
+import Switch from "../../../packages/antd/switch/Switch";
 
 const components: {
   [propName: string]: Component;
 } = {
-  Row,
-  Form,
+  ContentLayout,
   Crud,
   Divider,
-  Input,
-  Select,
-  ContentLayout,
+  Form,
   HeaderLayout,
-  SiderLayout,
   HeaderSystemMenu,
+  Input,
+  Row,
+  Select,
+  SiderLayout,
+  Switch,
 };
 
 export default components;

@@ -1,6 +1,7 @@
 import { CrudKey } from "./common";
 import { validatenull } from "../../../src/utils/validate";
 import { detail } from "../../../src/core/detail";
+import { getSlotName, getSlotList } from "../../../src/core/slot";
 import { DIC_PROPS } from "../../../src/global/variable";
 // import { FormKey } from "../form/common";
 import FormTemp from "../../core/components/form/FormTemp";
@@ -82,7 +83,7 @@ export default defineComponent({
     }
 
     function setVal(val: any) {
-      console.log('val: ', val);
+      console.log("setVal: ", val);
     }
 
     return () => {
@@ -111,8 +112,10 @@ export default defineComponent({
               onSetValue={setValue}
             />
           </a-form-item>
+        ) : slots[column.prop] ? (
+          (slots as any)[column.prop]({ row: record })
         ) : (
-          <span>{handleDetail(props.record, props.column)}</span>
+          <span v-text={handleDetail(props.record, props.column)} />
         ))
       );
     };

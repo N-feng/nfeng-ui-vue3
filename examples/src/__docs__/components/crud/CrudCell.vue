@@ -1,25 +1,26 @@
 <script setup lang="ts">
 import { reactive, ref } from "vue";
 import { Modal } from "ant-design-vue";
-const data = reactive([
+const data: any = reactive([
   {
     id: 1,
     name: "张三",
     sex: "男",
     age: 24,
-    $cellEdit:true,
+    $cellEdit: true,
   },
   {
     id: 2,
     name: "李四",
     sex: "女",
     age: 18,
+    switch: true,
   },
 ]);
 const option = reactive({
   searchIndex: 1,
   searchIcon: true,
-  cellBtn:true,
+  cellBtn: true,
   column: {
     name: {
       label: "姓名",
@@ -30,10 +31,10 @@ const option = reactive({
       rules: [
         {
           required: true,
-          message: '请输入姓名',
-          trigger: 'blur'
-        }
-      ]
+          message: "请输入姓名",
+          trigger: "blur",
+        },
+      ],
     },
     sex: {
       label: "性别",
@@ -48,6 +49,12 @@ const option = reactive({
       span: 12,
       searchSpan: 12,
       search: true,
+      cell: true,
+    },
+    switch: {
+      label: "开关",
+      type: "switch",
+      cell: true,
     },
   },
 });
@@ -116,6 +123,18 @@ const rowUpdate = (
     done(form);
   }, 2000);
 };
+
+const addNextRow = (index: number) => {
+  data.splice(index + 1, 0, {
+    $cellEdit: true,
+  });
+};
+
+const addBreakRow = (index: number) => {
+  data.splice(index, 0, {
+    $cellEdit: true,
+  });
+};
 </script>
 
 <template>
@@ -128,5 +147,20 @@ const rowUpdate = (
     @row-save="rowSave"
     @row-update="rowUpdate"
     @row-del="rowDel"
-  />
+  >
+    <template #age="{ row }">
+      <a-tag>{{ row.age }}</a-tag>
+    </template>
+    <template #age-form="{ row, disabled }">
+      自定义:<a-input v-model="row.age" :disabled="disabled"></a-input>
+    </template>
+    <template #menu="{ row, index, size, type }">
+      <a-button @click="addBreakRow(index)" :size="size" :type="type" text
+        >向上添加</a-button
+      >
+      <a-button @click="addNextRow(index)" :size="size" :type="type" text
+        >向下添加</a-button
+      >
+    </template>
+  </n-crud>
 </template>

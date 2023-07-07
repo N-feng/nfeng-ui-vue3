@@ -7,6 +7,7 @@ import lang from "../../../src/locale/lang/zh";
 import { DIC_PROPS } from "../../../src/global/variable";
 import useInit, { defineInit } from "../../core/common/init";
 import { calcCascader } from "../../../src/core/dataformat";
+import { getSlotName, getSlotList } from "../../../src/core/slot";
 import {
   deepClone,
   getColumn,
@@ -80,22 +81,9 @@ export default defineComponent({
   setup(props, { attrs, slots, emit }) {
     const btnDisabledList: any = reactive({});
     const btnDisabled = ref(false);
+    const cascaderFormList: any = reactive([]);
     const cellForm = reactive({
-      list: [
-        {
-          id: 1,
-          name: "张三",
-          sex: "男",
-          age: 24,
-          $cellEdit: true,
-        },
-        {
-          id: 2,
-          name: "李四",
-          sex: "女",
-          age: 18,
-        },
-      ],
+      list: [],
     });
     const dialogForm = ref();
     const formRef: any = ref<FormInstance>();
@@ -151,6 +139,16 @@ export default defineComponent({
       findProp(columnOption.value);
       result = calcCascader(result);
       return result;
+    });
+
+    const mainSlot = computed(() => {
+      let result: any = [];
+      propOption.value.forEach((item: any) => {
+        if (slots[item.prop]) result.push(item.prop);
+      });
+      return getSlotList(["Header", "Form"], slots, propOption.value).concat(
+        result
+      );
     });
 
     const objectOption = computed(() => {
@@ -212,10 +210,33 @@ export default defineComponent({
       let result = true;
       const r = await formRef.value.validate();
       // const r = await formRef.value.validateFields([`cellForm.list.${index}`]);
-      console.log('r: ', r);
+      console.log("r: ", r);
       return result;
     }
 
+    function rowAdd() {
+      dialogForm.value.show("add");
+    }
+
+    // 行取消
+    function rowCancel(row: any, index: number) {
+      if (validatenull(row[rowKey.value])) {
+        list.value.splice(index, 1);
+        console.log('list: ', list);
+      } else {
+        cascaderFormList[index].$cellEdit = false;
+        list.value[index] = cascaderFormList[index];
+      }
+    }
+
+    // 行编辑点击
+    function rowCell(row: any, index: number) {
+      if (row.$cellEdit) {
+        rowCellUpdate(row, index);
+      } else {
+        rowCellEdit(row, index);
+      }
+    }
     async function rowCellUpdate(row: any, index: number) {
       row = deepClone(row);
       var result = await validateCellField(index);
@@ -244,19 +265,6 @@ export default defineComponent({
       row.$cellEdit = true;
       // 缓冲行数据
       // cascaderFormList[index] = deepClone(row);
-    }
-
-    // 行编辑点击
-    function rowCell(row: any, index: number) {
-      if (row.$cellEdit) {
-        rowCellUpdate(row, index);
-      } else {
-        rowCellEdit(row, index);
-      }
-    }
-
-    function rowAdd() {
-      dialogForm.value.show("add");
     }
 
     // 删除
@@ -313,6 +321,7 @@ export default defineComponent({
         option: props.option,
         propOption,
         rowAdd,
+        rowCancel,
         rowCell,
         rowDel,
         rowEdit,
@@ -330,6 +339,11 @@ export default defineComponent({
         list: data.value,
       });
       list.value = data.value;
+      list.value.forEach((ele: any, index: number) => {
+        if (ele.$cellEdit && !cascaderFormList[index]) {
+          cascaderFormList[index] = deepClone(ele);
+        }
+      });
     }
 
     onMounted(() => {
@@ -361,7 +375,17 @@ export default defineComponent({
                       propMap.value["operation"]
                     )
                   ) {
-                    return <ColumnMenu record={record} index={index} />;
+                    return (
+                      <ColumnMenu
+                        record={record}
+                        index={index}
+                        v-slots={{
+                          menu: (scope: any) => {
+                            return slots.menu && slots.menu(scope);
+                          },
+                        }}
+                      />
+                    );
                   } else {
                     return (
                       <ColumnSlot
@@ -369,6 +393,7 @@ export default defineComponent({
                         columnOption={columnOption.value}
                         record={record}
                         index={index}
+                        v-slots={slots}
                       />
                     );
                   }
