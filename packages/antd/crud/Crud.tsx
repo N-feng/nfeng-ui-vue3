@@ -6,7 +6,7 @@ import config from "./config";
 import lang from "../../../src/locale/lang/zh";
 import { DIC_PROPS } from "../../../src/global/variable";
 import useInit, { defineInit } from "../../core/common/init";
-import { calcCascader } from "../../../src/core/dataformat";
+import { calcCascader, formInitVal } from "../../../src/core/dataformat";
 import { getSlotName, getSlotList } from "../../../src/core/slot";
 import {
   deepClone,
@@ -73,12 +73,14 @@ export default defineComponent({
   emits: [
     "current-change",
     "on-load",
+    "row-click",
+    "row-dblclick",
     "row-del",
     "row-save",
     "row-update",
     "search-change",
   ],
-  setup(props, { attrs, slots, emit }) {
+  setup(props, { attrs, slots, emit, expose }) {
     const btnDisabledList: any = reactive({});
     const btnDisabled = ref(false);
     const cascaderFormList: any = reactive([]);
@@ -222,7 +224,6 @@ export default defineComponent({
     function rowCancel(row: any, index: number) {
       if (validatenull(row[rowKey.value])) {
         list.value.splice(index, 1);
-        console.log('list: ', list);
       } else {
         cascaderFormList[index].$cellEdit = false;
         list.value[index] = cascaderFormList[index];
@@ -237,6 +238,24 @@ export default defineComponent({
         rowCellEdit(row, index);
       }
     }
+
+    // 单元格新增
+    function rowCellAdd(row: any = {}) {
+      let len = list.value.length;
+      let formDefault = formInitVal(propOption.value).tableForm;
+      row = deepClone(
+        Object.assign({ $cellEdit: true, $index: len }, formDefault, row)
+      );
+      list.value.push(row);
+    }
+
+    // 单元格编辑
+    function rowCellEdit(row: any, index: number) {
+      row.$cellEdit = true;
+      // 缓冲行数据
+      cascaderFormList[index] = deepClone(row);
+    }
+
     async function rowCellUpdate(row: any, index: number) {
       row = deepClone(row);
       var result = await validateCellField(index);
@@ -260,11 +279,26 @@ export default defineComponent({
       }
     }
 
-    // 单元格编辑
-    function rowCellEdit(row: any, index: number) {
-      row.$cellEdit = true;
-      // 缓冲行数据
-      // cascaderFormList[index] = deepClone(row);
+    // 行单机
+    function rowClick(row: any, event: any, column?: any) {
+      if (
+        event.target.cellIndex === columns.value.length - 1 ||
+        !event.target.cellIndex
+      ) {
+        return;
+      }
+      emit("row-click", row, event, column);
+    }
+
+    // 行双击
+    function rowDblclick(row: any, event: any) {
+      if (
+        event.target.cellIndex === columns.value.length - 1 ||
+        !event.target.cellIndex
+      ) {
+        return;
+      }
+      emit("row-dblclick", row, event);
     }
 
     // 删除
@@ -323,6 +357,7 @@ export default defineComponent({
         rowAdd,
         rowCancel,
         rowCell,
+        rowCellAdd,
         rowDel,
         rowEdit,
         rowKey: rowKey.value,
@@ -343,6 +378,8 @@ export default defineComponent({
         if (ele.$cellEdit && !cascaderFormList[index]) {
           cascaderFormList[index] = deepClone(ele);
         }
+        ele.$cellEdit = ele.$cellEdit || false;
+        ele.$index = index;
       });
     }
 
@@ -350,22 +387,35 @@ export default defineComponent({
       dataInit();
     });
 
+    expose({
+      rowCancel,
+      rowCell,
+      rowCellAdd,
+      rowEdit,
+    });
+
     return () => {
       return (
         <div class={prefixCls}>
           <HeaderSearch />
-          <HeaderMenu />
+          <HeaderMenu v-slots={slots} />
           <a-form model={cellForm.list} ref={formRef}>
             <a-table
-              size={controlSize.value}
-              dataSource={cellForm.list}
               columns={columns.value}
+              customRow={(record: any, index: number) => {
+                return {
+                  onClick: (event: any) => rowClick(record, event), // 点击行
+                  onDblclick: (event: any) => rowDblclick(record, event),
+                };
+              }}
+              dataSource={cellForm.list}
               onChange={onChange}
               pagination={
                 pageFlag.value &&
                 vaildData(props.option.page, true) &&
                 defaultPage
               }
+              size={controlSize.value}
               v-slots={{
                 bodyCell: (prop: BodyCellParams) => {
                   const { column, index, text, record } = prop;

@@ -39,6 +39,6 @@ const searchChange = (params: any,done: Function) => {
 </script>
 
 <template>
-  <div>{{ search }}</div>
+  <div style="margin-bottom: 24px">{{ search }}</div>
   <n-crud :option="option" :data="data" :search="search" @search-change="searchChange" />
 </template>

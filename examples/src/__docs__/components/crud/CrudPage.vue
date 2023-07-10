@@ -56,9 +56,11 @@ function onLoad(page: any) {
 </script>
 
 <template>
-  <div>{{ page }}</div>
-  <a-button @click="page.current = page.current + 1">页码+1</a-button>
-  <a-button @click="page.pageSize = page.pageSize + 10">条数+1</a-button>
-  <a-button @click="page.total = page.total + 10">总页数+1</a-button>
+  <div style="margin-bottom: 24px">
+    <div style="margin-bottom: 24px">{{ page }}</div>
+    <a-button @click="page.current = page.current + 1">页码+1</a-button>
+    <a-button @click="page.pageSize = page.pageSize + 10">条数+1</a-button>
+    <a-button @click="page.total = page.total + 10">总页数+1</a-button>
+  </div>
   <n-crud :option="option" :data="data" :page="page" @on-load="onLoad" />
 </template>

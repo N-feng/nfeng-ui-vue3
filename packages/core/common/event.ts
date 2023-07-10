@@ -11,7 +11,7 @@ export function getLabelText(item: any, typeformat: any, labelKey: string, value
 }
 
 export function useEvent(props: any, emit?: any) {
-  const text = ref(initVal(props.value, props));
+  const text = ref(initVal(props.modelValue, props));
 
   watch(() => text.value, (n) => {
     handleChange(n);

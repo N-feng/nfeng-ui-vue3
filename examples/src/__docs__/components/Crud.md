@@ -1,6 +1,6 @@
 # Crud 表格
 
-<!-- ## Object对象形式
+## Object对象形式
 
 ```vue demo src="./crud/CrudObject.vue"
 
@@ -22,7 +22,7 @@
 
 ```vue demo src="./crud/CrudFun.vue"
 
-``` -->
+```
 
 ## 行编辑
 

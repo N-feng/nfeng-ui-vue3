@@ -7,7 +7,9 @@ import Crud from "../__docs__/components/Crud.md";
 import Image from "../__docs__/components/Image.md";
 
 import Divider from "../__docs__/components/Divider.md";
+import Input from "../__docs__/components/Input.md";
 import Select from "../__docs__/components/Select.md";
+import Switch from "../__docs__/components/Switch.md";
 
 export const routes = [
   {
@@ -50,7 +52,9 @@ export const routes = [
     path: "/form-component",
     title: "表单组件",
     children: [
-      { path: "/select", title: "Select 下拉选择", component: Select }
+      { path: "/input", title: "Input 输入框", component: Input },
+      { path: "/select", title: "Select 下拉选择", component: Select },
+      { path: "/switch", title: "Switch 开关", component: Switch },
     ]
   }
 ];

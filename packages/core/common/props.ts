@@ -39,7 +39,7 @@ export const defineProps = () => ({
   dic: {
     type: Array<any>,
     default: () => {
-      return {};
+      return [];
     },
   },
   placeholder: {
@@ -50,6 +50,7 @@ export const defineProps = () => ({
     type: Object as PropType<Props>,
     default: () => DIC_PROPS,
   },
+  modelValue: {},
 });
 
 export function useProps(props: any) {

@@ -94,15 +94,15 @@ const Select = defineComponent({
         <a-select
           {...attrs}
           v-model:value={text.value}
-          show-search={props.filterable}
-          filter-option={filterOption}
           allow-clear={clearableVal.value}
-          placeholder={props.placeholder || "请选择"}
+          filter-option={filterOption}
           onSearch={props.filterable ? onChangeSelect : void 0}
           onFocus={handleFocus}
           onBlur={getValue}
           onSelect={onSelect}
           options={computedOptions.value}
+          placeholder={props.placeholder || "请选择"}
+          show-search={props.filterable}
         />
       );
     };

@@ -1,28 +1,35 @@
 import { CrudKey } from "./common";
+import config from "./config";
 import lang from "../../../src/locale/lang/zh";
-import { deepClone, filterParams } from "../../../src/utils/util";
+import {
+  deepClone,
+  filterParams,
+  setPx,
+  vaildData,
+} from "../../../src/utils/util";
 import { validatenull } from "../../../src/utils/validate";
 import Form from "../form/Form";
 
 export default defineComponent({
   setup(props, { expose }) {
-    const { crud } = inject(CrudKey) as any;
-    const disabled = ref<boolean>(false);
     const boxType = ref<string>("");
     const boxVisible = ref<boolean>(false);
+    const { crud } = inject(CrudKey) as any;
+    const disabled = ref<boolean>(false);
+    const fullscreen = ref<boolean>(false);
     const tableForm = ref<any>();
 
     const isView = computed(() => {
-      return boxType.value === 'view'
-    })
+      return boxType.value === "view";
+    });
 
     const isAdd = computed(() => {
       return boxType.value === "add";
-    })
+    });
 
     const isEdit = computed(() => {
       return boxType.value === "edit";
-    })
+    });
 
     const formOption = computed(() => {
       let option = deepClone(crud.tableOption);
@@ -62,13 +69,35 @@ export default defineComponent({
     });
 
     const dialogType = computed(() => {
-      return isDrawer.value ? "drawer" : "AModal";
+      return isDrawer.value ? "ADrawer" : "AModal";
     });
 
-    const dialogTitle = computed( () => {
+    const width = computed(() => {
+      return vaildData(
+        crud.tableOption.dialogWidth + "",
+        crud.isMobile ? "100%" : config.dialogWidth + ""
+      );
+    });
+
+    const params = computed(() => {
+      return isDrawer.value
+        ? {
+            size: fullscreen.value ? "100%" : setPx(width.value),
+            direction: crud.tableOption.dialogDirection,
+          }
+        : {
+            width: setPx(width.value),
+            fullscreen: fullscreen.value,
+          };
+    });
+
+    const dialogTitle = computed(() => {
       const key = `${boxType.value}`;
       if (!validatenull(boxType.value)) {
-        return crud.tableOption[key + "Title"] || (lang as any)['crud'][`${key}Title`];
+        return (
+          crud.tableOption[key + "Title"] ||
+          (lang as any)["crud"][`${key}Title`]
+        );
       }
     });
 
@@ -82,7 +111,6 @@ export default defineComponent({
 
     // 隐藏菜单
     function hide(done?: () => void) {
-      console.log('hide')
       const callback = () => {
         done && done();
         boxVisible.value = false;
@@ -123,7 +151,7 @@ export default defineComponent({
             crud.list.value.push(row);
           }
         }
-      }
+      };
       if (row) callback();
       hide();
     }
@@ -145,7 +173,7 @@ export default defineComponent({
         filterParams(crud.tableForm, ["$"]),
         crud.tableIndex.value,
         closeDialog,
-        hide,
+        hide
       );
     }
 
@@ -161,48 +189,51 @@ export default defineComponent({
       show,
     });
 
+    const Component = resolveComponent(dialogType.value) as string;
+
     return () => {
-      const Component = resolveComponent(dialogType.value) as string;
       return (
         <>
-          {
-            h(
-              Component,
-              {
-                visible: boxVisible.value,
-                title: dialogTitle.value,
+          {h(
+            Component,
+            {
+              visible: boxVisible.value,
+              title: dialogTitle.value,
+              ...params.value,
+              width: params.value.size,
+              onClose: (event: any) => hide(),
+            },
+            {
+              default: () => {
+                return (
+                  <>
+                    {boxVisible.value && (
+                      <Form
+                        option={formOption.value}
+                        model={crud.tableForm}
+                        v-model:status={disabled.value}
+                        ref={tableForm}
+                        onSubmit={handleSubmit}
+                        onReset-change={hide}
+                      />
+                    )}
+                  </>
+                );
               },
-              {
-                default: () => {
-                  return (
-                    <>
-                      {boxVisible.value && (
-                        <Form
-                          option={formOption.value}
-                          model={crud.tableForm}
-                          v-model:status={disabled.value}
-                          ref={tableForm}
-                          onSubmit={handleSubmit}
-                          onReset-change={hide}
-                        />
-                      )}
-                    </>
-                  );
-                },
-                footer: () => {
-                  return (
-                    <>
-                      <a-button onClick={submit} loading={disabled.value}>
-                        {formOption.value.submitText}
-                      </a-button>
-                      <a-button onClick={reset} disabled={disabled.value}>
-                        {formOption.value.emptyText}
-                      </a-button>
-                    </>
-                  );
-                },
-              }
-            )}
+              footer: () => {
+                return (
+                  <>
+                    <a-button onClick={submit} loading={disabled.value}>
+                      {formOption.value.submitText}
+                    </a-button>
+                    <a-button onClick={reset} disabled={disabled.value}>
+                      {formOption.value.emptyText}
+                    </a-button>
+                  </>
+                );
+              },
+            }
+          )}
         </>
       );
     };

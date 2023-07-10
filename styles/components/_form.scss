@@ -11,15 +11,15 @@
 @include e(center) {
   text-align: center;
 
-  .ant-btn {
-    margin: 0 5px;
-  }
+  // .ant-btn {
+  //   margin: 0 5px;
+  // }
 }
 
 @include e(right) {
   text-align: right;
 }
 
-// .ant-btn + .ant-btn {
-//   margin-left: 10px;
-// }
+.ant-btn + .ant-btn {
+  margin-left: 10px;
+}

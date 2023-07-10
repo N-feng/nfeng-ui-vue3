@@ -83,6 +83,6 @@ const option = reactive({
 </script>
 
 <template>
-  <div>{{ form }}</div>
+  <div style="margin-bottom: 24px">{{ form }}</div>
   <n-form :option="option" :model="form" />
 </template>

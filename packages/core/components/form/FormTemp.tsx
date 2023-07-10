@@ -61,10 +61,10 @@ export default defineComponent({
         <>
           {h(Component, {
             ...column,
-            value: text.value,
             column: Object.assign({}, column),
             dic,
             disabled: column.disabled || disabled,
+            modelValue: text.value,
             placeholder: getPlaceholder(column),
             props: column.props || props.props,
             "onUpdate:modelValue": setVal,

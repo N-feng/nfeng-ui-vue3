@@ -98,22 +98,29 @@ export default defineComponent({
             name={[index, column.prop]}
             rules={column.rules}
           >
-            <FormTemp
-              column={column}
-              dic={crud.DIC[column.prop] || []}
-              disabled={
-                crud.disabled ||
-                crud.tableOption.disabled ||
-                column.disabled ||
-                crud.btnDisabledList[index]
-              }
-              value={record[column.prop]}
-              onUpdate:modelValue={setVal}
-              onSetValue={setValue}
-            />
+            {slots[`${column.prop}-form`] ? (
+              (slots as any)[`${column.prop}-form`]({
+                row: record,
+                disabled: crud.btnDisabledList[index],
+              })
+            ) : (
+              <FormTemp
+                column={column}
+                dic={crud.DIC[column.prop] || []}
+                disabled={
+                  crud.disabled ||
+                  crud.tableOption.disabled ||
+                  column.disabled ||
+                  crud.btnDisabledList[index]
+                }
+                value={record[column.prop]}
+                onUpdate:modelValue={setVal}
+                onSetValue={setValue}
+              />
+            )}
           </a-form-item>
         ) : slots[column.prop] ? (
-          (slots as any)[column.prop]({ row: record })
+          (slots as any)[column.prop]({ row: record, index: index })
         ) : (
           <span v-text={handleDetail(props.record, props.column)} />
         ))

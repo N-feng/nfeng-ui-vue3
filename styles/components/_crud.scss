@@ -2,6 +2,9 @@
   .ant-table .ant-form-item {
     margin-bottom: 0;
   }
+  .ant-btn.ant-btn-link {
+    margin-left: 0;
+  }
 }
 
 @include b(header-menu) {

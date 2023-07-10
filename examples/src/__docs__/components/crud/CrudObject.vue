@@ -19,6 +19,6 @@ const option = reactive({
 </script>
 
 <template>
-  <div>{{ data }}</div>
+  <div style="margin-bottom: 24px">{{ data }}</div>
   <n-crud :option="option" :data="data" />
 </template>

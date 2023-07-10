@@ -7,10 +7,10 @@ import { FormKey } from "./common";
 import { TableOption, Column } from "./types";
 import useInit from "../../core/common/init";
 import {
+  clearVal,
+  findObject,
   setPx,
   vaildData,
-  findObject,
-  clearVal,
 } from "../../../src/utils/util";
 import { validatenull } from "../../../src/utils/validate";
 import { formInitVal } from "../../../src/core/dataformat";

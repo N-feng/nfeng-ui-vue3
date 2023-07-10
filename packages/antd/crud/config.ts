@@ -5,9 +5,11 @@ export default {
   emptyBtnIcon: "rest-outlined",
   // 显隐
   addBtn: true,
+  addRowBtn: false,
   editBtn: true,
   delBtn: true,
   cellBtn: false,
+  dialogWidth: "60%",
   saveBtn: true,
   searchLabelWidth: 80,
   searchSpan: 6,

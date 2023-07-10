@@ -1,6 +1,6 @@
 import { CrudKey } from "./common";
-import { vaildData } from "../../../src/utils/util";
 import config from "./config";
+import { vaildData } from "../../../src/utils/util";
 
 export default defineComponent({
   props: {

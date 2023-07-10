@@ -3,36 +3,12 @@
 ```vue demo
 <script setup>
 import { ref, reactive } from "vue";
-let form = {
-  name: 1,
-};
-let option = {
-  column: [
-    {
-      label: "姓名",
-      prop: "name",
-      type: "select",
-      span: 12,
-      dicData: [
-        {
-          label: "字典1",
-          value: 0,
-        },
-        {
-          label: "字典2",
-          value: 1,
-        },
-      ],
-    },
-  ],
-};
 let value = ref('jack');
 </script>
 
 <template>
-  <!-- <n-form :option="option" v-model="form" /> -->
   <div>
-    <div>value: {{ JSON.stringify(value)  }}</div>
+    <div style="margin-bottom: 24px">value: {{ JSON.stringify(value)  }}</div>
     <n-select
       v-model="value"
       style="width: 120px"

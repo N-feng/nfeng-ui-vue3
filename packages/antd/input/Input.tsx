@@ -22,8 +22,8 @@ export default defineComponent({
           <a-input
             v-model:value={text.value}
             allow-clear={clearableVal.value}
-            placeholder={placeholder}
             disabled={disabled}
+            placeholder={placeholder}
           />
         </>
       );
