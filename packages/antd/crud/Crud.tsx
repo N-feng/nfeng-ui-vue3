@@ -161,7 +161,7 @@ export default defineComponent({
       return result;
     });
 
-    const columns = computed(() => {
+    const initColumns = computed(() => {
       let result: any = [...columnOption.value];
       result = arraySort(
         result,
@@ -178,14 +178,26 @@ export default defineComponent({
           key: ele.prop,
         };
       });
-      newColumns.push({
-        title: "操作",
-        dataIndex: propMap.value["operation"],
-        key: propMap.value["operation"],
-        fixed: "right",
-        align: "center",
-        width: props.editable ? 60 : 160,
-      });
+      if (vaildData(tableOption.index)) {
+        const seq = reactive({
+          title: tableOption.indexLabel || config.indexLabel,
+          dataIndex: "seq",
+          fixed: "left",
+          align: "center",
+          width: tableOption.indexWidth || config.indexWidth,
+        });
+        newColumns.unshift(seq);
+      }
+      if (vaildData(tableOption.menu, config.menu)) {
+        newColumns.push({
+          title: "操作",
+          dataIndex: propMap.value["operation"],
+          key: propMap.value["operation"],
+          fixed: "right",
+          align: "center",
+          width: props.editable ? 60 : 160,
+        });
+      }
       return newColumns;
     });
 
@@ -282,7 +294,7 @@ export default defineComponent({
     // 行单机
     function rowClick(row: any, event: any, column?: any) {
       if (
-        event.target.cellIndex === columns.value.length - 1 ||
+        event.target.cellIndex === initColumns.value.length - 1 ||
         !event.target.cellIndex
       ) {
         return;
@@ -293,7 +305,7 @@ export default defineComponent({
     // 行双击
     function rowDblclick(row: any, event: any) {
       if (
-        event.target.cellIndex === columns.value.length - 1 ||
+        event.target.cellIndex === initColumns.value.length - 1 ||
         !event.target.cellIndex
       ) {
         return;
@@ -401,7 +413,7 @@ export default defineComponent({
           <HeaderMenu v-slots={slots} />
           <a-form model={cellForm.list} ref={formRef}>
             <a-table
-              columns={columns.value}
+              columns={initColumns.value}
               customRow={(record: any, index: number) => {
                 return {
                   onClick: (event: any) => rowClick(record, event), // 点击行
@@ -419,6 +431,9 @@ export default defineComponent({
               v-slots={{
                 bodyCell: (prop: BodyCellParams) => {
                   const { column, index, text, record } = prop;
+                  if (tableOption.index && column.dataIndex === "seq") {
+                    return index + 1;
+                  }
                   if (
                     vaildData(tableOption.menu, config.menu) &&
                     [column.dataIndex, column.key].includes(

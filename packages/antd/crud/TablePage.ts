@@ -20,9 +20,9 @@ export default function (props: any, emit?: any, crud?: any) {
     return defaultPage.total != 0;
   });
 
-  // watch(() => props.page, (val) => {
-  //   pageInit();
-  // }, { deep: true });
+  watch(() => props.page, (val) => {
+    pageInit();
+  }, { deep: true });
 
   function pageInit() {
     Object.assign(defaultPage, props.page);

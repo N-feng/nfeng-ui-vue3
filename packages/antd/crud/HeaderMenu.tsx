@@ -16,7 +16,14 @@ export default defineComponent({
               <>
                 {vaildData(crud.tableOption.addBtn, config.addBtn) &&
                   !crud.isIconMenu && (
-                    <a-button type="primary" onClick={crud.rowAdd}>
+                    <a-button
+                      type="primary"
+                      onClick={crud.rowAdd}
+                      v-slots={{
+                        icon: () =>
+                          h(resolveComponent(crud.getBtnIcon("addBtn"))),
+                      }}
+                    >
                       {crud.menuIcon("addBtn")}
                     </a-button>
                   )}

@@ -325,7 +325,19 @@ export default defineComponent({
                               push={getItemParams(column, item, "push")}
                               pull={getItemParams(column, item, "pull")}
                             >
-                              <a-form-item label={column.label}>
+                              <a-form-item
+                                label={column.label}
+                                labelCol={{
+                                  style: {
+                                    width: getItemParams(
+                                      column,
+                                      item,
+                                      "labelWidth",
+                                      true
+                                    ),
+                                  },
+                                }}
+                              >
                                 <FormTemp
                                   column={column}
                                   dic={DIC.value[column.prop] || []}

@@ -9,8 +9,6 @@ export default defineComponent({
     const { allDisabled, parentOption, menuPosition, submit, resetForm } =
       inject(FormKey) as any;
     const menuSpan = computed(() => parentOption.value.menuSpan || 24);
-    const SubmitIcon = resolveComponent(parentOption.value.submitIcon);
-    const EmptyIcon = resolveComponent(parentOption.value.emptyIcon);
     return () => {
       return (
         <>
@@ -33,7 +31,8 @@ export default defineComponent({
                     onClick={submit}
                     loading={allDisabled.value}
                     v-slots={{
-                      icon: () => h(SubmitIcon),
+                      icon: () =>
+                        h(resolveComponent(parentOption.value.submitIcon)),
                     }}
                   >
                     {vaildData(parentOption.value.submitText, "提 交")}
@@ -43,7 +42,10 @@ export default defineComponent({
                   <a-button
                     disabled={allDisabled.value}
                     onClick={() => resetForm()}
-                    v-slots={{ icon: () => h(EmptyIcon) }}
+                    v-slots={{
+                      icon: () =>
+                        h(resolveComponent(parentOption.value.emptyIcon)),
+                    }}
                   >
                     {vaildData(parentOption.value.emptyText, "清 空")}
                   </a-button>

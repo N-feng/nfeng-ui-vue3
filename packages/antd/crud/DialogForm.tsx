@@ -75,14 +75,14 @@ export default defineComponent({
     const width = computed(() => {
       return vaildData(
         crud.tableOption.dialogWidth + "",
-        crud.isMobile ? "100%" : config.dialogWidth + ""
+        crud.isMobile.value ? "100%" : config.dialogWidth + ""
       );
     });
 
     const params = computed(() => {
       return isDrawer.value
         ? {
-            size: fullscreen.value ? "100%" : setPx(width.value),
+            width: fullscreen.value ? "100%" : setPx(width.value),
             direction: crud.tableOption.dialogDirection,
           }
         : {
@@ -200,7 +200,6 @@ export default defineComponent({
               visible: boxVisible.value,
               title: dialogTitle.value,
               ...params.value,
-              width: params.value.size,
               onClose: (event: any) => hide(),
             },
             {

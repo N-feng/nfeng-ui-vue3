@@ -225,7 +225,7 @@ export const clearVal = (obj: any, propList: any, list: any[] = []) => {
 /**
  * 验证是否存在true/false
  */
-export const vaildData = (val: any, dafult: any) => {
+export const vaildData = (val: any, dafult?: any) => {
   if (typeof val === "boolean") {
     return val;
   }

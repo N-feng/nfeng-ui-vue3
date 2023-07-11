@@ -79,6 +79,10 @@ export default defineComponent({
                     type={menuText("link")}
                     size={crud.isMediumSize}
                     onClick={() => crud.rowEdit(props.record, props.index)}
+                    v-slots={{
+                      icon: () =>
+                        h(resolveComponent(crud.getBtnIcon("editBtn"))),
+                    }}
                   >
                     {!isIconMenu.value && crud.menuIcon("editBtn")}
                   </a-button>
@@ -90,6 +94,10 @@ export default defineComponent({
                     danger
                     size={crud.isMediumSize}
                     onClick={() => crud.rowDel(props.record, props.index)}
+                    v-slots={{
+                      icon: () =>
+                        h(resolveComponent(crud.getBtnIcon("delBtn"))),
+                    }}
                   >
                     {!isIconMenu.value && crud.menuIcon("delBtn")}
                   </a-button>

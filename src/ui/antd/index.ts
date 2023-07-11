@@ -4,6 +4,7 @@ import Divider from "../../../packages/antd/divider/Divider";
 import Form from "../../../packages/antd/form/Form";
 import HeaderLayout from "../../../packages/antd/layouts/HeaderLayout";
 import HeaderSystemMenu from "../../../packages/antd/menus/HeaderSystemMenu";
+import Image from "../../../packages/antd/image/Image";
 import Input from "../../../packages/antd/input/Input";
 import Row from "../../../packages/antd/row/Row";
 import Select from "../../../packages/antd/select/Select";
@@ -19,6 +20,7 @@ const components: {
   Form,
   HeaderLayout,
   HeaderSystemMenu,
+  Image,
   Input,
   Row,
   Select,

@@ -86,6 +86,12 @@ export default defineComponent({
       console.log("setVal: ", val);
     }
 
+    function showToolTip(e: any) {
+      if (e.target.offsetWidth >= e.target.scrollWidth) {
+        e.target.style.pointerEvents = "none"; // 阻止鼠标事件
+      }
+    }
+
     return () => {
       const column: any = props.column;
       const record: any = props.record;
@@ -122,7 +128,36 @@ export default defineComponent({
         ) : slots[column.prop] ? (
           (slots as any)[column.prop]({ row: record, index: index })
         ) : (
-          <span v-text={handleDetail(props.record, props.column)} />
+          <>
+            {(column.overHidden && (
+              <a-tooltip
+                placement="top"
+                v-slots={{
+                  title: () => {
+                    return (
+                      <span v-text={handleDetail(props.record, props.column)} />
+                    );
+                  },
+                  default: () => {
+                    return (
+                      <div
+                        class={["tooltip", "cell"]}
+                        style={{ width: column.width + "px" }}
+                        onMouseenter={showToolTip}
+                      >
+                        <span
+                          v-text={handleDetail(props.record, props.column)}
+                        />
+                      </div>
+                    );
+                  },
+                }}
+              ></a-tooltip>
+            )) ||
+              (column.html && (
+                <span v-html={handleDetail(props.record, props.column)}></span>
+              )) || <span v-text={handleDetail(props.record, props.column)} />}
+          </>
         ))
       );
     };

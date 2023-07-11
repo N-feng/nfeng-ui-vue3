@@ -5,6 +5,13 @@
   .ant-btn.ant-btn-link {
     margin-left: 0;
   }
+  .cell {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .cell.tooltip {
+    white-space: nowrap;
+  }
 }
 
 @include b(header-menu) {
