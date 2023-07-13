@@ -9,32 +9,19 @@ export type Props = {
 
 export const defineProps = () => ({
   blur: Function,
-  focus: Function,
   change: Function,
   click: Function,
+  focus: Function,
   typeformat: Function,
-  value: {},
+  clearable: {
+    type: Boolean,
+    default: true,
+  },
   column: {
     type: Object as PropType<Column>,
     default: () => {
       return {};
     },
-  },
-  label: {
-    type: String,
-    default: "",
-  },
-  disabled: {
-    type: Boolean,
-    default: false,
-  },
-  clearable: {
-    type: Boolean,
-    default: true,
-  },
-  prop: {
-    type: String,
-    default: "",
   },
   dic: {
     type: Array<any>,
@@ -42,7 +29,20 @@ export const defineProps = () => ({
       return [];
     },
   },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
+  label: {
+    type: String,
+    default: "",
+  },
+  modelValue: {},
   placeholder: {
+    type: String,
+    default: "",
+  },
+  prop: {
     type: String,
     default: "",
   },
@@ -50,7 +50,19 @@ export const defineProps = () => ({
     type: Object as PropType<Props>,
     default: () => DIC_PROPS,
   },
-  modelValue: {},
+  size: {
+    type: String,
+    default: "",
+  },
+  tip: {
+    type: String,
+    // default: "",
+  },
+  tipPlacement: {
+    type: String,
+    default: "topLeft",
+  },
+  value: {},
 });
 
 export function useProps(props: any) {

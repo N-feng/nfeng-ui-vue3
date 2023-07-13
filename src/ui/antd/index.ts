@@ -2,6 +2,7 @@ import ContentLayout from "../../../packages/antd/layouts/ContentLayout";
 import Crud from "../../../packages/antd/crud/Crud";
 import Divider from "../../../packages/antd/divider/Divider";
 import Form from "../../../packages/antd/form/Form";
+import Group from "../../../packages/antd/group/Group";
 import HeaderLayout from "../../../packages/antd/layouts/HeaderLayout";
 import HeaderSystemMenu from "../../../packages/antd/menus/HeaderSystemMenu";
 import Image from "../../../packages/antd/image/Image";
@@ -18,6 +19,7 @@ const components: {
   Crud,
   Divider,
   Form,
+  Group,
   HeaderLayout,
   HeaderSystemMenu,
   Image,

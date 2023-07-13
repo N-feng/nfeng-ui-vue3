@@ -16,16 +16,32 @@ export default defineComponent({
     const { text } = useEvent(props, emit);
 
     return () => {
-      const { placeholder, disabled } = props;
-      return (
-        <>
-          <a-input
-            v-model:value={text.value}
-            allow-clear={clearableVal.value}
-            disabled={disabled}
-            placeholder={placeholder}
-          />
-        </>
+      const { disabled, placeholder, size, tip, tipPlacement } = props;
+      return tip ? (
+        <a-tooltip
+          trigger={["hover"]}
+          placement={tipPlacement}
+          v-slots={{
+            title: () => tip,
+            default: () => (
+              <a-input
+                v-model:value={text.value}
+                allow-clear={clearableVal.value}
+                disabled={disabled}
+                placeholder={placeholder}
+                size={size}
+              />
+            ),
+          }}
+        />
+      ) : (
+        <a-input
+          v-model:value={text.value}
+          allow-clear={clearableVal.value}
+          disabled={disabled}
+          placeholder={placeholder}
+          size={size}
+        />
       );
     };
   },

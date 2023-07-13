@@ -68,7 +68,7 @@ export default function useInit(option: any) {
   });
 
   const controlSize = computed(() => {
-    return option.value?.size || "small";
+    return option.value?.size || "default";
   });
 
   const isMediumSize = computed(() => {

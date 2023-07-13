@@ -3,6 +3,7 @@ export type TableOption = {
   display?: boolean;
   page?: object;
   // Option
+  size?: string;
   column?: Column[];
   labelWidth?: string;
   group?: TableOption[];
@@ -33,6 +34,10 @@ export type Column = {
   styles?: object;
   dataType?: string;
   component?: any;
+  // Column-共用属性
+  size?: string;
+  tip?: string;
+  tipPlacement?: string;
   // Column-字典属性
   props?: ColumnProps;
   dicData?: [];

@@ -13,7 +13,7 @@ import {
   vaildData,
 } from "../../../src/utils/util";
 import { validatenull } from "../../../src/utils/validate";
-import { formInitVal } from "../../../src/core/dataformat";
+import { formInitVal, getPlaceholder } from "../../../src/core/dataformat";
 import { sendDic } from "../../../src/core/dic";
 import config from "./config";
 import FormMenu from "./Menu";
@@ -53,7 +53,7 @@ export default defineComponent({
       return props.option;
     });
 
-    const { DIC, tableOption, columnOption, propOption, rowKey } =
+    const { DIC, controlSize, columnOption, propOption, rowKey, tableOption } =
       useInit(option);
 
     const parentOption = computed(() => {
@@ -108,38 +108,6 @@ export default defineComponent({
       submit,
       resetForm,
     });
-
-    function setValue(name: string | string[], value: any | any[]) {
-      if (typeof name === "string") {
-        if (isEmpty(value)) {
-          unset(model.value, name);
-        } else {
-          set(model.value, name, value);
-        }
-      } else if (Array.isArray(name)) {
-        name.forEach((field, index) => {
-          if (isEmpty(value)) {
-            unset(model.value, field);
-          } else {
-            if (Array.isArray(value)) {
-              set(model.value, field, value[index]);
-            } else {
-              set(model.value, field, value);
-            }
-          }
-        });
-      }
-    }
-
-    function resetFields() {
-      propOption.value.forEach((item) => {
-        if (typeof item.prop === "string") {
-          if (isEmpty(formData[item.prop])) {
-            unset(model.value, item.prop);
-          }
-        }
-      });
-    }
 
     //初始化表单
     function dataFormat() {
@@ -214,44 +182,26 @@ export default defineComponent({
       });
     }
 
-    function propChange(option?: TableOption, column?: Column) {
-      if (column?.cascader) handleChange(option, column);
-    }
-
-    // 验证表单是否显隐
-    function vaildDisplay(column: Column) {
-      let key: any;
-      if (!validatenull(column.display)) {
-        key = "display";
-      } else if (isAdd.value) {
-        key = "addDisplay";
-      } else if (isEdit.value) {
-        key = "editDisplay";
-      } else if (isView.value) {
-        key = "viewDisplay";
-      }
-      return vaildData((column as any)[key], true);
-    }
-
-    function show() {
-      allDisabled.value = true;
-    }
-
     function hide() {
       allDisabled.value = false;
     }
 
-    async function validate(callback: Function) {
-      // TODO: dynamicOption validate
-      try {
-        const values = await formRef.value.validateFields();
-        // console.log("Success:", values);
-        show();
-        callback(true, hide);
-      } catch (errorInfo) {
-        // console.log("Failed:", errorInfo);
-        callback(false, hide, errorInfo);
-      }
+    function onInput(name: string, val: any) {
+      formData[name] = val;
+    }
+
+    function propChange(option?: TableOption, column?: Column) {
+      if (column?.cascader) handleChange(option, column);
+    }
+
+    function resetFields() {
+      propOption.value.forEach((item) => {
+        if (typeof item.prop === "string") {
+          if (isEmpty(formData[item.prop])) {
+            unset(model.value, item.prop);
+          }
+        }
+      });
     }
 
     function resetForm(reset: boolean = true) {
@@ -273,6 +223,32 @@ export default defineComponent({
       });
     }
 
+    function setValue(name: string | string[], value: any | any[]) {
+      if (typeof name === "string") {
+        if (isEmpty(value)) {
+          unset(model.value, name);
+        } else {
+          set(model.value, name, value);
+        }
+      } else if (Array.isArray(name)) {
+        name.forEach((field, index) => {
+          if (isEmpty(value)) {
+            unset(model.value, field);
+          } else {
+            if (Array.isArray(value)) {
+              set(model.value, field, value[index]);
+            } else {
+              set(model.value, field, value);
+            }
+          }
+        });
+      }
+    }
+
+    function show() {
+      allDisabled.value = true;
+    }
+
     function submit() {
       validate((valid: boolean, msg: string) => {
         if (valid) {
@@ -283,8 +259,36 @@ export default defineComponent({
       });
     }
 
-    function onInput(name: string, val: any) {
-      formData[name] = val;
+    async function validate(callback: Function) {
+      // TODO: dynamicOption validate
+      try {
+        const values = await formRef.value.validateFields();
+        // console.log("Success:", values);
+        show();
+        callback(true, hide);
+      } catch (errorInfo) {
+        // console.log("Failed:", errorInfo);
+        callback(false, hide, errorInfo);
+      }
+    }
+
+    // 验证表单是否显隐
+    function vaildDisplay(column: Column) {
+      let key: any;
+      if (!validatenull(column.display)) {
+        key = "display";
+      } else if (isAdd.value) {
+        key = "addDisplay";
+      } else if (isEdit.value) {
+        key = "editDisplay";
+      } else if (isView.value) {
+        key = "viewDisplay";
+      }
+      return vaildData((column as any)[key], true);
+    }
+
+    function validTip(column: Column) {
+      return !column.tip || column.type === "upload";
     }
 
     dataFormat();
@@ -301,16 +305,18 @@ export default defineComponent({
             ref={formRef}
             model={formData}
             class={prefixCls}
+            labelOption={parentOption.value.labelOption}
             labelCol={{
               style: {
                 width: setPx(parentOption.value.labelWidth, config.labelWidth),
               },
             }}
+            layout={parentOption.value.layout}
           >
             <a-row>
               {columnOption.value.map((item: any) => {
                 return (
-                  <>
+                  <n-group>
                     {item.column?.map((column: any, cindex: number) => {
                       return (
                         <>
@@ -326,7 +332,7 @@ export default defineComponent({
                               pull={getItemParams(column, item, "pull")}
                             >
                               <a-form-item
-                                label={column.label}
+                                // label={column.label}
                                 labelCol={{
                                   style: {
                                     width: getItemParams(
@@ -337,20 +343,51 @@ export default defineComponent({
                                     ),
                                   },
                                 }}
-                              >
-                                <FormTemp
-                                  column={column}
-                                  dic={DIC.value[column.prop] || []}
-                                  value={(formData as any)[column.prop]}
-                                  onChange={() =>
-                                    propChange(item.column, column)
-                                  }
-                                  onUpdate:modelValue={(val) =>
-                                    onInput(column.prop, val)
-                                  }
-                                  onSetValue={setValue}
-                                />
-                              </a-form-item>
+                                class={[
+                                  `form-item--${
+                                    column.size || controlSize.value
+                                  }`,
+                                ]}
+                                v-slots={{
+                                  label: () => {
+                                    return (
+                                      <span>
+                                        {column.labelTip && (
+                                          <a-tooltip
+                                            placement={
+                                              column.labelTipPlacement ||
+                                              "topLeft"
+                                            }
+                                            v-slots={{
+                                              title: () => column.labelTip,
+                                              default: () => (
+                                                <span style="margin-right:8px">
+                                                  <info-circle-outlined />
+                                                </span>
+                                              ),
+                                            }}
+                                          ></a-tooltip>
+                                        )}
+                                        {column.label}
+                                      </span>
+                                    );
+                                  },
+                                  default: () => {
+                                    const componentProps = {
+                                      column: column,
+                                      dic: DIC.value[column.prop] || [],
+                                      size: column.size || controlSize.value,
+                                      value: (formData as any)[column.prop],
+                                      onChange: () =>
+                                        propChange(item.column, column),
+                                      "onUpdate:modelValue": (val: any) =>
+                                        onInput(column.prop, val),
+                                      onSetValue: setValue,
+                                    };
+                                    return <FormTemp {...componentProps} />;
+                                  },
+                                }}
+                              />
                             </a-col>
                           )}
                           {column.row && column.span !== 24 && column.count && (
@@ -372,10 +409,16 @@ export default defineComponent({
                         }}
                       />
                     )}
-                  </>
+                  </n-group>
                 );
               })}
-              {!isDetail.value && isMenu.value && <div>222</div>}
+              {!isDetail.value && isMenu.value && (
+                <FormMenu
+                  v-slots={{
+                    menuForm: () => slots.menuForm && slots.menuForm(),
+                  }}
+                />
+              )}
             </a-row>
           </a-form>
         </div>

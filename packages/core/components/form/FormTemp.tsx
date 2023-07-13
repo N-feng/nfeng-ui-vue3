@@ -5,31 +5,31 @@ import { getComponent, getPlaceholder } from "../../../../src/core/dataformat";
 
 export default defineComponent({
   props: {
-    value: {},
-    props: {
-      type: Object,
-    },
-    dic: {
-      type: Array,
-    },
-    placeholder: {
-      type: String,
-    },
-    size: {
-      type: String,
-    },
-    disabled: {
-      type: Boolean,
-    },
-    readonly: {
-      type: Boolean,
-    },
     column: {
       type: Object as PropType<Column>,
       default: () => {
         return {};
       },
     },
+    dic: {
+      type: Array,
+    },
+    disabled: {
+      type: Boolean,
+    },
+    placeholder: {
+      type: String,
+    },
+    props: {
+      type: Object,
+    },
+    readonly: {
+      type: Boolean,
+    },
+    size: {
+      type: String,
+    },
+    value: {},
   },
   emits: ["update:modelValue", "change", "setValue"],
   setup(props, { emit }) {
@@ -67,6 +67,7 @@ export default defineComponent({
             modelValue: text.value,
             placeholder: getPlaceholder(column),
             props: column.props || props.props,
+            size: column.size || props.size,
             "onUpdate:modelValue": setVal,
           })}
         </>
