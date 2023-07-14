@@ -234,6 +234,61 @@ const option = reactive({
 </template>
 ```
 
+## 分组展示
+
+```vue demo
+<script setup lang="ts">
+import { ref, reactive } from "vue";
+const form = reactive({
+  text: "文本",
+  text1: "文本1",
+  text2: "文本2",
+  text3: "文本3",
+});
+const option = reactive({
+  column: [
+    {
+      label: "内容1",
+      prop: "text1",
+    },
+  ],
+  group: [
+    {
+      icon: "el-icon-info",
+      label: "分组1",
+      collapse: false,
+      prop: "group1",
+      column: [
+        {
+          label: "内容1",
+          prop: "text1",
+        },
+      ],
+    },
+    {
+      icon: "el-icon-info",
+      label: "分组2",
+      prop: "group2",
+      column: [
+        {
+          label: "选项卡2",
+          prop: "text2",
+        },
+        {
+          label: "选项卡3",
+          prop: "text3",
+        },
+      ],
+    },
+  ],
+});
+</script>
+
+<template>
+  <n-form :option="option" :model="form" />
+</template>
+```
+
 ## 选项卡展示
 
 ```vue demo

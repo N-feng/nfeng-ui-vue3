@@ -34,6 +34,7 @@ export default defineComponent({
   emits: ["submit", "error", "reset-change", "update:status"],
   setup(props, { attrs, slots, emit, expose }) {
     const formRef: any = ref<FormInstance>();
+    const activeName = ref('');
     const allDisabled = ref(false);
     const formData: any = reactive({});
     const formList: any[] = [];
@@ -78,6 +79,10 @@ export default defineComponent({
 
     const isMenu = computed(() => {
       return columnOption.value.length != 1;
+    });
+
+    const isTabs = computed(() => {
+      return parentOption.value.tabs === true;
     });
 
     const boxType = computed(() => {
@@ -184,6 +189,14 @@ export default defineComponent({
 
     function hide() {
       allDisabled.value = false;
+    }
+
+    function isGroupShow(item: any,index: any) {
+      if (isTabs.value) {
+        return index == activeName.value || index == 0;
+      } else {
+        return true;
+      }
     }
 
     function onInput(name: string, val: any) {
@@ -313,10 +326,15 @@ export default defineComponent({
             }}
             layout={parentOption.value.layout}
           >
-            <a-row>
-              {columnOption.value.map((item: any) => {
-                return (
-                  <n-group>
+            {columnOption.value.map((item: any, index: number) => {
+              return (
+                <n-group
+                  collapse={item.collapse}
+                  display={vaildDisplay(item)}
+                  key={item.prop}
+                  label={item.label}
+                >
+                  <a-row v-show={isGroupShow(item, index)}>
                     {item.column?.map((column: any, cindex: number) => {
                       return (
                         <>
@@ -409,17 +427,17 @@ export default defineComponent({
                         }}
                       />
                     )}
-                  </n-group>
-                );
-              })}
-              {!isDetail.value && isMenu.value && (
-                <FormMenu
-                  v-slots={{
-                    menuForm: () => slots.menuForm && slots.menuForm(),
-                  }}
-                />
-              )}
-            </a-row>
+                  </a-row>
+                </n-group>
+              );
+            })}
+            {!isDetail.value && isMenu.value && (
+              <FormMenu
+                v-slots={{
+                  menuForm: () => slots.menuForm && slots.menuForm(),
+                }}
+              />
+            )}
           </a-form>
         </div>
       );
