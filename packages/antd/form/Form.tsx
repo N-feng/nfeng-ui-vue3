@@ -6,6 +6,10 @@ import { isEmpty, getPrefix } from "../../../src/_utils/common";
 import { FormKey } from "./common";
 import { TableOption, Column } from "./types";
 import useInit from "../../core/common/init";
+import { formInitVal, getPlaceholder } from "../../../src/core/dataformat";
+import { sendDic } from "../../../src/core/dic";
+import { getSlotName } from "../../../src/core/slot";
+import b from "../../../src/utils/bem";
 import {
   clearVal,
   findObject,
@@ -13,8 +17,6 @@ import {
   vaildData,
 } from "../../../src/utils/util";
 import { validatenull } from "../../../src/utils/validate";
-import { formInitVal, getPlaceholder } from "../../../src/core/dataformat";
-import { sendDic } from "../../../src/core/dic";
 import config from "./config";
 import FormMenu from "./Menu";
 import FormTemp from "../../core/components/form/FormTemp";
@@ -34,7 +36,7 @@ export default defineComponent({
   emits: ["submit", "error", "reset-change", "update:status"],
   setup(props, { attrs, slots, emit, expose }) {
     const formRef: any = ref<FormInstance>();
-    const activeName = ref('');
+    const activeName = ref("");
     const allDisabled = ref(false);
     const formData: any = reactive({});
     const formList: any[] = [];
@@ -102,6 +104,18 @@ export default defineComponent({
     });
 
     const model = computed(() => (props.model as object) || {});
+
+    const tabsActive = computed(() => {
+      return vaildData(tableOption.tabsActive + "", "1");
+    });
+
+    watch(
+      tabsActive,
+      (val) => {
+        activeName.value = val;
+      },
+      { immediate: true }
+    );
 
     provide(FormKey, {
       allDisabled,
@@ -191,7 +205,7 @@ export default defineComponent({
       allDisabled.value = false;
     }
 
-    function isGroupShow(item: any,index: any) {
+    function isGroupShow(item: any, index: any) {
       if (isTabs.value) {
         return index == activeName.value || index == 0;
       } else {
@@ -225,7 +239,7 @@ export default defineComponent({
           clearVal(
             formData,
             propList,
-            (tableOption.value.filterParams || []).concat([rowKey.value])
+            (tableOption.filterParams || []).concat([rowKey.value])
           )
         );
         // formRef.value.resetFields();
@@ -326,111 +340,159 @@ export default defineComponent({
             }}
             layout={parentOption.value.layout}
           >
-            {columnOption.value.map((item: any, index: number) => {
-              return (
-                <n-group
-                  collapse={item.collapse}
-                  display={vaildDisplay(item)}
-                  key={item.prop}
-                  label={item.label}
-                >
-                  <a-row v-show={isGroupShow(item, index)}>
-                    {item.column?.map((column: any, cindex: number) => {
-                      return (
-                        <>
-                          {vaildDisplay(column) && (
-                            <a-col
-                              key={cindex}
-                              span={getItemParams(column, item, "span")}
-                              md={getItemParams(column, item, "span")}
-                              sm={getItemParams(column, item, "span")}
-                              xs={getItemParams(column, item, "xsSpan")}
-                              offset={getItemParams(column, item, "offset")}
-                              push={getItemParams(column, item, "push")}
-                              pull={getItemParams(column, item, "pull")}
-                            >
-                              <a-form-item
-                                // label={column.label}
-                                labelCol={{
-                                  style: {
-                                    width: getItemParams(
+            <a-row>
+              {columnOption.value.map((item: any, index: number) => {
+                return (
+                  <n-group
+                    collapse={item.collapse}
+                    display={vaildDisplay(item)}
+                    header={!isTabs.value}
+                    key={item.prop}
+                    label={item.label}
+                    v-slots={{
+                      tabs: () => isTabs.value && index == 1 && (
+                        <a-tabs v-model:activeKey={activeName.value}>
+                          {columnOption.value.map(
+                            (tabs: any, index: number) => {
+                              if (vaildDisplay(tabs) && index != 0) {
+                                return (
+                                  <a-tab-pane
+                                    key={index + ""}
+                                    tab={tabs.label}
+                                  />
+                                );
+                              }
+                              return <></>;
+                            }
+                          )}
+                        </a-tabs>
+                      ),
+                      header: getSlotName(item, "H", slots)
+                        ? () =>
+                            slots[getSlotName(item, "H")]?.({ column: item })
+                        : null,
+                      default: () => (
+                        <div
+                          class={b(prefixCls, "group", {
+                            flex: vaildData(item.flex, true),
+                          })}
+                          v-show={isGroupShow(item, index)}
+                        >
+                          {item.column?.map((column: any, cindex: number) => {
+                            return (
+                              <>
+                                {vaildDisplay(column) && (
+                                  <a-col
+                                    key={cindex}
+                                    span={getItemParams(column, item, "span")}
+                                    md={getItemParams(column, item, "span")}
+                                    sm={getItemParams(column, item, "span")}
+                                    xs={getItemParams(column, item, "xsSpan")}
+                                    offset={getItemParams(
                                       column,
                                       item,
-                                      "labelWidth",
-                                      true
-                                    ),
-                                  },
-                                }}
-                                class={[
-                                  `form-item--${
-                                    column.size || controlSize.value
-                                  }`,
-                                ]}
-                                v-slots={{
-                                  label: () => {
-                                    return (
-                                      <span>
-                                        {column.labelTip && (
-                                          <a-tooltip
-                                            placement={
-                                              column.labelTipPlacement ||
-                                              "topLeft"
-                                            }
-                                            v-slots={{
-                                              title: () => column.labelTip,
-                                              default: () => (
-                                                <span style="margin-right:8px">
-                                                  <info-circle-outlined />
-                                                </span>
-                                              ),
-                                            }}
-                                          ></a-tooltip>
-                                        )}
-                                        {column.label}
-                                      </span>
-                                    );
-                                  },
-                                  default: () => {
-                                    const componentProps = {
-                                      column: column,
-                                      dic: DIC.value[column.prop] || [],
-                                      size: column.size || controlSize.value,
-                                      value: (formData as any)[column.prop],
-                                      onChange: () =>
-                                        propChange(item.column, column),
-                                      "onUpdate:modelValue": (val: any) =>
-                                        onInput(column.prop, val),
-                                      onSetValue: setValue,
-                                    };
-                                    return <FormTemp {...componentProps} />;
-                                  },
-                                }}
-                              />
-                            </a-col>
-                          )}
-                          {column.row && column.span !== 24 && column.count && (
-                            <a-col
-                              class={`${prefixCls}__line`}
-                              key={cindex}
-                              style={{
-                                width: (column.count / 24) * 100 + "%",
+                                      "offset"
+                                    )}
+                                    push={getItemParams(column, item, "push")}
+                                    pull={getItemParams(column, item, "pull")}
+                                  >
+                                    <a-form-item
+                                      // label={column.label}
+                                      labelCol={{
+                                        style: {
+                                          width: getItemParams(
+                                            column,
+                                            item,
+                                            "labelWidth",
+                                            true
+                                          ),
+                                        },
+                                      }}
+                                      class={[
+                                        `form-item--${
+                                          column.size || controlSize.value
+                                        }`,
+                                      ]}
+                                      v-slots={{
+                                        label: () => {
+                                          return (
+                                            <span>
+                                              {column.labelTip && (
+                                                <a-tooltip
+                                                  placement={
+                                                    column.labelTipPlacement ||
+                                                    "topLeft"
+                                                  }
+                                                  v-slots={{
+                                                    title: () =>
+                                                      column.labelTip,
+                                                    default: () => (
+                                                      <span style="margin-right:8px">
+                                                        <info-circle-outlined />
+                                                      </span>
+                                                    ),
+                                                  }}
+                                                ></a-tooltip>
+                                              )}
+                                              {column.label}
+                                            </span>
+                                          );
+                                        },
+                                        default: () => {
+                                          const componentProps = {
+                                            column: column,
+                                            dic: DIC.value[column.prop] || [],
+                                            size:
+                                              column.size || controlSize.value,
+                                            value: (formData as any)[
+                                              column.prop
+                                            ],
+                                            onChange: () =>
+                                              propChange(item.column, column),
+                                            "onUpdate:modelValue": (val: any) =>
+                                              onInput(column.prop, val),
+                                            onSetValue: setValue,
+                                          };
+                                          return slots[column.prop] ? (
+                                            slots[column.prop]?.(componentProps)
+                                          ) : (
+                                            <FormTemp {...componentProps} />
+                                          );
+                                        },
+                                      }}
+                                    />
+                                  </a-col>
+                                )}
+                                {column.row &&
+                                  column.span !== 24 &&
+                                  column.count && (
+                                    <a-col
+                                      class={`${prefixCls}__line`}
+                                      key={cindex}
+                                      style={{
+                                        width: (column.count / 24) * 100 + "%",
+                                      }}
+                                    />
+                                  )}
+                              </>
+                            );
+                          })}
+                          {!isDetail.value && !isMenu.value && (
+                            <FormMenu
+                              v-slots={{
+                                menuForm: () =>
+                                  slots.menuForm && slots.menuForm(),
                               }}
                             />
                           )}
-                        </>
-                      );
-                    })}
-                    {!isDetail.value && !isMenu.value && (
-                      <FormMenu
-                        v-slots={{
-                          menuForm: () => slots.menuForm && slots.menuForm(),
-                        }}
-                      />
-                    )}
-                  </a-row>
-                </n-group>
-              );
-            })}
+                        </div>
+                      ),
+                    }}
+                  ></n-group>
+                );
+              })}
+            </a-row>
+
             {!isDetail.value && isMenu.value && (
               <FormMenu
                 v-slots={{

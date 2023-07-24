@@ -285,7 +285,15 @@ const option = reactive({
 </script>
 
 <template>
-  <n-form :option="option" :model="form" />
+  <n-form :option="option" :model="form">
+    <template #group1-header="{ column }">
+      {{ column.label }}
+      <question-outlined style="margin-left: 5px;" />
+    </template>
+    <template #text3="{}">
+      <a-input placeholder="自定义" v-model:value="form.text3" />
+    </template>
+  </n-form>
 </template>
 ```
 
@@ -338,9 +346,15 @@ const option = reactive({
     },
   ],
 });
+function tabClick() {
+  Object.assign(option, {
+    tabs: !option.tabs
+  })
+}
 </script>
 
 <template>
+  <a-button @click="tabClick">转化</a-button>
   <n-form :option="option" :model="form" />
 </template>
 ```

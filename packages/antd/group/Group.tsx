@@ -52,19 +52,32 @@ export default defineComponent({
     });
 
     return () => {
-      const { arrow, label } = props;
+      const { arrow, display, header, label } = props;
       return (
-        <div class={[b(prefixCls, { header: !isHeader.value, arrow: !arrow })]}>
-          <a-collapse
-            v-model:activeKey={activeKey.value}
-            ghost
-            onChange={handleChange}
+        display && (
+          <div
+            class={[b(prefixCls, { header: !isHeader.value, arrow: !arrow })]}
           >
-            <a-collapse-panel key={1} header={label}>
-              {slots.default?.()}
-            </a-collapse-panel>
-          </a-collapse>
-        </div>
+            {slots.tabs?.()}
+            <a-collapse
+              v-model:activeKey={activeKey.value}
+              ghost
+              onChange={handleChange}
+            >
+              <a-collapse-panel
+                key={1}
+                v-slots={{
+                  header: header
+                    ? () =>
+                        slots.header ? <>{slots.header()}</> : <>{label}</>
+                    : null,
+                }}
+              >
+                {slots.default?.()}
+              </a-collapse-panel>
+            </a-collapse>
+          </div>
+        )
       );
     };
   },

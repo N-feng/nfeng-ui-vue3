@@ -19,12 +19,13 @@ export default function useInit(option: any) {
   const DIC: any = ref({});
   const cascaderDIC: any = reactive({});
   const isMobile = ref(false);
+  const tableOption = deepClone(option.value);
 
   const columnOption = computed(() => {
-    let tableOption = deepClone(option.value);
     let column = getColumn(tableOption?.column);
     let group = option.value?.group || [];
     group.unshift({
+      header: false,
       column: column,
     });
     group.forEach((ele: any, index: number) => {
@@ -113,6 +114,6 @@ export default function useInit(option: any) {
     propOption,
     resultOption,
     rowKey,
-    tableOption: option,
+    tableOption,
   };
 }

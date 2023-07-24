@@ -1,4 +1,18 @@
-@include b(form) {}
+@include b(form) {
+
+  @include e(group) {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    height: auto;
+
+    .ant-collapse-content-box {
+      padding: 0;
+    }
+    @include m(flex) {
+      display: flex;
+    }
+  }
+}
 
 @include e(line) {
   display: inline-block;

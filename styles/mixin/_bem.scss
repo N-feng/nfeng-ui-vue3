@@ -1,3 +1,10 @@
+// b(form) --> $namespace+'-'+form
+// e(group) --> $namespace+'-'+form+'__'+group
+// m(flex) --> $namespace+'-'+form+'__'+group+'--'+flex
+
+// b(form) --> $namespace+'-'+form
+// m(flex) --> $namespace+'-'+form+'--'+flex
+
 @mixin b($block) {
   $B: $namespace + '-' + $block !global;
 
