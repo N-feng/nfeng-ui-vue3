@@ -19,11 +19,11 @@ export default function useInit(option: any) {
   const DIC: any = ref({});
   const cascaderDIC: any = reactive({});
   const isMobile = ref(false);
-  const tableOption = deepClone(option.value);
+  let tableOption: any = reactive({});
 
   const columnOption = computed(() => {
     let column = getColumn(tableOption?.column);
-    let group = option.value?.group || [];
+    let group = tableOption?.group || [];
     group.unshift({
       header: false,
       column: column,
@@ -76,13 +76,14 @@ export default function useInit(option: any) {
     return controlSize.value;
   });
 
-  // watch(
-  //   () => option,
-  //   (val) => {
-  //     init(false);
-  //   },
-  //   { deep: true }
-  // );
+  watch(
+    () => option,
+    (val) => {
+      // console.log('val: ', val);
+      init(false);
+    },
+    { deep: true }
+  );
 
   function getIsMobile() {
     isMobile.value = document.body.clientWidth <= 768;
@@ -97,6 +98,7 @@ export default function useInit(option: any) {
   }
 
   function init(type?: boolean) {
+    tableOption = option;
     getIsMobile();
     handleLocalDic();
     if (type !== false) return false;
@@ -114,6 +116,6 @@ export default function useInit(option: any) {
     propOption,
     resultOption,
     rowKey,
-    tableOption,
+    tableOption: tableOption,
   };
 }

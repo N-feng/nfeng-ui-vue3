@@ -1,8 +1,8 @@
 import type { FormInstance } from "ant-design-vue";
-import { BodyCellParams } from "./types";
-import { getPrefix } from "../../../src/_utils/common";
 import { CrudKey } from "./common";
 import config from "./config";
+import { BodyCellParams } from "./types";
+import { getPrefix } from "../../../src/_utils/common";
 import lang from "../../../src/locale/lang/zh";
 import { DIC_PROPS } from "../../../src/global/variable";
 import useInit, { defineInit } from "../../core/common/init";
@@ -20,7 +20,9 @@ import HeaderSearch from "./HeaderSearch";
 import HeaderMenu from "./HeaderMenu";
 import ColumnSlot from "./ColumnSlot";
 import ColumnMenu from "./ColumnMenu";
+import DialogColumn from "./DialogColumn";
 import DialogForm from "./DialogForm";
+import Sortable from "sortablejs";
 
 const { prefixName, prefixCls } = getPrefix("Crud");
 
@@ -73,6 +75,7 @@ export default defineComponent({
   emits: [
     "current-change",
     "on-load",
+    "refresh-change",
     "row-click",
     "row-dblclick",
     "row-del",
@@ -87,11 +90,14 @@ export default defineComponent({
     const cellForm = reactive({
       list: [],
     });
+    const dialogColumn = ref();
     const dialogForm = ref();
     const formRef: any = ref<FormInstance>();
     const list: any = ref([]);
+    const reload = ref(Math.random());
     const tableForm = reactive({});
     const tableIndex = ref(-1);
+    const theadColumns = ref<any[]>([]);
 
     const {
       DIC,
@@ -107,26 +113,73 @@ export default defineComponent({
       isMobile,
     });
 
-    const data = computed(() => props.data || []);
-
-    const propMap = computed(() => {
-      return Object.assign({}, defaultPropMap, props.propMap);
-    });
-
-    const treeProps = computed(() => {
-      return tableOption.treeProps || {};
-    });
-
-    const rowParentKey = computed(() => {
-      return props.option.rowParentKey || DIC_PROPS.rowParentKey;
-    });
-
     const childrenKey = computed(() => {
       return treeProps.value.children || DIC_PROPS.children;
     });
 
     const columnOption = computed(() => {
+      if (theadColumns.value.length) {
+        return theadColumns.value;
+      }
       return getColumn(props.option.column);
+    });
+
+    const data = computed(() => props.data || []);
+
+    const initColumns = computed(() => {
+      let result: any = [...columnOption.value];
+      result = arraySort(
+        result,
+        "index",
+        (a: any, b: any) =>
+          (objectOption.value as any)[a.prop]?.index -
+          (objectOption.value as any)[b.prop]?.index
+      );
+      const newColumns = result.map((ele: any) => {
+        return {
+          ...ele,
+          title: ele.label,
+          dataIndex: ele.prop,
+          key: ele.prop,
+        };
+      });
+      if (vaildData(tableOption?.index)) {
+        const seq = reactive({
+          title: tableOption?.indexLabel || config.indexLabel,
+          dataIndex: "seq",
+          fixed: "left",
+          align: "center",
+          width: tableOption?.indexWidth || config.indexWidth,
+        });
+        newColumns.unshift(seq);
+      }
+      if (vaildData(tableOption?.menu, config.menu)) {
+        newColumns.push({
+          title: "操作",
+          dataIndex: propMap.value["operation"],
+          key: propMap.value["operation"],
+          fixed: "right",
+          align: "center",
+          width: props.editable ? 60 : 160,
+        });
+      }
+      return newColumns.filter((column: any) => getColumnProp(column, "hide"));
+    });
+
+    const isColumnSort = computed(() => {
+      return tableOption?.columnSort;
+    });
+
+    const isRowSort = computed(() => {
+      return tableOption?.rowSort;
+    });
+
+    const isSortable = computed(() => {
+      return tableOption?.sortable;
+    });
+
+    const propMap = computed(() => {
+      return Object.assign({}, defaultPropMap, props.propMap);
     });
 
     const propOption = computed(() => {
@@ -153,7 +206,7 @@ export default defineComponent({
       );
     });
 
-    const objectOption = computed(() => {
+    const objectOption: any = computed(() => {
       let result = {};
       propOption.value.forEach((ele: any) => {
         (result as any)[ele.prop] = ele;
@@ -161,44 +214,12 @@ export default defineComponent({
       return result;
     });
 
-    const initColumns = computed(() => {
-      let result: any = [...columnOption.value];
-      result = arraySort(
-        result,
-        "index",
-        (a: any, b: any) =>
-          (objectOption.value as any)[a.prop]?.index -
-          (objectOption.value as any)[b.prop]?.index
-      );
-      const newColumns = result.map((ele: any) => {
-        return {
-          ...ele,
-          title: ele.label,
-          dataIndex: ele.prop,
-          key: ele.prop,
-        };
-      });
-      if (vaildData(tableOption.index)) {
-        const seq = reactive({
-          title: tableOption.indexLabel || config.indexLabel,
-          dataIndex: "seq",
-          fixed: "left",
-          align: "center",
-          width: tableOption.indexWidth || config.indexWidth,
-        });
-        newColumns.unshift(seq);
-      }
-      if (vaildData(tableOption.menu, config.menu)) {
-        newColumns.push({
-          title: "操作",
-          dataIndex: propMap.value["operation"],
-          key: propMap.value["operation"],
-          fixed: "right",
-          align: "center",
-          width: props.editable ? 60 : 160,
-        });
-      }
-      return newColumns;
+    const rowParentKey = computed(() => {
+      return props.option.rowParentKey || DIC_PROPS.rowParentKey;
+    });
+
+    const treeProps = computed(() => {
+      return tableOption?.treeProps || {};
     });
 
     watch(
@@ -208,11 +229,25 @@ export default defineComponent({
       }
     );
 
-    function menuIcon(value: string) {
-      return vaildData(
-        tableOption[value + "Text"],
-        (lang as any)["crud"][value]
-      );
+    function findData(id: number | string) {
+      let result: any = {};
+      const callback = (parentList: any, parent?: any) => {
+        parentList.value.forEach((ele: any, index: number) => {
+          if (ele[rowKey.value] == id) {
+            result = {
+              item: ele,
+              index: index,
+              parentList: parentList,
+              parent: parent,
+            };
+          }
+          if (ele[childrenKey.value]) {
+            callback(ele[childrenKey.value], ele);
+          }
+        });
+      };
+      callback(list);
+      return result;
     }
 
     function getBtnIcon(value: string) {
@@ -220,12 +255,74 @@ export default defineComponent({
       return props.option[name] || (config as any)[name];
     }
 
-    async function validateCellField(index: number) {
-      let result = true;
-      const r = await formRef.value.validate();
-      // const r = await formRef.value.validateFields([`cellForm.list.${index}`]);
-      console.log("r: ", r);
-      return result;
+    function getColumnProp(column: any, type: string) {
+      let obj = objectOption.value[column.prop] || {};
+      if (type === "filterMethod") return obj?.filters;
+      if (isMobile.value && ["fixed"].includes(type)) return false;
+      let result = obj?.[type];
+      if (type == "width" && result == 0) {
+        return undefined;
+      }
+      if (type == "filters") return handleFilters(column, result);
+      if (type == "hide") return obj?.hide !== true;
+      else return result;
+    }
+
+    //表格筛选字典
+    function handleFilters(column: any, flag: boolean) {
+      if (flag !== true) return undefined;
+      let list: any[] = [];
+      if (!validatenull(DIC[column.prop])) {
+        DIC[column.prop].forEach((ele: any) => {
+          const props = column.props || tableOption.props || {};
+          list.push({
+            text: ele[props.label || DIC_PROPS.label],
+            value: ele[props.value || DIC_PROPS.value],
+          });
+        });
+      } else {
+        cellForm.list.forEach((ele: any) => {
+          if (!list.map((item) => item.text).includes(ele[column.prop])) {
+            list.push({
+              text: ele[column.prop],
+              value: ele[column.prop],
+            });
+          }
+        });
+      }
+      return list;
+    }
+
+    function headerSort (oldIndex: number, newIndex: number) {
+      let column = columnOption.value;
+      let targetRow = column.splice(oldIndex, 1)[0];
+      column.splice(newIndex, 0, targetRow);
+      refreshChange();
+    }
+
+    function menuIcon(value: string) {
+      return vaildData(
+        tableOption?.[value + "Text"],
+        (lang as any)["crud"][value]
+      );
+    }
+
+    function onGetThead(option: any) {
+      const newColumns = option.columns;
+      theadColumns.value = newColumns || [];
+    }
+
+    //刷新事件
+    function refreshChange () {
+      emit("refresh-change");
+    }
+
+    function refreshTable(callback?: Function) {
+      reload.value = Math.random();
+      console.log('reload.value: ', reload.value);
+      nextTick(() => {
+        callback && callback();
+      });
     }
 
     function rowAdd() {
@@ -328,24 +425,28 @@ export default defineComponent({
       dialogForm.value.show("edit");
     }
 
-    function findData(id: number | string) {
-      let result: any = {};
-      const callback = (parentList: any, parent?: any) => {
-        parentList.value.forEach((ele: any, index: number) => {
-          if (ele[rowKey.value] == id) {
-            result = {
-              item: ele,
-              index: index,
-              parentList: parentList,
-              parent: parent,
-            };
-          }
-          if (ele[childrenKey.value]) {
-            callback(ele[childrenKey.value], ele);
-          }
-        });
-      };
-      callback(list);
+    function tableDrop(type: string, el: any, callback: Function) {
+      if (isSortable.value !== true) {
+        if (type == 'row' && !isRowSort.value) {
+          return
+        } else if (type == 'column' && isColumnSort.value) {
+          return
+        }
+      }
+      Sortable.create(el, {
+        ghostClass: config.ghostClass,
+        chosenClass: config.ghostClass,
+        animation: 500,
+        delay: 0,
+        onEnd: (evt: any) => callback(evt),
+      });
+    }
+
+    async function validateCellField(index: number) {
+      let result = true;
+      const r = await formRef.value.validate();
+      // const r = await formRef.value.validateFields([`cellForm.list.${index}`]);
+      console.log("r: ", r);
       return result;
     }
 
@@ -355,10 +456,13 @@ export default defineComponent({
         cascaderDIC,
         cellForm,
         childrenKey: childrenKey.value,
+        dialogColumn: dialogColumn,
         DIC,
         emit,
         findData,
         getBtnIcon,
+        getColumnProp,
+        headerSort,
         isMediumSize: isMediumSize.value,
         isMobile,
         list: list,
@@ -366,6 +470,7 @@ export default defineComponent({
         objectOption: objectOption.value,
         option: props.option,
         propOption,
+        refreshTable,
         rowAdd,
         rowCancel,
         rowCell,
@@ -375,9 +480,10 @@ export default defineComponent({
         rowKey: rowKey.value,
         rowParentKey: rowParentKey.value,
         search: props.search,
-        tableOption,
+        tableDrop,
         tableForm,
         tableIndex,
+        tableOption,
       },
     });
 
@@ -407,12 +513,14 @@ export default defineComponent({
     });
 
     return () => {
+      const { scroll } = attrs;
       return (
         <div class={prefixCls}>
           <HeaderSearch />
           <HeaderMenu v-slots={slots} />
           <a-form model={cellForm.list} ref={formRef}>
             <a-table
+              key={reload.value}
               columns={initColumns.value}
               customRow={(record: any, index: number) => {
                 return {
@@ -427,15 +535,16 @@ export default defineComponent({
                 vaildData(props.option.page, true) &&
                 defaultPage
               }
+              scroll={{ x: 100, ...((scroll as object) || {}) }}
               size={controlSize.value}
               v-slots={{
                 bodyCell: (prop: BodyCellParams) => {
                   const { column, index, text, record } = prop;
-                  if (tableOption.index && column.dataIndex === "seq") {
+                  if (tableOption?.index && column.dataIndex === "seq") {
                     return index + 1;
                   }
                   if (
-                    vaildData(tableOption.menu, config.menu) &&
+                    vaildData(tableOption?.menu, config.menu) &&
                     [column.dataIndex, column.key].includes(
                       propMap.value["operation"]
                     )
@@ -466,6 +575,7 @@ export default defineComponent({
               }}
             />
           </a-form>
+          <DialogColumn ref={dialogColumn} onOk={onGetThead} />
           <DialogForm ref={dialogForm} />
         </div>
       );

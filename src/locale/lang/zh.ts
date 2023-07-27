@@ -95,4 +95,4 @@ export default {
     copyBtn: "复 制",
     delBtn: "删 除",
   },
-};
+} as any;

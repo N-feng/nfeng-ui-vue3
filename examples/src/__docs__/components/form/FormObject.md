@@ -19,8 +19,8 @@ const option = reactive({
     },
   },
 });
-watch(form, (value) => {
-  console.log("value: ", value);
+watch(option, (value) => {
+  // console.log("value: ", value);
 });
 onMounted(() => {
   option.column.name.label += "(name)";

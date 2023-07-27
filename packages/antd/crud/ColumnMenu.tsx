@@ -13,7 +13,7 @@ export default defineComponent({
     const { crud } = inject(CrudKey) as any;
 
     const menuType = computed(() => {
-      return crud.tableOption.menuType || "link";
+      return crud.tableOption?.menuType || "link";
     });
 
     const isIconMenu = computed(() => {
@@ -39,9 +39,9 @@ export default defineComponent({
         <>
           {["button", "text", "icon", "link"].includes(menuType.value) && (
             <>
-              {vaildData((crud as any).tableOption.cellBtn, config.cellBtn) && (
+              {vaildData((crud as any).tableOption?.cellBtn, config.cellBtn) && (
                 <>
-                  {vaildData(crud.tableOption.editBtn, config.editBtn) &&
+                  {vaildData(crud.tableOption?.editBtn, config.editBtn) &&
                     !record.$cellEdit && (
                       <a-button
                         type={menuText("link")}
@@ -51,7 +51,7 @@ export default defineComponent({
                         {crud.menuIcon("editBtn")}
                       </a-button>
                     )}
-                  {vaildData(crud.tableOption.saveBtn, config.saveBtn) &&
+                  {vaildData(crud.tableOption?.saveBtn, config.saveBtn) &&
                     record.$cellEdit && (
                       <a-button
                         type={menuText("link")}
@@ -73,8 +73,8 @@ export default defineComponent({
                   )}
                 </>
               )}
-              {vaildData(crud.tableOption.editBtn, config.editBtn) &&
-                !crud.tableOption.cellBtn && (
+              {vaildData(crud.tableOption?.editBtn, config.editBtn) &&
+                !crud.tableOption?.cellBtn && (
                   <a-button
                     type={menuText("link")}
                     size={crud.isMediumSize}
@@ -87,7 +87,7 @@ export default defineComponent({
                     {!isIconMenu.value && crud.menuIcon("editBtn")}
                   </a-button>
                 )}
-              {vaildData(crud.tableOption.delBtn, config.delBtn) &&
+              {vaildData(crud.tableOption?.delBtn, config.delBtn) &&
                 !(props.record as any).$cellEdit && (
                   <a-button
                     type={menuText("link")}

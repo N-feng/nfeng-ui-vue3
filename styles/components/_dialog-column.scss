@@ -1,0 +1,47 @@
+@include b(dialog-column) {
+  @include e(column) {
+    .modal_footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .show_fields {
+      .field_item {
+        border: 1px dashed transparent;
+      }
+      .item {
+        background: cornflowerblue;
+      }
+      .chosen {
+        background: rgba(51, 136, 255, 0.1);
+        border: 1px dashed #3388ff;
+      }
+    }
+
+    .icon-menu {
+      color: #dcdcdc;
+      margin: 0;
+      font-size: 14px;
+      width: 24px;
+      padding-right: 4px;
+      cursor: grab;
+    }
+
+    .title {
+      margin-bottom: 8px;
+    }
+
+    .pointer {
+      cursor: pointer;
+    }
+
+    .marginB10 {
+      margin-bottom: 10px;
+    }
+
+    .ant-btn + .ant-btn {
+      margin-left: 0;
+    }
+  }
+}

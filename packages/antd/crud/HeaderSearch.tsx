@@ -11,8 +11,7 @@ export default defineComponent({
     const searchIndex = crud.option.searchIndex || 2;
 
     watch(crud.propOption, (val) => {
-      console.log('val: ', val);
-
+      // console.log('val: ', val);
     }, { deep: true });
 
     const search = computed(() => {

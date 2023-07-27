@@ -96,7 +96,7 @@ const option = reactive({
 </template>
 ```
 
-## 序号
+## 索引
 
 ```vue demo
 <script setup lang="ts">
@@ -122,18 +122,24 @@ const option = reactive({
     {
       label: "姓名",
       prop: "name",
+      width: 100,
+      fixed: true,
     },
     {
       label: "性别",
       prop: "sex",
+      width: 100,
+      fixed: true,
     },
     {
       label: "年龄",
       prop: "age",
+      width: 100,
     },
     {
       label: "开关",
       prop: "switch",
+      width: 100,
     },
   ],
 });
@@ -320,7 +326,7 @@ const option = reactive({
     {
       label: "姓名",
       prop: "name",
-      html:true,
+      html: true,
       formatter: (val) => {
         return '<b style="color:red">' + val.name + "格式化内容</b>";
       },
@@ -336,6 +342,61 @@ const option = reactive({
     {
       label: "开关",
       prop: "switch",
+    },
+  ],
+});
+</script>
+
+<template>
+  <n-crud :option="option" :data="data"></n-crud>
+</template>
+```
+
+## 列隐藏
+
+```vue demo
+<script setup lang="ts">
+import { reactive, ref } from "vue";
+
+const data: any = reactive([
+  {
+    text1: "内容1-1",
+    text2: "内容1-2",
+    text3: "内容1-3",
+    text4: "内容1-4",
+  },
+  {
+    text1: "内容2-1",
+    text2: "内容2-2",
+    text3: "内容2-3",
+    text4: "内容2-4",
+  },
+]);
+const option = reactive({
+  align: "center",
+  headerAlign: "center",
+  column: [
+    {
+      label: "列内容1",
+      prop: "text1",
+      width: 100,
+    },
+    {
+      label: "列内容2",
+      prop: "text2",
+      width: 100,
+    },
+    {
+      label: "列内容3",
+      prop: "text3",
+      width: 100,
+      hide: true,
+    },
+    {
+      label: "列内容4",
+      prop: "text4",
+      width: 100,
+      showColumn: false,
     },
   ],
 });

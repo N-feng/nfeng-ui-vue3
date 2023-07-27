@@ -65,7 +65,7 @@ export default defineComponent({
     });
 
     const isDrawer = computed(() => {
-      return crud.tableOption.dialogType === "drawer";
+      return crud.tableOption?.dialogType === "drawer";
     });
 
     const dialogType = computed(() => {
@@ -74,7 +74,7 @@ export default defineComponent({
 
     const width = computed(() => {
       return vaildData(
-        crud.tableOption.dialogWidth + "",
+        crud.tableOption?.dialogWidth + "",
         crud.isMobile.value ? "100%" : config.dialogWidth + ""
       );
     });
@@ -83,7 +83,7 @@ export default defineComponent({
       return isDrawer.value
         ? {
             width: fullscreen.value ? "100%" : setPx(width.value),
-            direction: crud.tableOption.dialogDirection,
+            direction: crud.tableOption?.dialogDirection,
           }
         : {
             width: setPx(width.value),
@@ -94,10 +94,7 @@ export default defineComponent({
     const dialogTitle = computed(() => {
       const key = `${boxType.value}`;
       if (!validatenull(boxType.value)) {
-        return (
-          crud.tableOption[key + "Title"] ||
-          (lang as any)["crud"][`${key}Title`]
-        );
+        return crud.tableOption[key + "Title"] || lang["crud"][`${key}Title`];
       }
     });
 
@@ -143,7 +140,7 @@ export default defineComponent({
             if (!item[crud.childrenKey]) {
               item[crud.childrenKey] = [];
             }
-            if (crud.tableOption.lazy) {
+            if (crud.tableOption?.lazy) {
               item[crud.hasChildrenKey] = true;
             }
             item[crud.childrenKey].push(row);

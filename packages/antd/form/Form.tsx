@@ -9,13 +9,13 @@ import useInit from "../../core/common/init";
 import { formInitVal, getPlaceholder } from "../../../src/core/dataformat";
 import { sendDic } from "../../../src/core/dic";
 import { getSlotName } from "../../../src/core/slot";
-import b from "../../../src/utils/bem";
 import {
   clearVal,
   findObject,
   setPx,
   vaildData,
 } from "../../../src/utils/util";
+import b from "../../../src/utils/bem";
 import { validatenull } from "../../../src/utils/validate";
 import config from "./config";
 import FormMenu from "./Menu";
@@ -52,12 +52,8 @@ export default defineComponent({
       }
     );
 
-    const option = computed(() => {
-      return props.option;
-    });
-
     const { DIC, controlSize, columnOption, propOption, rowKey, tableOption } =
-      useInit(option);
+      useInit(props.option);
 
     const parentOption = computed(() => {
       return props.option;
@@ -350,23 +346,25 @@ export default defineComponent({
                     key={item.prop}
                     label={item.label}
                     v-slots={{
-                      tabs: () => isTabs.value && index == 1 && (
-                        <a-tabs v-model:activeKey={activeName.value}>
-                          {columnOption.value.map(
-                            (tabs: any, index: number) => {
-                              if (vaildDisplay(tabs) && index != 0) {
-                                return (
-                                  <a-tab-pane
-                                    key={index + ""}
-                                    tab={tabs.label}
-                                  />
-                                );
+                      tabs: () =>
+                        isTabs.value &&
+                        index == 1 && (
+                          <a-tabs v-model:activeKey={activeName.value}>
+                            {columnOption.value.map(
+                              (tabs: any, index: number) => {
+                                if (vaildDisplay(tabs) && index != 0) {
+                                  return (
+                                    <a-tab-pane
+                                      key={index + ""}
+                                      tab={tabs.label}
+                                    />
+                                  );
+                                }
+                                return <></>;
                               }
-                              return <></>;
-                            }
-                          )}
-                        </a-tabs>
-                      ),
+                            )}
+                          </a-tabs>
+                        ),
                       header: getSlotName(item, "H", slots)
                         ? () =>
                             slots[getSlotName(item, "H")]?.({ column: item })
