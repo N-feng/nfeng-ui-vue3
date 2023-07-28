@@ -1,7 +1,7 @@
 import { TableOption, Column } from "../../antd/form/types";
-import { deepClone, getColumn } from "../../../src/utils/util";
 import { calcCount } from "../../../src/core/dataformat";
 import { loadLocalDic } from "../../../src/core/dic";
+import { deepClone, getColumn } from "../../../src/utils/util";
 import config from "../../antd/form/config";
 import { DIC_PROPS } from "../../../src/global/variable";
 
@@ -22,8 +22,8 @@ export default function useInit(option: any) {
   let tableOption: any = reactive({});
 
   const columnOption = computed(() => {
-    let column = getColumn(tableOption?.column);
-    let group = tableOption?.group || [];
+    let column = getColumn(option.value?.column);
+    let group = option.value?.group || [];
     group.unshift({
       header: false,
       column: column,

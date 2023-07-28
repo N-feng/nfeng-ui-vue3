@@ -219,7 +219,7 @@ export default defineComponent({
               footer: () => {
                 return (
                   <>
-                    <a-button onClick={submit} loading={disabled.value}>
+                    <a-button type="primary" onClick={submit} loading={disabled.value}>
                       {formOption.value.submitText}
                     </a-button>
                     <a-button onClick={reset} disabled={disabled.value}>

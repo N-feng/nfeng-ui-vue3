@@ -13,8 +13,11 @@ import CrudObject from "../__docs__/components/crud/CrudObject.md";
 import CrudPage from "../__docs__/components/crud/CrudPage.md";
 import CrudSearch from "../__docs__/components/crud/CrudSearch.md";
 import CrudColumn from "../__docs__/components/crud/CrudColumn.md";
+import CrudMenu from "../__docs__/components/crud/CrudMenu.md";
 import CrudFun from "../__docs__/components/crud/CrudFun.md"
 import CrudCell from "../__docs__/components/crud/CrudCell.md";
+import CrudSortable from "../__docs__/components/crud/CrudSortable.md";
+import CrudAjax from "../__docs__/components/crud/CrudAjax.md";
 
 import Image from "../__docs__/components/Image.md";
 
@@ -71,8 +74,11 @@ export const routes = [
       { path: "/crud-page", title: "分页", component: CrudPage },
       { path: "/crud-search", title: "搜索", component: CrudSearch },
       { path: "/crud-column", title: "表格列配置", component: CrudColumn },
+      { path: "/crud-menu", title: "操作栏配置", component: CrudMenu },
       { path: "/crud-fun", title: "增删改查方法", component: CrudFun },
       { path: "/crud-cell", title: "行编辑", component: CrudCell },
+      { path: "/crud-sortable", title: "拖拽排序", component: CrudSortable },
+      { path: "/curd-ajax", title: "表格高级用法", component: CrudAjax }
     ],
   },
   {

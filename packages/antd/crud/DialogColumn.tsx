@@ -96,6 +96,7 @@ export default defineComponent({
       fixedL.value = [];
       const propOption = cloneDeep(crud.propOption.value);
       propOption.forEach((item: any) => {
+        if (item.showColumn === false) return;
         if (item.fixed == "right") {
           fixedR.value.push(item);
         } else if (
@@ -114,7 +115,7 @@ export default defineComponent({
       if (type === "normal") {
         normal.value.splice(index, 1);
       }
-      if (type == "right") {
+      if (type === "right") {
         fixedR.value.splice(index, 1);
       }
       fixedL.value.push(item);
@@ -125,7 +126,7 @@ export default defineComponent({
       if (type === "normal") {
         normal.value.splice(index, 1);
       }
-      if (type == "left") {
+      if (type === "left") {
         fixedL.value.splice(index, 1);
       }
       fixedR.value.push(item);
@@ -133,13 +134,13 @@ export default defineComponent({
 
     function handleAddNormal(item: any, index: number, type: string) {
       item.fixed = false;
-      normal.value.push(item);
-      if (type == "left") {
+      if (type === "left") {
         fixedL.value.splice(index, 1);
       }
-      if (type == "right") {
+      if (type === "right") {
         fixedR.value.splice(index, 1);
       }
+      normal.value.push(item);
     }
 
     function handleCancel() {

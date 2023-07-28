@@ -1,5 +1,7 @@
+import { DownOutlined } from "@ant-design/icons-vue";
 import { CrudKey } from "./common";
 import config from "./config";
+import lang from "../../../src/locale/lang/zh";
 import { vaildData } from "../../../src/utils/util";
 
 export default defineComponent({
@@ -37,9 +39,57 @@ export default defineComponent({
       const index: any = props.index;
       return (
         <>
+          {isMenu.value && (
+            <a-dropdown
+              v-slots={{
+                overlay: () => (
+                  <a-menu>
+                    {vaildData(crud.tableOption?.editBtn, config.editBtn) && (
+                      <a-menu-item
+                        size={crud.isMediumSize}
+                        onClick={() => crud.rowEdit(props.record, props.index)}
+                      >
+                        {h(resolveComponent(crud.getBtnIcon("editBtn")))}
+                        <span style={{ marginLeft: "5px" }}>
+                          {crud.menuIcon("editBtn")}
+                        </span>
+                      </a-menu-item>
+                    )}
+                    {vaildData(crud.tableOption?.delBtn, config.delBtn) && (
+                      <a-menu-item
+                        size={crud.isMediumSize}
+                        onClick={() => crud.rowDel(props.record, props.index)}
+                      >
+                        {h(resolveComponent(crud.getBtnIcon("delBtn")))}
+                        <span style={{ marginLeft: "5px" }}>
+                          {crud.menuIcon("delBtn")}
+                        </span>
+                      </a-menu-item>
+                    )}
+                    {slots.menuBtn &&
+                      slots.menuBtn({
+                        row: record,
+                        type: menuText("primary"),
+                        disabled: crud.btnDisabled,
+                        size: crud.isMediumSize,
+                        index: index,
+                      })}
+                  </a-menu>
+                ),
+              }}
+            >
+              <a class="ant-dropdown-link">
+                {crud.tableOption?.menuBtnTitle || lang.crud.menu}
+                <DownOutlined />
+              </a>
+            </a-dropdown>
+          )}
           {["button", "text", "icon", "link"].includes(menuType.value) && (
             <>
-              {vaildData((crud as any).tableOption?.cellBtn, config.cellBtn) && (
+              {vaildData(
+                (crud as any).tableOption?.cellBtn,
+                config.cellBtn
+              ) && (
                 <>
                   {vaildData(crud.tableOption?.editBtn, config.editBtn) &&
                     !record.$cellEdit && (

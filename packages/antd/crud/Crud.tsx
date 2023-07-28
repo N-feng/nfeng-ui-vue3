@@ -82,6 +82,7 @@ export default defineComponent({
     "row-save",
     "row-update",
     "search-change",
+    "sortable-change",
   ],
   setup(props, { attrs, slots, emit, expose }) {
     const btnDisabledList: any = reactive({});
@@ -97,6 +98,7 @@ export default defineComponent({
     const reload = ref(Math.random());
     const tableForm = reactive({});
     const tableIndex = ref(-1);
+    const tableRef = ref<any>();
     const theadColumns = ref<any[]>([]);
 
     const {
@@ -293,7 +295,7 @@ export default defineComponent({
       return list;
     }
 
-    function headerSort (oldIndex: number, newIndex: number) {
+    function headerSort(oldIndex: number, newIndex: number) {
       let column = columnOption.value;
       let targetRow = column.splice(oldIndex, 1)[0];
       column.splice(newIndex, 0, targetRow);
@@ -313,13 +315,12 @@ export default defineComponent({
     }
 
     //刷新事件
-    function refreshChange () {
+    function refreshChange() {
       emit("refresh-change");
     }
 
     function refreshTable(callback?: Function) {
       reload.value = Math.random();
-      console.log('reload.value: ', reload.value);
       nextTick(() => {
         callback && callback();
       });
@@ -427,10 +428,10 @@ export default defineComponent({
 
     function tableDrop(type: string, el: any, callback: Function) {
       if (isSortable.value !== true) {
-        if (type == 'row' && !isRowSort.value) {
-          return
-        } else if (type == 'column' && isColumnSort.value) {
-          return
+        if (type == "row" && !isRowSort.value) {
+          return;
+        } else if (type == "column" && isColumnSort.value) {
+          return;
         }
       }
       Sortable.create(el, {
@@ -484,6 +485,7 @@ export default defineComponent({
         tableForm,
         tableIndex,
         tableOption,
+        tableRef,
       },
     });
 
@@ -506,6 +508,7 @@ export default defineComponent({
     });
 
     expose({
+      refreshTable,
       rowCancel,
       rowCell,
       rowCellAdd,
@@ -535,6 +538,7 @@ export default defineComponent({
                 vaildData(props.option.page, true) &&
                 defaultPage
               }
+              ref={tableRef}
               scroll={{ x: 100, ...((scroll as object) || {}) }}
               size={controlSize.value}
               v-slots={{
@@ -557,6 +561,11 @@ export default defineComponent({
                           menu: (scope: any) => {
                             return slots.menu && slots.menu(scope);
                           },
+                          menuBtn: (scope: any) => {
+                            return (
+                              slots?.["menu-btn"] && slots?.["menu-btn"](scope)
+                            );
+                          }
                         }}
                       />
                     );

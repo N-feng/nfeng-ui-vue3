@@ -1,9 +1,7 @@
 import { CrudKey } from "./common";
+import config from "./config";
 import { validatenull } from "../../../src/utils/validate";
 import { detail } from "../../../src/core/detail";
-import { getSlotName, getSlotList } from "../../../src/core/slot";
-import { DIC_PROPS } from "../../../src/global/variable";
-// import { FormKey } from "../form/common";
 import FormTemp from "../../core/components/form/FormTemp";
 
 export default defineComponent({
@@ -22,16 +20,6 @@ export default defineComponent({
     //   setValue: setValue,
     // });
 
-    function setValue(prop: string, val: any) {
-      crud.cellForm.list[(props as any).index][prop] = val;
-    }
-
-    function vaildLabel(column: any, record: any, val: any) {
-      if (column.rules && record.$cellEdit) {
-        return val;
-      }
-    }
-
     function handleDetail(row: any, column: any) {
       let result;
       let DIC = column.parentProp
@@ -44,8 +32,28 @@ export default defineComponent({
       return result;
     }
 
+    function rowDrop() {
+      const el = crud.tableRef.value.$el.querySelectorAll(config.dropRowClass)[0]
+      crud.tableDrop('row', el, (evt: any) => {
+        const oldIndex = evt.oldIndex - 1;
+        const newIndex = evt.newIndex - 1;
+        const targetRow = crud.list.value.splice(oldIndex, 1)[0];
+        crud.list.value.splice(newIndex, 0, targetRow);
+        crud.emit('sortable-change', oldIndex, newIndex)
+        crud.refreshTable(() => rowDrop());
+      })
+    }
+
+    function setSort() {
+      rowDrop();
+    }
+
     function setVal(val: any) {
       console.log("setVal: ", val);
+    }
+
+    function setValue(prop: string, val: any) {
+      crud.cellForm.list[(props as any).index][prop] = val;
     }
 
     function showToolTip(e: any) {
@@ -53,6 +61,16 @@ export default defineComponent({
         e.target.style.pointerEvents = "none"; // 阻止鼠标事件
       }
     }
+
+    function vaildLabel(column: any, record: any, val: any) {
+      if (column.rules && record.$cellEdit) {
+        return val;
+      }
+    }
+
+    onMounted(() => {
+      setSort();
+    });
 
     return () => {
       const column: any = props.column;

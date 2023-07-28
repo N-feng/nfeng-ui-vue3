@@ -41,19 +41,8 @@ export default defineComponent({
     const formData: any = reactive({});
     const formList: any[] = [];
 
-    watch(
-      allDisabled,
-      (val) => {
-        emit("update:status", val);
-      },
-      {
-        deep: true,
-        immediate: true,
-      }
-    );
-
     const { DIC, controlSize, columnOption, propOption, rowKey, tableOption } =
-      useInit(props.option);
+      useInit(toRef(props, "option"));
 
     const parentOption = computed(() => {
       return props.option;
@@ -111,6 +100,17 @@ export default defineComponent({
         activeName.value = val;
       },
       { immediate: true }
+    );
+
+    watch(
+      allDisabled,
+      (val) => {
+        emit("update:status", val);
+      },
+      {
+        deep: true,
+        immediate: true,
+      }
     );
 
     provide(FormKey, {

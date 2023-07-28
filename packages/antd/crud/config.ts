@@ -3,6 +3,8 @@ export default {
   // 图标
   addBtnIcon: "plus-outlined",
   columnBtnIcon: "setting-outlined",
+  delBtnIcon: "delete-outlined",
+  editBtnIcon: "edit-outlined",
   emptyBtnIcon: "rest-outlined",
   searchBtnIcon: "SearchOutlined",
   // 显隐
