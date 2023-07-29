@@ -15,16 +15,19 @@ const MenuTree = defineComponent({
   props: {
     menus: {
       type: Object as PropType<Menu[]>,
-      // required: true,
+      required: true,
     },
     baseUrl: {
       type: String,
     },
   },
   setup(props) {
+    const menus = computed(() => {
+      return props.menus.filter((row: any) => !row.meta?.hide);
+    });
     return () => {
-      const { menus, baseUrl } = props;
-      return menus?.map((menu) => {
+      const { baseUrl } = props;
+      return menus.value.map((menu) => {
         return (
           <>
             {menu.children && menu.children.length > 0 ? (

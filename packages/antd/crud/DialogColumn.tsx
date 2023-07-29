@@ -213,18 +213,33 @@ export default defineComponent({
           delayOnTouchOnly: true,
           chosenClass: "chosen",
         };
-        Sortable.create(
-          document.querySelector(".sort_left") as HTMLElement,
-          ops
-        );
-        Sortable.create(
-          document.querySelector(".sort_normal") as HTMLElement,
-          ops
-        );
-        Sortable.create(
-          document.querySelector(".sort_right") as HTMLElement,
-          ops
-        );
+        const onEnd = (evt: any, checkList: any) => {
+          const { oldIndex, newIndex, item, from, to } = evt;
+          if (isEmpty(oldIndex) || isEmpty(newIndex) || newIndex === oldIndex) {
+            return;
+          }
+          // 将sortable移动过去的DOM复位
+          to.removeChild(item);
+          from.insertBefore(item, from.children[oldIndex]);
+
+          let targetRow = checkList.value.splice(oldIndex, 1)[0];
+          checkList.value.splice(newIndex, 0, targetRow);
+        };
+        Sortable.create(document.querySelector(".sort_left") as HTMLElement, {
+          ...ops,
+          //拖动结束
+          onEnd: (evt: any) => onEnd(evt, fixedL),
+        });
+        Sortable.create(document.querySelector(".sort_normal") as HTMLElement, {
+          ...ops,
+          //拖动结束
+          onEnd: (evt: any) => onEnd(evt, normal),
+        });
+        Sortable.create(document.querySelector(".sort_right") as HTMLElement, {
+          ...ops,
+          //拖动结束
+          onEnd: (evt: any) => onEnd(evt, fixedR),
+        });
       });
     }
 

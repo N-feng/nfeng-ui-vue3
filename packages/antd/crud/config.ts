@@ -21,7 +21,7 @@ export default {
   menu: true,
   saveBtn: true,
   searchLabelWidth: 80,
-  searchSpan: 6,
+  searchSpan: 8,
   searchBtnSpan: 24,
   searchSubBtn: undefined,
   dropRowClass: ".ant-table-content > table > tbody",

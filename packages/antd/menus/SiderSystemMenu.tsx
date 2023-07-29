@@ -25,14 +25,14 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const openKeysRef = ref<string[]>([]);
-    const selectedKeysRef = ref<string[]>([]);
+    const openKeys = ref<string[]>([]);
+    const selectedKeys = ref<string[]>([]);
     const route = useRoute();
     const router = useRouter();
     const activeKey = ref<string>("");
     const { systemMenus, headerSelectedKeys } = props;
 
-    const systemMenuRef = computed(() =>
+    const systemMenu: any = computed(() =>
       systemMenus.find((i: SystemMenu) => i.baseUrl === headerSelectedKeys[0])
     );
 
@@ -42,30 +42,28 @@ export default defineComponent({
       } else {
         router.push(`${key}`);
       }
-      // activeKey.value = path as string;
+      activeKey.value = key as string;
     };
 
     watchEffect(() => {
       const { path, subPaths } = uResolve(route.path);
 
-      openKeysRef.value = subPaths.map(
-        (item) => `${headerSelectedKeys}${item}`
-      );
-      selectedKeysRef.value = [`${headerSelectedKeys}${path}`];
+      openKeys.value = subPaths;
+      selectedKeys.value = [path];
     });
 
     return () => {
-      const openKeys = openKeysRef.value;
-      const selectedKeys = selectedKeysRef.value;
-      const systemMenu = systemMenuRef.value;
       return (
         <a-menu
           mode={"inline"}
-          openKeys={openKeys}
-          selectedKeys={selectedKeys}
+          openKeys={openKeys.value}
+          selectedKeys={selectedKeys.value}
           onSelect={handleSelect}
         >
-          <MenuTree menus={systemMenu?.menuList} baseUrl={systemMenu?.baseUrl} />
+          <MenuTree
+            menus={systemMenu.value.menuList}
+            baseUrl={systemMenu.value.baseUrl}
+          />
         </a-menu>
       );
     };

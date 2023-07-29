@@ -7,26 +7,28 @@ let value = ref('jack');
 </script>
 
 <template>
-  <div>
-    <div style="margin-bottom: 24px">value: {{ JSON.stringify(value)  }}</div>
-    <n-select
-      v-model="value"
-      style="width: 120px"
-      :dic="[
-        { type: 'jack', name: 'Jack' },
-        {
-          type: 'lucy',
-          name: 'Lucy',
-        },
-        { type: 'disabled', name: 'Disabled', disabled: true },
-        { type: 'Yiminghe', name: 'yiminghe' },
-      ]"
-      :props="{
-        label: 'name',
-        value: 'type',
-      }"
-    />
-  </div>
+  <a-row>
+    <a-col span="6">
+      value: {{ JSON.stringify(value)  }} <br />
+      <n-select
+        v-model="value"
+        style="width: 100%"
+        :dic="[
+          { type: 'jack', name: 'Jack' },
+          {
+            type: 'lucy',
+            name: 'Lucy',
+          },
+          { type: 'disabled', name: 'Disabled', disabled: true },
+          { type: 'Yiminghe', name: 'yiminghe' },
+        ]"
+        :props="{
+          label: 'name',
+          value: 'type',
+        }"
+      />
+    </a-col>
+  </a-row>
 </template>
 ```
 
@@ -43,7 +45,7 @@ let option = {
       label: "下拉框",
       prop: "select",
       type: "select",
-      span: 12,
+      span: 6,
       props: {
         label: "name",
         value: "code",
@@ -84,7 +86,7 @@ let option = {
       allowCreate: true,
       filterable: true,
       row: true,
-      span: 12,
+      span: 6,
       dicData: [
         {
           label: "字典1",
@@ -101,7 +103,7 @@ let option = {
       prop: "name",
       type: "select",
       filterable: true,
-      span: 12,
+      span: 6,
       dicData: [
         {
           label: "字典1",

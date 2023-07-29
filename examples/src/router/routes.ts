@@ -1,25 +1,27 @@
-import Introduce from "../__docs__/Introduct.md";
-import Guide from "../__docs__/Guide.md";
+import Divider from "../__docs__/packages/basic/Divider.md";
+
+import Input from "../__docs__/packages/component/Input.md";
+import Select from "../__docs__/packages/component/Select.md";
+import Switch from "../__docs__/packages/component/Switch.md";
+
+import CrudObject from "../__docs__/packages/crud/CrudObject.md";
+import CrudPage from "../__docs__/packages/crud/CrudPage.md";
+import CrudSearch from "../__docs__/packages/crud/CrudSearch.md";
+import CrudColumn from "../__docs__/packages/crud/CrudColumn.md";
+import CrudMenu from "../__docs__/packages/crud/CrudMenu.md";
+import CrudFun from "../__docs__/packages/crud/CrudFun.md";
+import CrudCell from "../__docs__/packages/crud/CrudCell.md";
+import CrudSortable from "../__docs__/packages/crud/CrudSortable.md";
+import CrudAjax from "../__docs__/packages/crud/CrudAjax.md";
+
+import Image from "../__docs__/packages/default/Image.md";
+
+import FormObject from "../__docs__/packages/form/FormObject.md";
+import FormLayout from "../__docs__/packages/form/FormLayout.md";
+
+import Introduce from "../__docs__/packages/Introduct.md";
+import Guide from "../__docs__/packages/Guide.md";
 import Theme from "../__docs__/styles/Theme.md";
-import Divider from "../__docs__/components/Divider.md";
-import Input from "../__docs__/components/Input.md";
-import Select from "../__docs__/components/Select.md";
-import Switch from "../__docs__/components/Switch.md";
-
-import FormObject from "../__docs__/components/form/FormObject.md";
-import FormLayout from "../__docs__/components/form/FormLayout.md";
-
-import CrudObject from "../__docs__/components/crud/CrudObject.md";
-import CrudPage from "../__docs__/components/crud/CrudPage.md";
-import CrudSearch from "../__docs__/components/crud/CrudSearch.md";
-import CrudColumn from "../__docs__/components/crud/CrudColumn.md";
-import CrudMenu from "../__docs__/components/crud/CrudMenu.md";
-import CrudFun from "../__docs__/components/crud/CrudFun.md"
-import CrudCell from "../__docs__/components/crud/CrudCell.md";
-import CrudSortable from "../__docs__/components/crud/CrudSortable.md";
-import CrudAjax from "../__docs__/components/crud/CrudAjax.md";
-
-import Image from "../__docs__/components/Image.md";
 
 export const routes = [
   {
@@ -43,15 +45,15 @@ export const routes = [
     children: [{ path: "/theme", title: "主题预设", component: Theme }],
   },
   {
-    path: "/basic-component",
+    path: "/basic",
     title: "布局",
     children: [
       { path: "/divider", title: "Divider 分割线", component: Divider },
     ],
   },
   {
-    path: "/data-component",
-    title: "数据录入",
+    path: "/component",
+    title: "表单组件",
     children: [
       { path: "/input", title: "Input 输入框", component: Input },
       { path: "/select", title: "Select 下拉选择", component: Select },
@@ -59,7 +61,7 @@ export const routes = [
     ],
   },
   {
-    path: "/form-component",
+    path: "/form",
     title: "Form 组件",
     children: [
       { path: "/form", title: "Object对象用法", component: FormObject },
@@ -67,7 +69,7 @@ export const routes = [
     ],
   },
   {
-    path: "/crud-component",
+    path: "/crud",
     title: "Crud 组件",
     children: [
       { path: "/crud-object", title: "Object对象用法", component: CrudObject },
@@ -78,46 +80,39 @@ export const routes = [
       { path: "/crud-fun", title: "增删改查方法", component: CrudFun },
       { path: "/crud-cell", title: "行编辑", component: CrudCell },
       { path: "/crud-sortable", title: "拖拽排序", component: CrudSortable },
-      { path: "/curd-ajax", title: "表格高级用法", component: CrudAjax }
+      { path: "/curd-ajax", title: "表格高级用法", component: CrudAjax },
     ],
   },
   {
-    path: "/data-component",
-    title: "数据展示",
-    children: [
-      { path: "/image", title: "Image 图片", component: Image },
-    ],
+    path: "/data",
+    title: "Data 组件",
+    children: [],
+    meta: {
+      hide: true,
+    },
+  },
+  {
+    path: "/default",
+    title: "Default 组件",
+    children: [{ path: "/image", title: "Image 图片", component: Image }],
   },
 ];
 
-function filter(arr: any) {
-  return arr.map((row: any) => {
-    const anchor = row.component && row.component?.$vd?.toc;
+function filter(arr: any[]) {
+  arr.forEach((row) => {
+    if (row.component) {
+      row["anchor"] = row.component?.$vd?.toc;
+    }
     if (row.children) {
-      if (anchor) {
-        return {
-          ...row,
-          children: filter(row.children),
-          anchor
-        }
-      }
-      return {
-        ...row,
-        children: filter(row.children)
-      }
+      filter(row.children);
     }
-    if (anchor) {
-      return {
-        ...row,
-        anchor
-      }
-    }
-    return row
-  })
-};
+  });
+}
+
+filter(routes);
 
 export default {
-  baseUrl: "/component",
+  baseUrl: "/packages", // 路由数据
   title: "组件库",
-  routes: filter(routes),
+  routes: routes,
 };

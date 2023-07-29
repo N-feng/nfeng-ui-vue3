@@ -21,6 +21,10 @@ export function useEvent(props: any, emit?: any) {
     text.value = initVal(val, props);
   });
 
+  watch(() => props.modelValue, (val) => {
+    text.value = initVal(val, props);
+  });
+
   function bindEvent(name: string, params: any) {
     let item = findNode(props.dic, props.props, text.value);
     params = Object.assign(params, { column: props.column, dic: props.dic, item: item });

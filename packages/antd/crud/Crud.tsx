@@ -162,7 +162,7 @@ export default defineComponent({
           key: propMap.value["operation"],
           fixed: "right",
           align: "center",
-          width: props.editable ? 60 : 160,
+          width: props.editable ? 60 : 220,
         });
       }
       return newColumns.filter((column: any) => getColumnProp(column, "hide"));

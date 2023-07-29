@@ -9,6 +9,7 @@ function getMenus(routes: any, parentPath: string) {
       node.children = getMenus(node.children, node.path)
       if (node.href) {
         return {
+          ...node,
           url: `${parentPath}${node.path}`,
           menuName: node.title,
           children: node.children,
@@ -16,6 +17,7 @@ function getMenus(routes: any, parentPath: string) {
         };
       }
       return {
+        ...node,
         url: `${parentPath}${node.path}`,
         menuName: node.title,
         children: node.children,
@@ -23,12 +25,14 @@ function getMenus(routes: any, parentPath: string) {
     }
     if (node.href) {
       return {
+        ...node,
         url: `${parentPath}${node.path}`,
         menuName: node.title,
         href: node.href,
       };
     }
     return {
+      ...node,
       url: `${parentPath}${node.path}`,
       menuName: node.title,
     };
@@ -40,10 +44,10 @@ export default defineComponent({
   setup() {
     const route = useRoute()
     const anchor = computed(() => (route.meta.anchor as any[]) || [])
-
+    const baseUrl = "/packages"; // Menu Data
     const systemMenus = [
       {
-        baseUrl: "/component",
+        baseUrl: baseUrl,
         menuList: getMenus(routes.routes, ""),
         name: "组件库",
         tenementId: 0,
@@ -53,7 +57,6 @@ export default defineComponent({
     const onClick = (e: Event, link: Object) => {
       e.preventDefault();
     };
-
 
     const collapsedRef = ref<boolean>(false);
 

@@ -41,16 +41,16 @@ const expandRoutes = () => {
 };
 
 const routes = expandRoutes();
-
+const baseUrl = "/packages"; // 路由匹配
 const router = _createRouter({
   history: createWebHistory(),
   routes: [
     {
       path: "/",
-      redirect: "/component/introduce",
+      redirect: `${baseUrl}/introduce`,
     },
     {
-      path: "/component",
+      path: baseUrl,
       name: "Layout",
       component: Layout,
       redirect: config.baseUrl + config.routes[0].path,
