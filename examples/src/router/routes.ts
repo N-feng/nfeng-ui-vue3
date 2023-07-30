@@ -17,7 +17,11 @@ import CrudAjax from "../__docs__/packages/crud/CrudAjax.md";
 import Image from "../__docs__/packages/default/Image.md";
 
 import FormObject from "../__docs__/packages/form/FormObject.md";
+import FormSelect from "../__docs__/packages/form/FormSelect.md";
 import FormLayout from "../__docs__/packages/form/FormLayout.md";
+import FormMenu from "../__docs__/packages/form/FormMenu.md";
+import FormCascader from "../__docs__/packages/form/FormCascader.md";
+import FormEvent from "../__docs__/packages/form/FormEvent.md";
 
 import Introduce from "../__docs__/packages/Introduct.md";
 import Guide from "../__docs__/packages/Guide.md";
@@ -65,7 +69,11 @@ export const routes = [
     title: "Form 组件",
     children: [
       { path: "/form", title: "Object对象用法", component: FormObject },
+      { path: "/form-select", title: "Select选择框", component: FormSelect },
       { path: "/form-layout", title: "表单布局", component: FormLayout },
+      { path: "/form-menu", title: "表单操作按钮", component: FormMenu },
+      { path: "/form-cascader", title: "表单多级联动", component: FormCascader },
+      { path: "/form-event", title: "表单组件事件", component: FormEvent },
     ],
   },
   {

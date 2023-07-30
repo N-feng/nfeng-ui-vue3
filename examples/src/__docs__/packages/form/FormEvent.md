@@ -1,3 +1,13 @@
+# 表单组件事件
+
+- `change`事件
+- `click`事件
+- `focus`事件
+- `blur`事件
+- `enter`事件
+
+## 组件事件
+```vue demo
 <script setup lang="ts">
 import { ref, reactive, watch } from "vue";
 const baseUrl = 'https://cli.avuejs.com/api/area'
@@ -10,7 +20,7 @@ const option = reactive({
     province: {
       label: "省份",
       type: "select",
-      span: 24,
+      span: 12,
       row: true,
       props: {
         label: "name",
@@ -64,7 +74,7 @@ const option = reactive({
     city: {
       label: "城市",
       type: "select",
-      span: 24,
+      span: 12,
       row: true,
       dicUrl: `${baseUrl}/getCity/{{key}}`,
       dicData: [
@@ -86,3 +96,4 @@ const option = reactive({
   <div style="margin-bottom: 24px">{{ form }}</div>
   <n-form :option="option" :model="form" />
 </template>
+```

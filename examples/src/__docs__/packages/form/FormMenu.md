@@ -1,3 +1,8 @@
+# 表单操作按钮
+
+## 自定义按钮
+
+```vue demo
 <script setup lang="ts">
 import { ref } from "vue";
 const form = ref({
@@ -25,3 +30,4 @@ const option = {
     </template>
   </n-form>
 </template>
+```

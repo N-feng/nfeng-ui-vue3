@@ -1,3 +1,8 @@
+# 表单多级联动
+
+## Select多级联动
+
+```vue demo
 <script setup lang="ts">
 import { ref } from "vue";
 const baseUrl = "";
@@ -41,3 +46,4 @@ const option = ref({
   <div style="margin-bottom: 24px">{{ form }}</div>
   <n-form :option="option" :model="form" />
 </template>
+```
