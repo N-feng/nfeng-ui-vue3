@@ -26,6 +26,51 @@ const page = reactive({
   current: 1,
   pageSize: 20,
 });
+</script>
+
+<template>
+  <p>
+    页码:{{ page.current }}
+    <a-button @click="page.current = page.current + 1">页码+1</a-button>
+  </p>
+  <p>
+    条数:{{ page.pageSize }}
+    <a-button @click="page.pageSize = page.pageSize + 10">条数+10</a-button>
+  </p>
+  <p>
+    总数:{{ page.total }}
+    <a-button @click="page.total = page.total + 10">总数+10</a-button>
+  </p>
+  <n-crud :option="option" :data="data" :page="page" />
+</template>
+```
+
+## 综合用法
+
+```vue demo
+<script setup lang="ts">
+import { reactive, ref, watch } from "vue";
+
+const data = ref();
+
+const option = reactive({
+  column: {
+    name: {
+      label: "姓名",
+      span: 12,
+    },
+    sex: {
+      label: "年龄",
+      span: 12,
+    },
+  },
+});
+
+const page = reactive({
+  total: 40,
+  current: 1,
+  pageSize: 20,
+});
 
 function onLoad(page: any) {
   console.log("分页信息:" + JSON.stringify(page));
@@ -61,11 +106,6 @@ function onLoad(page: any) {
 </script>
 
 <template>
-  <div style="margin-bottom: 24px">
-    页码:{{page.current}} <a-button @click="page.current = page.current + 1">页码+1</a-button><br /><br />
-    条数:{{page.pageSize}} <a-button @click="page.pageSize = page.pageSize + 10">条数+10</a-button><br /><br />
-    总数:{{page.total}} <a-button @click="page.total = page.total + 10">总数+10</a-button><br /><br />
-  </div>
-  <n-crud :option="option" :data="data" :page="page" @on-load="onLoad" />
+  <n-crud :option="option" :data="data" :page="page" @load="onLoad" />
 </template>
 ```

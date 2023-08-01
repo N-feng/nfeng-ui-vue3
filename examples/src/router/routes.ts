@@ -1,6 +1,7 @@
 import Divider from "../__docs__/packages/basic/Divider.md";
 
 import Input from "../__docs__/packages/component/Input.md";
+import InputTable from "../__docs__/packages/component/InputTable.md";
 import Select from "../__docs__/packages/component/Select.md";
 import Switch from "../__docs__/packages/component/Switch.md";
 
@@ -10,6 +11,7 @@ import CrudSearch from "../__docs__/packages/crud/CrudSearch.md";
 import CrudColumn from "../__docs__/packages/crud/CrudColumn.md";
 import CrudMenu from "../__docs__/packages/crud/CrudMenu.md";
 import CrudFun from "../__docs__/packages/crud/CrudFun.md";
+import CrudTree from "../__docs__/packages/crud/CrudTree.md";
 import CrudCell from "../__docs__/packages/crud/CrudCell.md";
 import CrudSortable from "../__docs__/packages/crud/CrudSortable.md";
 import CrudAjax from "../__docs__/packages/crud/CrudAjax.md";
@@ -60,6 +62,7 @@ export const routes = [
     title: "表单组件",
     children: [
       { path: "/input", title: "Input 输入框", component: Input },
+      { path: "/input-table", title: "InputTable 表格选择器", component: InputTable },
       { path: "/select", title: "Select 下拉选择", component: Select },
       { path: "/switch", title: "Switch 开关", component: Switch },
     ],
@@ -86,6 +89,7 @@ export const routes = [
       { path: "/crud-column", title: "表格列配置", component: CrudColumn },
       { path: "/crud-menu", title: "操作栏配置", component: CrudMenu },
       { path: "/crud-fun", title: "增删改查方法", component: CrudFun },
+      { path: "/crud-tree", title: "表格树", component: CrudTree },
       { path: "/crud-cell", title: "行编辑", component: CrudCell },
       { path: "/crud-sortable", title: "拖拽排序", component: CrudSortable },
       { path: "/curd-ajax", title: "表格高级用法", component: CrudAjax },

@@ -7,7 +7,7 @@ import HeaderLayout from "../../../packages/antd/layouts/HeaderLayout";
 import HeaderSystemMenu from "../../../packages/antd/menus/HeaderSystemMenu";
 import Image from "../../../packages/antd/image/Image";
 import Input from "../../../packages/antd/input/Input";
-import Row from "../../../packages/antd/row/Row";
+import InputTable from "../../../packages/antd/input-table/InputTable";
 import Select from "../../../packages/antd/select/Select";
 import SiderLayout from "../../../packages/antd/layouts/SiderLayout";
 import Switch from "../../../packages/antd/switch/Switch";
@@ -24,7 +24,7 @@ const components: {
   HeaderSystemMenu,
   Image,
   Input,
-  Row,
+  InputTable,
   Select,
   SiderLayout,
   Switch,

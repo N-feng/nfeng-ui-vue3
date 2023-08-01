@@ -62,6 +62,10 @@ export default defineComponent({
         return {};
       },
     },
+    tableLoading: {
+      type: Boolean,
+      default: false,
+    },
     data: {
       type: Array,
       required: true,
@@ -74,21 +78,22 @@ export default defineComponent({
   },
   emits: [
     "current-change",
-    "on-load",
+    "load",
     "refresh-change",
     "row-click",
     "row-dblclick",
     "row-del",
     "row-save",
     "row-update",
-    "search-change",
+    "searchChange",
+    "searchReset",
     "sortable-change",
   ],
   setup(props, { attrs, slots, emit, expose }) {
     const btnDisabledList: any = reactive({});
     const btnDisabled = ref(false);
     const cascaderFormList: any = reactive([]);
-    const cellForm = reactive({
+    const cellForm: any = reactive({
       list: [],
     });
     const dialogColumn = ref();
@@ -231,10 +236,17 @@ export default defineComponent({
       }
     );
 
+    watch(
+      list,
+      (val) => {
+        cellForm.list = val;
+      },
+    )
+
     function findData(id: number | string) {
       let result: any = {};
       const callback = (parentList: any, parent?: any) => {
-        parentList.value.forEach((ele: any, index: number) => {
+        parentList.forEach((ele: any, index: number) => {
           if (ele[rowKey.value] == id) {
             result = {
               item: ele,
@@ -248,7 +260,7 @@ export default defineComponent({
           }
         });
       };
-      callback(list);
+      callback(list.value);
       return result;
     }
 
@@ -456,7 +468,7 @@ export default defineComponent({
         btnDisabledList,
         cascaderDIC,
         cellForm,
-        childrenKey: childrenKey.value,
+        childrenKey: childrenKey,
         dialogColumn: dialogColumn,
         DIC,
         emit,
@@ -478,8 +490,8 @@ export default defineComponent({
         rowCellAdd,
         rowDel,
         rowEdit,
-        rowKey: rowKey.value,
-        rowParentKey: rowParentKey.value,
+        rowKey: rowKey,
+        rowParentKey: rowParentKey,
         search: props.search,
         tableDrop,
         tableForm,
@@ -490,9 +502,6 @@ export default defineComponent({
     });
 
     function dataInit() {
-      Object.assign(cellForm, {
-        list: data.value,
-      });
       list.value = data.value;
       list.value.forEach((ele: any, index: number) => {
         if (ele.$cellEdit && !cascaderFormList[index]) {
@@ -500,6 +509,7 @@ export default defineComponent({
         }
         ele.$cellEdit = ele.$cellEdit || false;
         ele.$index = index;
+        ele.key = ele[rowKey.value];
       });
     }
 
@@ -509,6 +519,7 @@ export default defineComponent({
 
     expose({
       refreshTable,
+      rowAdd,
       rowCancel,
       rowCell,
       rowCellAdd,
@@ -532,6 +543,7 @@ export default defineComponent({
                 };
               }}
               dataSource={cellForm.list}
+              loading={props.tableLoading}
               onChange={onChange}
               pagination={
                 pageFlag.value &&

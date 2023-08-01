@@ -1,5 +1,6 @@
 import { CrudKey } from "./common";
 import config from "./config";
+import { formInitVal, getPlaceholder } from "../../../src/core/dataformat";
 import lang from "../../../src/locale/lang/zh";
 import {
   deepClone,
@@ -110,6 +111,11 @@ export default defineComponent({
     function hide(done?: () => void) {
       const callback = () => {
         done && done();
+        crud.tableIndex.value = -1;
+        Object.assign(
+          crud.tableForm,
+          formInitVal(formOption.value.column).tableForm
+        );
         boxVisible.value = false;
       };
       callback();
@@ -128,22 +134,22 @@ export default defineComponent({
       row = deepClone(row);
       const callback = () => {
         if (isEdit.value) {
-          let { parentList, index } = crud.findData(row[crud.rowKey]);
-          if (parentList.value) {
-            const oldRow = parentList.value.splice(index, 1)[0];
-            row[crud.childrenKey.value] = oldRow[crud.childrenKey];
-            parentList.value.splice(index, 0, row);
+          let { parentList, index } = crud.findData(row[crud.rowKey.value]);
+          if (parentList) {
+            const oldRow = parentList.splice(index, 1)[0];
+            row[crud.childrenKey.value] = oldRow[crud.childrenKey.value];
+            parentList.splice(index, 0, row);
           }
         } else if (isAdd.value) {
-          let { item } = crud.findData(row[crud.rowParentKey]);
+          let { item } = crud.findData(row[crud.rowParentKey.value]);
           if (item) {
-            if (!item[crud.childrenKey]) {
-              item[crud.childrenKey] = [];
+            if (!item[crud.childrenKey.value]) {
+              item[crud.childrenKey.value] = [];
             }
             if (crud.tableOption?.lazy) {
               item[crud.hasChildrenKey] = true;
             }
-            item[crud.childrenKey].push(row);
+            item[crud.childrenKey.value].push(row);
           } else {
             crud.list.value.push(row);
           }
@@ -197,7 +203,7 @@ export default defineComponent({
               visible: boxVisible.value,
               title: dialogTitle.value,
               ...params.value,
-              onClose: (event: any) => hide(),
+              onCancel: (event: any) => hide(),
             },
             {
               default: () => {
@@ -219,7 +225,11 @@ export default defineComponent({
               footer: () => {
                 return (
                   <>
-                    <a-button type="primary" onClick={submit} loading={disabled.value}>
+                    <a-button
+                      type="primary"
+                      onClick={submit}
+                      loading={disabled.value}
+                    >
                       {formOption.value.submitText}
                     </a-button>
                     <a-button onClick={reset} disabled={disabled.value}>

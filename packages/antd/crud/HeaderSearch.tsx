@@ -7,6 +7,7 @@ import Form from "../../antd/form/Form";
 export default defineComponent({
   setup(props, ctx) {
     const { crud } = inject(CrudKey) as any;
+    const formRef = ref();
     const show = ref(false);
     const searchIndex = crud.option.searchIndex || 2;
 
@@ -127,6 +128,11 @@ export default defineComponent({
       return detailOption(crud.option);
     });
 
+    // 搜索清空
+    function resetChange() {
+      crud.emit("searchReset", search.value);
+    }
+
     // 搜索回调
     function searchChange (form: any, done: Function) {
       form = filterParams(form);
@@ -136,7 +142,7 @@ export default defineComponent({
           delete form[ele.prop];
         }
       });
-      crud.emit("search-change", form, done);
+      crud.emit("searchChange", form, done);
     }
 
     function showChange () {
@@ -148,8 +154,10 @@ export default defineComponent({
         <>
           {searchFlag.value && (
             <Form
-              option={option.value}
+              ref={formRef}
               model={search.value}
+              option={option.value}
+              onResetChange={resetChange}
               onSubmit={searchChange}
               v-slots={{
                 menuForm: () => (

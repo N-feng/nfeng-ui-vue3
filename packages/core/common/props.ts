@@ -50,6 +50,9 @@ export const defineProps = () => ({
     type: Object as PropType<Props>,
     default: () => DIC_PROPS,
   },
+  readonly: {
+    type: Boolean,
+  },
   size: {
     type: String,
     default: "",

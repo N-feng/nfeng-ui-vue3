@@ -47,14 +47,14 @@ export default function (props: any, emit?: any, crud?: any) {
   // 页大小回调
   function sizeChange(val: number) {
     updateValue(["current", "pageSize"], [1, val]);
-    emit("on-load", defaultPage);
+    emit("load", defaultPage);
     emit("size-change", val);
   }
 
   // 页码回调
   function currentChange(val: any) {
     updateValue("current", val);
-    emit("on-load", defaultPage);
+    emit("load", defaultPage);
     emit("current-change", props.page.current);
   }
 
@@ -74,7 +74,7 @@ export default function (props: any, emit?: any, crud?: any) {
 
   onMounted(() => {
     pageInit();
-    emit("on-load", defaultPage);
+    emit("load", defaultPage);
   });
 
   return {

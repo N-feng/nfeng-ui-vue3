@@ -29,7 +29,7 @@ const prefix: any = (name: any, mods: any) => {
   return ret;
 };
 
-export default function(b: string, el: any, mods?: any) {
+export default function(b: string, el?: any, mods?: any) {
   if (el && typeof el !== "string") {
     mods = el;
     el = "";

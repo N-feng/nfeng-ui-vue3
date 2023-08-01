@@ -33,7 +33,7 @@ export default defineComponent({
     value: {},
     model: {},
   },
-  emits: ["submit", "error", "reset-change", "update:status"],
+  emits: ["submit", "error", "resetChange", "update:status"],
   setup(props, { attrs, slots, emit, expose }) {
     const formRef: any = ref<FormInstance>();
     const activeName = ref("");
@@ -242,7 +242,7 @@ export default defineComponent({
         resetFields();
       }
       nextTick(() => {
-        emit("reset-change");
+        emit("resetChange");
       });
     }
 

@@ -1,6 +1,7 @@
 import { getPrefix } from "../../../src/_utils/common";
 import { vaildData } from "../../../src/utils/util";
 import { FormKey } from "./common";
+import config from "./config";
 
 const { prefixCls } = getPrefix("Menu");
 
@@ -32,7 +33,11 @@ export default defineComponent({
                     loading={allDisabled.value}
                     v-slots={{
                       icon: () =>
-                        h(resolveComponent(parentOption.value.submitIcon)),
+                        h(
+                          resolveComponent(
+                            parentOption.value.submitIcon || config.submitIcon
+                          )
+                        ),
                     }}
                   >
                     {vaildData(parentOption.value.submitText, "提 交")}
@@ -44,7 +49,11 @@ export default defineComponent({
                     onClick={() => resetForm()}
                     v-slots={{
                       icon: () =>
-                        h(resolveComponent(parentOption.value.emptyIcon)),
+                        h(
+                          resolveComponent(
+                            parentOption.value.emptyIcon || config.emptyIcon
+                          )
+                        ),
                     }}
                   >
                     {vaildData(parentOption.value.emptyText, "清 空")}

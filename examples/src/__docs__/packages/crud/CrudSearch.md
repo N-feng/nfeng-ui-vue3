@@ -51,7 +51,7 @@ const searchChange = (params: any, done: Function) => {
     :option="option"
     :data="data"
     :search="search"
-    @search-change="searchChange"
+    @searchChange="searchChange"
   />
 </template>
 ```
@@ -109,7 +109,7 @@ const searchChange = (params: any, done: Function) => {
     :option="option"
     :data="data"
     :search="search"
-    @search-change="searchChange"
+    @searchChange="searchChange"
   />
 </template>
 ```
