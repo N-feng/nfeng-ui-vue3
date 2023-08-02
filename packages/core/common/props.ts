@@ -13,6 +13,10 @@ export const defineProps = () => ({
   click: Function,
   focus: Function,
   typeformat: Function,
+  button: {
+    type: Boolean,
+    default: false,
+  },
   clearable: {
     type: Boolean,
     default: true,
@@ -68,11 +72,17 @@ export const defineProps = () => ({
   value: {},
 });
 
-export function useProps(props: any) {
+export function useProps(props: any, name?: string) {
   const propsDefault = DIC_PROPS;
 
   const clearableVal = computed(() => {
     return props.disabled ? false : props.clearable;
+  });
+
+  const componentName = computed(() => {
+    const type = 'a';
+    const result = `${type}-${name}${props.button ? '-button' : ''}`;
+    return result;
   });
 
   const valueKey = computed(() => {
@@ -85,6 +95,7 @@ export function useProps(props: any) {
 
   return {
     clearableVal,
+    componentName,
     valueKey,
     labelKey,
   };

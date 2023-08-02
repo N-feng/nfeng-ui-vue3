@@ -77,6 +77,7 @@ export default defineComponent({
     ...tableProps(),
   },
   emits: [
+    "currentRowChange",
     "current-change",
     "load",
     "refresh-change",
@@ -93,14 +94,15 @@ export default defineComponent({
     const btnDisabledList: any = reactive({});
     const btnDisabled = ref(false);
     const cascaderFormList: any = reactive([]);
-    const cellForm: any = reactive({
+    const cellForm = reactive<any>({
       list: [],
     });
     const dialogColumn = ref();
     const dialogForm = ref();
-    const formRef: any = ref<FormInstance>();
-    const list: any = ref([]);
+    const formRef = ref<any>();
+    const list = ref<any>([]);
     const reload = ref(Math.random());
+    const rowSelected = reactive<any>({});
     const tableForm = reactive({});
     const tableIndex = ref(-1);
     const tableRef = ref<any>();
@@ -236,12 +238,27 @@ export default defineComponent({
       }
     );
 
-    watch(
-      list,
-      (val) => {
-        cellForm.list = val;
-      },
-    )
+    watch(list, (val) => {
+      cellForm.list = val;
+    });
+
+    //设置单选
+    function currentRowChange(currentRow: any, oldCurrentRow?: any) {
+      Object.assign(rowSelected, currentRow);
+      emit("currentRowChange", currentRow, oldCurrentRow);
+    }
+
+    function dataInit() {
+      list.value = data.value;
+      list.value.forEach((ele: any, index: number) => {
+        if (ele.$cellEdit && !cascaderFormList[index]) {
+          cascaderFormList[index] = deepClone(ele);
+        }
+        ele.$cellEdit = ele.$cellEdit || false;
+        ele.$index = index;
+        ele.key = ele[rowKey.value];
+      });
+    }
 
     function findData(id: number | string) {
       let result: any = {};
@@ -405,7 +422,7 @@ export default defineComponent({
     function rowClick(row: any, event: any, column?: any) {
       if (
         event.target.cellIndex === initColumns.value.length - 1 ||
-        !event.target.cellIndex
+        event.target.cellIndex === undefined
       ) {
         return;
       }
@@ -436,6 +453,10 @@ export default defineComponent({
       Object.assign(tableForm, deepClone(row));
       tableIndex.value = index;
       dialogForm.value.show("edit");
+    }
+
+    function setCurrentRow(row: any) {
+      currentRowChange(row);
     }
 
     function tableDrop(type: string, el: any, callback: Function) {
@@ -501,18 +522,6 @@ export default defineComponent({
       },
     });
 
-    function dataInit() {
-      list.value = data.value;
-      list.value.forEach((ele: any, index: number) => {
-        if (ele.$cellEdit && !cascaderFormList[index]) {
-          cascaderFormList[index] = deepClone(ele);
-        }
-        ele.$cellEdit = ele.$cellEdit || false;
-        ele.$index = index;
-        ele.key = ele[rowKey.value];
-      });
-    }
-
     onMounted(() => {
       dataInit();
     });
@@ -524,6 +533,7 @@ export default defineComponent({
       rowCell,
       rowCellAdd,
       rowEdit,
+      setCurrentRow,
     });
 
     return () => {
@@ -534,7 +544,6 @@ export default defineComponent({
           <HeaderMenu v-slots={slots} />
           <a-form model={cellForm.list} ref={formRef}>
             <a-table
-              key={reload.value}
               columns={initColumns.value}
               customRow={(record: any, index: number) => {
                 return {
@@ -543,6 +552,7 @@ export default defineComponent({
                 };
               }}
               dataSource={cellForm.list}
+              key={reload.value}
               loading={props.tableLoading}
               onChange={onChange}
               pagination={
@@ -551,6 +561,11 @@ export default defineComponent({
                 defaultPage
               }
               ref={tableRef}
+              rowClassName={(record: any, index: number) => {
+                return record[rowKey.value] === rowSelected[rowKey.value]
+                  ? "ant-table-row-selected"
+                  : null;
+              }}
               scroll={{ x: 100, ...((scroll as object) || {}) }}
               size={controlSize.value}
               v-slots={{
@@ -577,7 +592,7 @@ export default defineComponent({
                             return (
                               slots?.["menu-btn"] && slots?.["menu-btn"](scope)
                             );
-                          }
+                          },
                         }}
                       />
                     );

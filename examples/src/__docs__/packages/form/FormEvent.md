@@ -7,10 +7,12 @@
 - `enter`事件
 
 ## 组件事件
+
 ```vue demo
 <script setup lang="ts">
 import { ref, reactive, watch } from "vue";
-const baseUrl = 'https://cli.avuejs.com/api/area'
+import { message } from "ant-design-vue";
+const baseUrl = "https://cli.avuejs.com/api/area";
 const form = reactive({
   province: "110000",
   city: "110100",
@@ -38,38 +40,17 @@ const option = reactive({
       ],
       cascader: ["city"],
       change: ({ value, column, item, dic }: any) => {
-        // this.$message.success('change事件查看控制台')
-        console.log("值改变", value, column, item, dic);
-        form.city = value;
-        Object.assign(form, {
-          city: value,
-        });
-        if (value) {
-          if (
-            option.column.city.dicData.findIndex(
-              (item: any) => item.value === value
-            ) === -1
-          ) {
-            option.column.city.dicData.push({
-              label: `我选择了：${item.name}`,
-              value,
-            });
-          } else {
-            option.column.city.dicData.push({
-              label: `我又选择了：${item.name}`,
-              value,
-            });
-          }
-        }
+        message.success("change事件查看控制台");
+        console.log("值改变", value, column);
       },
-      focus: ({ value,column }: any) => {
-        // this.$message.success('focus事件查看控制台')
-        console.log('获取焦点',value,column);
+      focus: ({ value, column }: any) => {
+        message.success("focus事件查看控制台");
+        console.log("获取焦点", value, column);
       },
       blur: ({ value, column }: any) => {
-        // this.$message.success('blur事件查看控制台')
+        message.success("blur事件查看控制台");
         console.log("失去焦点", value, column);
-      }
+      },
     },
     city: {
       label: "城市",
@@ -93,7 +74,72 @@ const option = reactive({
 </script>
 
 <template>
-  <div style="margin-bottom: 24px">{{ form }}</div>
+  <n-form :option="option" :model="form" />
+</template>
+```
+
+## 组件交互
+
+```vue demo
+<script setup lang="ts">
+import { ref, reactive, watch } from "vue";
+import { message } from "ant-design-vue";
+const baseUrl = "https://cli.avuejs.com/api/area";
+const form = reactive({
+  text1: 0,
+});
+const option = reactive({
+  column: [
+    {
+      label: "内容1",
+      prop: "text1",
+      type: "radio",
+      control: (val, form) => {
+        if (val === 0) {
+          return {
+            text2: {
+              display: true,
+            },
+            text3: {
+              label: "内容3",
+            },
+          };
+        } else {
+          return {
+            text2: {
+              display: false,
+            },
+            text3: {
+              label: "有没有发现我变了",
+            },
+          };
+        }
+      },
+      dicData: [
+        {
+          label: "显示",
+          value: 0,
+        },
+        {
+          label: "隐藏",
+          value: 1,
+        },
+      ],
+    },
+    {
+      label: "内容2",
+      prop: "text2",
+      display: true,
+    },
+    {
+      label: "内容3",
+      prop: "text3",
+    },
+  ],
+});
+</script>
+
+<template>
   <n-form :option="option" :model="form" />
 </template>
 ```

@@ -16,10 +16,11 @@ export const defineInit = () => ({
 });
 
 export default function useInit(option: any) {
-  const DIC: any = ref({});
-  const cascaderDIC: any = reactive({});
+  const cascaderDIC = reactive<any>({});
+  const DIC = ref<any>({});
   const isMobile = ref(false);
-  let tableOption: any = reactive({});
+  const objectOption = reactive<any>({});
+  const tableOption = reactive<any>({});
 
   const columnOption = computed(() => {
     let column = getColumn(option.value?.column);
@@ -78,11 +79,25 @@ export default function useInit(option: any) {
 
   watch(
     () => option,
-    (val) => {
-      // console.log('val: ', val);
+    () => {
       init(false);
     },
     { deep: true }
+  );
+
+  watch(
+    propOption,
+    (list) => {
+      let result: any = {}
+      list.forEach((ele: any) => {
+        result[ele.prop] = ele;
+      });
+      Object.assign(objectOption, result);
+    },
+    {
+      deep: true,
+      immediate: true,
+    }
   );
 
   function getIsMobile() {
@@ -98,7 +113,8 @@ export default function useInit(option: any) {
   }
 
   function init(type?: boolean) {
-    tableOption = option;
+    Object.assign(objectOption, option);
+    // tableOption = option;
     getIsMobile();
     handleLocalDic();
     if (type !== false) return false;
@@ -113,6 +129,7 @@ export default function useInit(option: any) {
     columnOption,
     isMediumSize,
     isMobile,
+    objectOption,
     propOption,
     resultOption,
     rowKey,

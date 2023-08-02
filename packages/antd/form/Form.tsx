@@ -35,14 +35,22 @@ export default defineComponent({
   },
   emits: ["submit", "error", "resetChange", "update:status"],
   setup(props, { attrs, slots, emit, expose }) {
-    const formRef: any = ref<FormInstance>();
+    const formRef = ref<any>();
     const activeName = ref("");
     const allDisabled = ref(false);
-    const formData: any = reactive({});
-    const formList: any[] = [];
+    const formData = reactive<any>({});
+    const formList = ref<any[]>([]);
+    const formBind = reactive<any>({});
 
-    const { DIC, controlSize, columnOption, propOption, rowKey, tableOption } =
-      useInit(toRef(props, "option"));
+    const {
+      DIC,
+      controlSize,
+      columnOption,
+      objectOption,
+      propOption,
+      rowKey,
+      tableOption,
+    } = useInit(toRef(props, "option"));
 
     const parentOption = computed(() => {
       return props.option;
@@ -139,6 +147,7 @@ export default defineComponent({
         }
       });
       Object.assign(formData, form);
+      setControl()
     }
 
     function getItemParams(
@@ -170,7 +179,7 @@ export default defineComponent({
         const columnNext = findObject(list, columnNextProp);
         if (validatenull(columnNext)) return;
         // 如果不是首次加载则清空全部关联节点的属性值和字典值
-        if (formList.includes(str)) {
+        if (formList.value.includes(str)) {
           //清空子类字典列表和值
           cascader?.forEach((ele) => {
             formData.value[ele] = "";
@@ -246,6 +255,32 @@ export default defineComponent({
       });
     }
 
+    function setControl() {
+      propOption.value.forEach((column: any) => {
+        let prop = column.prop;
+        let bind = column.bind;
+        let control = column.control;
+        let value = formData;
+        if (!formBind[prop]) {
+          let bindList = [];
+          if (bind) {}
+          if (control) {
+            const callback = () => {
+              let controlList = control(formData[column.prop], formData) || {};
+              Object.keys(controlList).forEach((item) => {
+                let ele = Object.assign(objectOption[item] || {}, controlList[item]);
+                if (controlList[item].dicData) DIC[item] = controlList[item].dicData;
+              });
+            };
+            let formControl = watch(() => formData[prop], callback);
+            bindList.push(formControl);
+            callback();
+          }
+          formBind[prop] = bindList;
+        }
+      });
+    }
+
     function setValue(name: string | string[], value: any | any[]) {
       if (typeof name === "string") {
         if (isEmpty(value)) {
@@ -314,7 +349,11 @@ export default defineComponent({
       return !column.tip || column.type === "upload";
     }
 
-    dataFormat();
+    onMounted(() => {
+      setTimeout(() => {
+        dataFormat();
+      });
+    })
 
     expose({
       submit: submit,

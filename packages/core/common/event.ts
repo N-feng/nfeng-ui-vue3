@@ -11,10 +11,21 @@ export function getLabelText(item: any, typeformat: any, labelKey: string, value
 }
 
 export function useEvent(props: any, emit?: any) {
-  const text = ref(initVal(props.modelValue, props));
+  const active = reactive<any>({});
+  const created = ref(false);
+  const object = reactive<any>({});
+  const text = ref<any>(undefined);
 
-  watch(() => text.value, (n) => {
-    handleChange(n);
+  watch(() => text.value, (val) => {
+    handleChange(val);
+    if (created.value || validatenull(val)) return;
+    if (typeof props.load === "function") {
+      props.load({ value: text.value }, (data: any) => {
+        Object.assign(active, data);
+        Object.assign(object, data);
+        created.value = true;
+      });
+    }
   });
 
   watch(() => props.value, (val) => {
@@ -65,7 +76,15 @@ export function useEvent(props: any, emit?: any) {
     emit("update:modelValue", result);
   }
 
+  function initValue() {
+    text.value = initVal(props.modelValue, props);
+  }
+
+  initValue();
+
   return {
+    active,
+    object,
     text,
     handleFocus,
     handleBlur,
