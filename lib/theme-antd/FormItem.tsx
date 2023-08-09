@@ -1,4 +1,4 @@
-import { CommonWidgetPropsDefine } from "../schema-form/types";
+import { CommonWidgetPropsDefine } from "../types";
 
 const FormItem = defineComponent({
   name: "FormItem",

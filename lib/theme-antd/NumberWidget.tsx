@@ -1,5 +1,5 @@
 import { defineComponent } from "vue";
-import { CommonWidgetPropsDefine } from "../schema-form/types";
+import { CommonWidgetPropsDefine } from "../types";
 
 export default defineComponent({
   name: "NumberWidget",

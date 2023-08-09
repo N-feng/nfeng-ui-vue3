@@ -1,8 +1,10 @@
+import b from "../../../src/utils/bem";
 import { getPrefix } from "../../../src/_utils/common";
+import lang from "../../../src/locale/lang/zh";
+import { setPx } from "../../../src/utils/util";
 import { useProps, defineProps } from "../../core/common/props";
 import { useEvent } from "../../core/common/event";
-import b from "../../../src/utils/bem";
-import { setPx } from "../../../src/utils/util";
+import { validatenull } from "../../../src/utils/validate";
 
 const { prefixName, prefixCls } = getPrefix("InputTable");
 
@@ -11,6 +13,7 @@ export default defineComponent({
   inheritAttrs: false,
   props: {
     ...defineProps(),
+    formatter: Function,
     load: Function,
     dialogWidth: {
       type: String,
@@ -20,8 +23,8 @@ export default defineComponent({
   emits: ["update:modelValue"],
   setup(props, { attrs, emit }) {
     const crudRef = ref<any>();
-    const { clearableVal, valueKey } = useProps(props);
-    const { object, text } = useEvent(props, emit);
+    const { clearableVal, labelKey, valueKey } = useProps(props);
+    const { text } = useEvent(props, emit);
 
     const {
       dialogWidth,
@@ -33,12 +36,23 @@ export default defineComponent({
       tipPlacement,
     } = props;
 
+    const active = ref<any>({});
     const box = ref<boolean>();
+    const clear = ref<boolean>();
+    const created = ref(false);
     const data = ref<any[]>([]);
     const loading = ref<boolean>(false);
     const main = ref<any>();
+    const object = ref<any>({});
     const page: any = reactive({});
     const search = reactive({});
+
+    const labelShow = computed(() => {
+      if (typeof props.formatter === "function") {
+        return props.formatter(object.value);
+      }
+      return object.value[labelKey.value] || ''
+    });
 
     const option = computed(() => {
       return Object.assign(
@@ -54,9 +68,37 @@ export default defineComponent({
       );
     });
 
-    watch(text, (val) => {
-      console.log("val: ", val);
+    watch(() => props.modelValue, (val) => {
+      if (validatenull(val)) {
+        active.value = {}
+        object.value = {}
+      }
     });
+
+    watch(text, (val) => {
+      if (created.value || validatenull(val)) return;
+      if (typeof props.load === "function") {
+        props.load({ value: text.value }, (data: any) => {
+          active.value = data;
+          object.value = data;
+          created.value = true;
+        });
+      }
+    }, { immediate: true });
+
+    function handleChange(event: any) {
+      if (!event.target.value) handleClear();
+    }
+
+    function handleClear() {
+      clear.value = true;
+      active.value = {};
+      setVal();
+    }
+
+    function handleCurrentRowChange(val: any) {
+      active.value = val;
+    }
 
     function handleSearchChange(form: any, done: Function) {
       Object.assign(page, {
@@ -69,6 +111,10 @@ export default defineComponent({
     function handleShow() {
       main.value.blur();
       if (disabled || readonly) return;
+      if (clear.value) {
+        clear.value = false;
+        return;
+      }
       Object.assign(page, {
         currentPage: 1,
         total: 0,
@@ -85,11 +131,17 @@ export default defineComponent({
           data.value = res.data;
           loading.value = false;
           let active = data.value.find(
-            (ele: any) => ele[valueKey.value] == object[valueKey.value]
+            (ele: any) => ele[valueKey.value] == object.value[valueKey.value]
           );
           setTimeout(() => crudRef.value.setCurrentRow(active));
         });
       }
+    }
+
+    function setVal() {
+      object.value = active.value;
+      text.value = active.value[valueKey.value] || '';
+      box.value = false;
     }
 
     return () => {
@@ -104,12 +156,13 @@ export default defineComponent({
                 default: () => (
                   <a-input
                     ref={main}
-                    v-model:value={text.value}
+                    value={labelShow.value}
                     allow-clear={clearableVal.value}
                     disabled={disabled}
                     placeholder={placeholder}
                     size={size}
                     onFocus={handleShow}
+                    onChange={handleChange}
                   />
                 ),
               }}
@@ -117,12 +170,13 @@ export default defineComponent({
           ) : (
             <a-input
               ref={main}
-              v-model:value={text.value}
+              value={labelShow.value}
               allow-clear={clearableVal.value}
               disabled={disabled}
               placeholder={placeholder}
               size={size}
               onFocus={handleShow}
+              onChange={handleChange}
             />
           )}
           <>
@@ -131,12 +185,25 @@ export default defineComponent({
                 width={setPx(dialogWidth)}
                 title={placeholder}
                 v-model:visible={box.value}
+                v-slots={{
+                  footer: () => {
+                    return (
+                        <div class="dialog-footer">
+                          <a-button type="primary" onClick={setVal}>
+                            <check-outlined />
+                            {lang.common.submitBtn}
+                          </a-button>
+                        </div>
+                    );
+                  },
+                }}
               >
                 {box.value && (
                   <n-crud
                     ref={crudRef}
                     class={b("crud")}
                     data={data.value}
+                    onCurrentRowChange={handleCurrentRowChange}
                     onLoad={onList}
                     onSearchChange={handleSearchChange}
                     onSearchReset={handleSearchChange}

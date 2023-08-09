@@ -28,7 +28,7 @@ export const defineProps = () => ({
     },
   },
   dic: {
-    type: Array<any>,
+    type: Array,
     default: () => {
       return [];
     },

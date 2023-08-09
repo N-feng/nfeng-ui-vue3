@@ -9,6 +9,7 @@ import {
   AndDesignVueResolve,
 } from "vite-plugin-style-import";
 import { fileURLToPath, URL } from "node:url";
+import path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -45,8 +46,11 @@ export default defineConfig({
     },
   },
   resolve: {
-    alias: {
-      "@": fileURLToPath(new URL("./src", import.meta.url)),
-    },
+    alias: [
+      // {
+      //   find: new RegExp("nfeng-ui-vue3"),
+      //   replacement: path.resolve(__dirname, "src/index.ts"),
+      // },
+    ],
   },
 });

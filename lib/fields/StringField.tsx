@@ -1,6 +1,6 @@
 import { computed, defineComponent } from "vue";
-import { useWidget } from "../schema-form/theme";
-import { CommonWidgetNames, FieldPropsDefine } from "../schema-form/types";
+import { useWidget } from "../theme";
+import { CommonWidgetNames, FieldPropsDefine } from "../types";
 
 export default defineComponent({
   name: 'StringField',

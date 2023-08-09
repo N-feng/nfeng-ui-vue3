@@ -1,5 +1,5 @@
 import { defineComponent } from "vue";
-import { SelectionWidgetPropsDefine } from "../schema-form/types";
+import { SelectionWidgetPropsDefine } from "../types";
 
 export default defineComponent({
   name: "SelectionWidget",

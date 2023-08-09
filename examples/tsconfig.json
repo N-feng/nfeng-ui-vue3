@@ -14,7 +14,8 @@
     "noEmit": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "nfeng-ui-vue3": ["../src/index.ts"],
     },
   },
   "include": [

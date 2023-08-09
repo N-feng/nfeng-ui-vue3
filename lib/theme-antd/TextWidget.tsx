@@ -1,5 +1,5 @@
 import { defineComponent } from "vue";
-import { CommonWidgetDefine, CommonWidgetPropsDefine } from "../schema-form/types";
+import { CommonWidgetDefine, CommonWidgetPropsDefine } from "../types";
 
 import { withFormItem } from "./FormItem";
 

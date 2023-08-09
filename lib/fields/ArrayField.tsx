@@ -1,7 +1,7 @@
 import { defineComponent } from "vue";
-import SchemaItem from "../schema-form/SchemaItem";
-import { useWidget } from "../schema-form/theme";
-import { FieldPropsDefine, Schema, SelectionWidgetNames } from "../schema-form/types";
+import SchemaItem from "../SchemaItem";
+import { useWidget } from "../theme";
+import { FieldPropsDefine, Schema, SelectionWidgetNames } from "../types";
 
 const ArrayItemWrapper = defineComponent({
   name: "ArrayItemWrapper",

@@ -38,6 +38,5 @@ export const sendDic = (params: any) => {
 
   return new Promise((resolve, reject) => {
     if (!url) resolve([]);
-    console.log('url: ', url);
   });
 };

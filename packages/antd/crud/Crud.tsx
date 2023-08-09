@@ -91,9 +91,9 @@ export default defineComponent({
     "sortable-change",
   ],
   setup(props, { attrs, slots, emit, expose }) {
-    const btnDisabledList: any = reactive({});
+    const btnDisabledList = reactive<any>({});
     const btnDisabled = ref(false);
-    const cascaderFormList: any = reactive([]);
+    const cascaderFormList = reactive<any>([]);
     const cellForm = reactive<any>({
       list: [],
     });
@@ -101,6 +101,7 @@ export default defineComponent({
     const dialogForm = ref();
     const formRef = ref<any>();
     const list = ref<any>([]);
+    const oldCurrentRow = reactive<any>({});
     const reload = ref(Math.random());
     const rowSelected = reactive<any>({});
     const tableForm = reactive({});
@@ -427,6 +428,11 @@ export default defineComponent({
         return;
       }
       emit("row-click", row, event, column);
+      //设置单选
+      if (JSON.stringify(row) !== JSON.stringify(oldCurrentRow)) {
+        currentRowChange(row, oldCurrentRow);
+        Object.assign(oldCurrentRow, row);
+      }
     }
 
     // 行双击

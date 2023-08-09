@@ -1,10 +1,10 @@
 import { defineComponent } from "vue";
 import { FieldPropsDefine, SchemaTypes } from "./types";
-import StringField from "../fields/StringField";
-import NumberField from "../fields/NumberField";
+import StringField from "./fields/StringField";
+import NumberField from "./fields/NumberField";
 
-import ObjectField from "../fields/ObjectField";
-import ArrayField from "../fields/ArrayField";
+import ObjectField from "./fields/ObjectField";
+import ArrayField from "./fields/ArrayField";
 import { retrieveSchema } from "./utils";
 import { useVJSFContext } from "./context";
 

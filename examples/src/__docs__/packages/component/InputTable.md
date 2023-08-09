@@ -26,7 +26,7 @@ const props = {
   label: "name",
   value: "id",
 };
-const form = ref("jack");
+const form = ref("0");
 function onLoad({ page, value, data }, callback) {
   //首次加载去查询对应的值
   if (value) {

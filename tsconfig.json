@@ -6,6 +6,7 @@
     "moduleResolution": "Node",
     "strict": true,
     "jsx": "preserve",
+    "declaration": true, // 生成*.d.ts
     "resolveJsonModule": true,
     "isolatedModules": true,
     "esModuleInterop": true,

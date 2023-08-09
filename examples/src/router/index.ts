@@ -6,7 +6,7 @@ import {
 
 import config from "./routes";
 
-const Layout = () => import("@/components/Layout");
+const Layout = () => import("../components/Layout");
 
 const expandRoutes = () => {
   let current: RouteRecordRaw[] = [];

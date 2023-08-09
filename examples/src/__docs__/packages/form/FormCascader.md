@@ -109,7 +109,7 @@ const option = ref({
       span: 12,
       props: {
         label: "name",
-        value: "code",
+        value: "id",
       },
       dicData: [
         {

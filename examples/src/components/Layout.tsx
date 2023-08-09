@@ -1,6 +1,6 @@
 import { computed, defineComponent, ref } from "vue";
 
-import routes from "@/router/routes";
+import routes from "../router/routes";
 import { useRoute } from "vue-router";
 
 function getMenus(routes: any, parentPath: string) {
@@ -64,7 +64,7 @@ export default defineComponent({
       const collapsed = collapsedRef.value;
 
       return (
-        <a-layout class={"min-h100vh"}>
+        <a-layout id="layout" class={"min-h100vh"}>
           <header-layout />
           <a-layout class={"mt-48"}>
             <sider-layout

@@ -12,6 +12,7 @@ import Radio from "../../../packages/antd/radio/Radio";
 import Select from "../../../packages/antd/select/Select";
 import SiderLayout from "../../../packages/antd/layouts/SiderLayout";
 import Switch from "../../../packages/antd/switch/Switch";
+import { Component } from "vue";
 
 const components: {
   [propName: string]: Component;

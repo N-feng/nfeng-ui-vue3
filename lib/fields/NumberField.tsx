@@ -1,6 +1,6 @@
 import { defineComponent } from "vue"
-import { useWidget } from "../schema-form/theme"
-import { CommonWidgetNames, CommonWidgetPropsDefine } from "../schema-form/types"
+import { useWidget } from "../theme"
+import { CommonWidgetNames, CommonWidgetPropsDefine } from "../types"
 
 export default defineComponent({
   name: "NumberField",
