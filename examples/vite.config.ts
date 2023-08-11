@@ -9,8 +9,7 @@ import {
   createStyleImportPlugin,
   // AndDesignVueResolve,
 } from "vite-plugin-style-import";
-import { fileURLToPath, URL } from "node:url";
-import path from "path";
+import alias from "../build/alias";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -57,12 +56,7 @@ export default defineConfig({
     },
   },
   resolve: {
-    alias: [
-      // {
-      //   find: new RegExp("nfeng-ui-vue3"),
-      //   replacement: path.resolve(__dirname, "../src/index.ts"),
-      // },
-    ],
+    alias: alias,
   },
 });
 

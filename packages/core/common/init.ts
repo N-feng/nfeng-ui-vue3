@@ -6,6 +6,12 @@ import config from "../../antd/form/config";
 import { DIC_PROPS } from "../../../src/global/variable";
 
 export const defineInit = () => ({
+  defaults: {
+    type: Object as PropType<any>,
+    default () {
+      return {};
+    },
+  },
   option: {
     type: Object as PropType<TableOption>,
     required: true,
@@ -15,7 +21,7 @@ export const defineInit = () => ({
   },
 });
 
-export default function useInit(option: any) {
+export default function useInit(option: any, emit?: any, defaults?: any) {
   const cascaderDIC = reactive<any>({});
   const DIC = ref<any>({});
   const isMobile = ref(false);
@@ -39,7 +45,9 @@ export default function useInit(option: any) {
         }
       });
       //根据order排序
-      ele.column = ele.column.sort((a: any, b: any) => (b.order || 0) - (a.order || 0));
+      ele.column = ele.column.sort(
+        (a: any, b: any) => (b.order || 0) - (a.order || 0)
+      );
     });
     return group;
   });
@@ -78,9 +86,17 @@ export default function useInit(option: any) {
   });
 
   watch(
-    () => option,
-    () => {
-      init(false);
+    () => defaults,
+    ({ value }) => {
+      Object.assign(objectOption, value);
+    },
+    { deep: true }
+  );
+
+  watch(
+    objectOption,
+    (val) => {
+      emit("update:defaults", val);
     },
     { deep: true }
   );
@@ -88,7 +104,7 @@ export default function useInit(option: any) {
   watch(
     propOption,
     (list) => {
-      let result: any = {}
+      let result: any = {};
       list.forEach((ele: any) => {
         result[ele.prop] = ele;
       });
@@ -100,6 +116,14 @@ export default function useInit(option: any) {
     }
   );
 
+  watch(
+    () => option,
+    () => {
+      init(false);
+    },
+    { deep: true }
+  );
+
   function getIsMobile() {
     isMobile.value = document.body.clientWidth <= 768;
   }
@@ -107,14 +131,13 @@ export default function useInit(option: any) {
   // 本地字典
   function handleLocalDic() {
     const result = loadLocalDic(resultOption.value, DIC);
-    Object.keys(result).forEach(ele => {
+    Object.keys(result).forEach((ele) => {
       DIC.value[ele] = result[ele];
-    })
+    });
   }
 
   function init(type?: boolean) {
-    Object.assign(objectOption, option);
-    // tableOption = option;
+    Object.assign(tableOption, option);
     getIsMobile();
     handleLocalDic();
     if (type !== false) return false;

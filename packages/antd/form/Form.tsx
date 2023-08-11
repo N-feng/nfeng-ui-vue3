@@ -5,7 +5,7 @@ import unset from "lodash-es/unset";
 import { isEmpty, getPrefix } from "../../../src/_utils/common";
 import { FormKey } from "./common";
 import { TableOption, Column } from "./types";
-import useInit from "../../core/common/init";
+import useInit, { defineInit } from "../../core/common/init";
 import { formInitVal, getPlaceholder } from "../../../src/core/dataformat";
 import { sendDic } from "../../../src/core/dic";
 import { getSlotName } from "../../../src/core/slot";
@@ -14,9 +14,9 @@ import {
   findObject,
   setPx,
   vaildData,
-} from "../../../src/utils/util";
-import b from "../../../src/utils/bem";
-import { validatenull } from "../../../src/utils/validate";
+} from "utils/util";
+import b from "utils/bem";
+import { validatenull } from "utils/validate";
 import config from "./config";
 import FormMenu from "./Menu";
 import FormTemp from "../../core/components/form/FormTemp";
@@ -26,14 +26,11 @@ const { prefixName, prefixCls } = getPrefix("Form");
 export default defineComponent({
   name: prefixName,
   props: {
-    option: {
-      type: Object as PropType<TableOption>,
-      required: true,
-    },
     value: {},
     model: {},
+    ...defineInit(),
   },
-  emits: ["submit", "error", "resetChange", "update:status"],
+  emits: ["submit", "error", "resetChange", "update:status", "update:defaults"],
   setup(props, { attrs, slots, emit, expose }) {
     const formRef = ref<any>();
     const activeName = ref("");
@@ -50,7 +47,7 @@ export default defineComponent({
       propOption,
       rowKey,
       tableOption,
-    } = useInit(toRef(props, "option"));
+    } = useInit(toRef(props, "option"), emit, toRef(props, "defaults"));
 
     const parentOption = computed(() => {
       return props.option;
@@ -147,7 +144,7 @@ export default defineComponent({
         }
       });
       Object.assign(formData, form);
-      setControl()
+      setControl();
     }
 
     function getItemParams(
@@ -263,13 +260,19 @@ export default defineComponent({
         let value = formData;
         if (!formBind[prop]) {
           let bindList = [];
-          if (bind) {}
+          if (bind) {
+          }
           if (control) {
             const callback = () => {
               let controlList = control(formData[column.prop], formData) || {};
               Object.keys(controlList).forEach((item) => {
-                let ele = Object.assign(objectOption[item] || {}, controlList[item]);
-                if (controlList[item].dicData) DIC[item] = controlList[item].dicData;
+                let ele = Object.assign(
+                  objectOption[item] || {},
+                  controlList[item]
+                );
+                Object.assign(objectOption, { [item]: ele })
+                if (controlList[item].dicData)
+                  DIC[item] = controlList[item].dicData;
               });
             };
             let formControl = watch(() => formData[prop], callback);
@@ -353,7 +356,7 @@ export default defineComponent({
       setTimeout(() => {
         dataFormat();
       });
-    })
+    });
 
     expose({
       submit: submit,

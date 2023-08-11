@@ -14,9 +14,8 @@
     "noEmit": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "nfeng-ui-vue3": ["../src/index.ts"],
-    },
+      "@/*": ["./src/*"]
+    }
   },
   "include": [
     "src/auto-imports.d.ts",

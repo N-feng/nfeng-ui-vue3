@@ -4,7 +4,7 @@ import lang from "../../../src/locale/lang/zh";
 import { setPx } from "../../../src/utils/util";
 import { useProps, defineProps } from "../../core/common/props";
 import { useEvent } from "../../core/common/event";
-import { validatenull } from "../../../src/utils/validate";
+import { validatenull } from "../../../src";
 
 const { prefixName, prefixCls } = getPrefix("InputTable");
 

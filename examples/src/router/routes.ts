@@ -24,6 +24,7 @@ import FormLayout from "../__docs__/packages/form/FormLayout.md";
 import FormMenu from "../__docs__/packages/form/FormMenu.md";
 import FormCascader from "../__docs__/packages/form/FormCascader.md";
 import FormEvent from "../__docs__/packages/form/FormEvent.md";
+import FormAjax from "../__docs__/packages/form/FormAjax.md";
 
 import Introduce from "../__docs__/packages/Introduct.md";
 import Guide from "../__docs__/packages/Guide.md";
@@ -77,6 +78,7 @@ export const routes = [
       { path: "/form-menu", title: "表单操作按钮", component: FormMenu },
       { path: "/form-cascader", title: "表单多级联动", component: FormCascader },
       { path: "/form-event", title: "表单组件事件", component: FormEvent },
+      { path: "/form-ajax", title: "表单高级用法", component: FormAjax },
     ],
   },
   {
